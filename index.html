@@ -72,51 +72,77 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 
 /* KPI */
 .kpi-grid{
-  display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
   gap:14px;margin-bottom:18px;
 }
 .kpi-card{
-  background:radial-gradient(circle at top left,#1e293b,#020617);
-  border-radius:var(--radius);border:1px solid var(--border);
-  padding:14px 14px 12px;
+  background:var(--card);border:1px solid var(--border);
+  padding:16px;border-radius:var(--radius);
 }
-.kpi-card .lbl{font-size:0.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;}
-.kpi-card .val{font-size:1.4rem;font-weight:700;}
-.kpi-card .sub{font-size:0.78rem;color:var(--muted);margin-top:6px;}
-.green{color:var(--green);} .red{color:var(--red);} .yellow{color:var(--yellow);} .blue{color:var(--accent);}
+.kpi-card .lbl{font-size:0.8rem;color:var(--muted);margin-bottom:6px;}
+.kpi-card .val{font-size:1.6rem;font-weight:600;}
+.kpi-card .val.green{color:var(--green);}
+.kpi-card .val.red{color:var(--red);}
+.kpi-card .val.yellow{color:var(--yellow);}
 
-/* PANELS / GRID */
-.grid2{display:grid;grid-template-columns:1.4fr 1fr;gap:16px;margin-bottom:18px;}
-.grid-1-2{display:grid;grid-template-columns:1fr 1.6fr;gap:16px;margin-bottom:18px;}
-@media(max-width:1100px){.main{margin-left:0;padding:16px;}.sidebar{position:static;width:100%;flex-direction:row;overflow-x:auto;height:auto;}.grid2,.grid-1-2{grid-template-columns:1fr;}}
-.panel{
-  background:var(--card2);border-radius:var(--radius);
-  border:1px solid var(--border);padding:14px 16px;
+/* CHARTS */
+.chart-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+  gap:14px;margin-bottom:18px;
 }
-.panel h3{font-size:0.9rem;margin-bottom:10px;}
-.panel-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
-.chart-wrap{position:relative;height:230px;}
-
-/* TABLE */
-.table-wrap{overflow-x:auto;}
-table{width:100%;border-collapse:collapse;font-size:0.8rem;}
-th{padding:7px 9px;border-bottom:1px solid var(--border);color:var(--muted);font-size:0.7rem;text-transform:uppercase;letter-spacing:.05em;text-align:left;}
-td{padding:8px 9px;border-bottom:1px solid var(--border);color:var(--text);}
-tr:last-child td{border-bottom:none;}
-.table-sm th,.table-sm td{padding:5px 9px;}
-
-/* EMPTY STATE */
-.empty-state{
-  text-align:center;padding:40px 20px;color:var(--muted);
-  font-size:0.9rem;border:1px dashed var(--border);border-radius:var(--radius);
-  margin-top:20px;
+.chart-card{
+  background:var(--card);border:1px solid var(--border);
+  padding:16px;border-radius:var(--radius);
 }
-.empty-state .icon{font-size:2.5rem;margin-bottom:10px;}
+.chart-card h3{font-size:1.1rem;margin-bottom:12px;}
+.chart-card .chart-container{position:relative;height:250px;}
 
-/* FOOTER */
-.footer{
-  font-size:0.75rem;color:var(--muted);text-align:center;
-  margin-top:30px;padding-top:20px;border-top:1px solid var(--border);
+/* TABLES */
+.table-card{
+  background:var(--card);border:1px solid var(--border);
+  padding:16px;border-radius:var(--radius);
+  overflow-x:auto;
+}
+.table-card h3{font-size:1.1rem;margin-bottom:12px;}
+.data-table{
+  width:100%;border-collapse:collapse;font-size:0.85rem;
+}
+.data-table th,.data-table td{
+  padding:10px 12px;border-bottom:1px solid var(--border);
+  text-align:left;
+}
+.data-table th{
+  color:var(--muted);font-weight:600;text-transform:uppercase;
+  font-size:0.75rem;
+}
+.data-table tbody tr:last-child td{border-bottom:none;}
+.data-table tbody tr:hover{background:var(--card2);}
+
+/* UTILITIES */
+.flex-col{display:flex;flex-direction:column;}
+.flex-row{display:flex;flex-direction:row;}
+.gap-10{gap:10px;}
+.mt-10{margin-top:10px;}
+.mb-10{margin-bottom:10px;}
+.text-center{text-align:center;}
+.text-muted{color:var(--muted);}
+.text-green{color:var(--green);}
+.text-red{color:var(--red);}
+.text-yellow{color:var(--yellow);}
+.text-bold{font-weight:600;}
+.p-16{padding:16px;}
+.rounded-lg{border-radius:var(--radius);}
+.bg-card{background:var(--card);}
+.border{border:1px solid var(--border);}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .sidebar{width:100%;height:auto;position:relative;border-right:none;border-bottom:1px solid var(--border);}
+  .main{margin-left:0;}
+  .ph{flex-direction:column;align-items:flex-start;}
+  .mbar{width:100%;justify-content:flex-start;}
+  .kpi-grid{grid-template-columns:1fr;}
+  .chart-grid{grid-template-columns:1fr;}
 }
 </style>
 </head>
@@ -127,242 +153,392 @@ tr:last-child td{border-bottom:none;}
     <span class="logo-icon">📊</span>
     <div class="logo-text">
       <strong>FluxoCaixa IA</strong>
-      <span>Crédito Real Ag. São Pedro</span>
+      <span>Credito Real Ag. São Pedro</span>
     </div>
   </div>
-  <div class="nav-section">Navegação</div>
-  <button class="nav-item active" data-page="dashboard"><span>🏠</span>Dashboard</button>
-  <button class="nav-item" data-page="ia"><span>🤖</span>IA</button>
-  <button class="nav-item" data-page="receitas"><span>💸</span>Receitas</button>
-  <button class="nav-item" data-page="despesas"><span>💳</span>Despesas</button>
-  <button class="nav-item" data-page="futuros"><span>🗓️</span>Futuros</button>
-  <button class="nav-item" data-page="carteira"><span>🏢</span>Carteira Imóveis</button>
+  <div class="nav-section">PRINCIPAL</div>
+  <button class="nav-item active" data-page="dashboard">
+    <span>🏠</span> Dashboard
+  </button>
+  <button class="nav-item" data-page="analise-ia">
+    <span>🧠</span> Análise IA
+  </button>
+  <div class="nav-section">OPERACIONAL</div>
+  <button class="nav-item" data-page="receitas">
+    <span>💰</span> Receitas
+  </button>
+  <button class="nav-item" data-page="despesas">
+    <span>💸</span> Despesas
+  </button>
+  <button class="nav-item" data-page="futuros">
+    <span>📅</span> Futuros
+  </button>
+  <div class="nav-section">CARTEIRA</div>
+  <button class="nav-item" data-page="imoveis">
+    <span>🏢</span> Imóveis
+  </button>
 </div>
 
 <div class="main">
-  <!-- DASHBOARD PAGE -->
+  <!-- Dashboard Page -->
   <div id="dashboard" class="page active">
     <div class="ph">
       <div>
-        <h1>Dashboard</h1>
-        <div class="sub">Visão geral do fluxo de caixa da agência.</div>
+        <h1>Dashboard Financeiro</h1>
+        <p class="sub">Visão geral e desempenho da imobiliária.</p>
       </div>
       <div class="mbar">
         <select id="mesDashboard">
-          <option value="JANEIRO2026">Janeiro 2026</option>
-          <option value="FEVEREIRO2026">Fevereiro 2026</option>
           <option value="MARCO2026">Março 2026</option>
+          <option value="FEVEREIRO2026">Fevereiro 2026</option>
+          <option value="JANEIRO2026">Janeiro 2026</option>
         </select>
       </div>
     </div>
 
-    <div class="kpi-grid" id="dashboardKpis">
+    <div class="kpi-grid">
       <div class="kpi-card">
-        <div class="lbl">Receita Total</div>
-        <div class="val" id="kpiReceitaTotal">R$ 0,00</div>
-        <div class="sub">Receitas de locação e venda.</div>
+        <div class="lbl">RECEITA TOTAL</div>
+        <div class="val green" id="kpiReceitaTotal">R$ 0,00</div>
       </div>
       <div class="kpi-card">
-        <div class="lbl">Despesa Total</div>
-        <div class="val" id="kpiDespesaTotal">R$ 0,00</div>
-        <div class="sub">Custos operacionais.</div>
+        <div class="lbl">DESPESA TOTAL</div>
+        <div class="val red" id="kpiDespesaTotal">R$ 0,00</div>
       </div>
       <div class="kpi-card">
-        <div class="lbl">Resultado Líquido</div>
-        <div class="val" id="kpiResultadoLiquido">R$ 0,00</div>
-        <div class="sub">Lucro/Prejuízo do mês.</div>
+        <div class="lbl">SALDO DO MÊS</div>
+        <div class="val" id="kpiSaldoMes">R$ 0,00</div>
       </div>
       <div class="kpi-card">
-        <div class="lbl">Imóveis Ativos</div>
-        <div class="val" id="kpiImoveisAtivos">0</div>
-        <div class="sub">Imóveis com locação ativa.</div>
+        <div class="lbl">IMÓVEIS NA CARTEIRA</div>
+        <div class="val" id="kpiImoveisCarteira">0</div>
       </div>
     </div>
 
-    <div class="grid2">
-      <div class="panel">
-        <h3>Receitas vs Despesas Mensais</h3>
-        <div class="chart-wrap"><canvas id="receitaDespesaChart"></canvas></div>
+    <div class="chart-grid">
+      <div class="chart-card">
+        <h3>Receita x Despesa — Janeiro 2026, Fevereiro 2026, Março 2026</h3>
+        <div class="chart-container">
+          <canvas id="receitaDespesaChart"></canvas>
+        </div>
       </div>
-      <div class="panel">
+      <div class="chart-card">
         <h3>Composição das Receitas</h3>
-        <div class="chart-wrap"><canvas id="composicaoReceitasChart"></canvas></div>
+        <div class="chart-container">
+          <canvas id="composicaoReceitasChart"></canvas>
+        </div>
       </div>
     </div>
 
-    <div class="panel">
-      <h3>Receitas Detalhadas</h3>
-      <div id="receitasDashboardTable" class="table-wrap">
-        <div class="empty-state">
-          <span class="icon">📊</span>
-          <div>Nenhum dado de receita para exibir.</div>
+    <div class="chart-grid">
+      <div class="chart-card">
+        <h3>Metas de Receita</h3>
+        <div class="p-16">
+          <div class="flex-row gap-10 mb-10">
+            <div class="flex-col">
+              <span class="text-muted">Locação</span>
+              <span id="metaLocacao" class="text-bold">R$ 0,00 / R$ 150.000,00</span>
+            </div>
+          </div>
+          <div class="flex-row gap-10 mb-10">
+            <div class="flex-col">
+              <span class="text-muted">Venda</span>
+              <span id="metaVenda" class="text-bold">R$ 0,00 / R$ 70.000,00</span>
+            </div>
+          </div>
+          <div class="flex-row gap-10">
+            <div class="flex-col">
+              <span class="text-muted">Bonificação</span>
+              <span id="metaBonificacao" class="text-bold">R$ 0,00 / R$ 10.000,00</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="chart-card">
+        <h3>Próximos Vencimentos</h3>
+        <div class="p-16">
+          <p id="proximosVencimentos" class="text-muted">Sem despesas futuras próximas.</p>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- IA PAGE -->
-  <div id="ia" class="page">
+  <!-- Análise IA Page -->
+  <div id="analise-ia" class="page">
     <div class="ph">
       <div>
-        <h1>IA</h1>
-        <div class="sub">Análises e insights gerados por inteligência artificial.</div>
+        <h1>Análise IA</h1>
+        <p class="sub">Insights e recomendações baseadas em inteligência artificial.</p>
       </div>
       <div class="mbar">
         <select id="iaMes">
-          <option value="JANEIRO2026">Janeiro 2026</option>
-          <option value="FEVEREIRO2026">Fevereiro 2026</option>
           <option value="MARCO2026">Março 2026</option>
+          <option value="FEVEREIRO2026">Fevereiro 2026</option>
+          <option value="JANEIRO2026">Janeiro 2026</option>
         </select>
+        <button class="btn btn-primary">Pedir Análise IA</button>
       </div>
     </div>
-    <div class="panel">
-      <h3>Análise de Desempenho</h3>
-      <p>Ainda não há dados suficientes para gerar uma análise de desempenho detalhada. Por favor, certifique-se de que os dados de receita e despesa estão carregados.</p>
+    <div class="chart-card">
+      <h3>Inteligência Artificial — Análise do Mês</h3>
+      <div class="p-16">
+        <p id="iaAnaliseTexto" class="text-muted">Carregando análise...</p>
+      </div>
+    </div>
+    <div class="chart-grid">
+      <div class="chart-card">
+        <h3>Receita vs Despesa — 6 meses</h3>
+        <div class="chart-container">
+          <canvas id="receitaDespesa6MesesChart"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <h3>Composição de Receitas</h3>
+        <div class="chart-container">
+          <canvas id="composicaoReceitasIaChart"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="chart-grid">
+      <div class="chart-card">
+        <h3>Despesas por Categoria</h3>
+        <div class="chart-container">
+          <canvas id="despesasPorCategoriaIaChart"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <h3>Saldo Acumulado</h3>
+        <div class="chart-container">
+          <canvas id="saldoAcumuladoChart"></canvas>
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- RECEITAS PAGE -->
+  <!-- Receitas Page -->
   <div id="receitas" class="page">
     <div class="ph">
       <div>
         <h1>Receitas</h1>
-        <div class="sub">Detalhes de todas as receitas da agência.</div>
+        <p class="sub">Detalhes de todas as receitas da imobiliária.</p>
       </div>
       <div class="mbar">
         <select id="rMes">
-          <option value="JANEIRO2026">Janeiro 2026</option>
-          <option value="FEVEREIRO2026">Fevereiro 2026</option>
           <option value="MARCO2026">Março 2026</option>
+          <option value="FEVEREIRO2026">Fevereiro 2026</option>
+          <option value="JANEIRO2026">Janeiro 2026</option>
         </select>
       </div>
     </div>
-    <div class="panel">
-      <h3>Lista de Receitas</h3>
-      <div id="receitasTable" class="table-wrap">
-        <div class="empty-state">
-          <span class="icon">💸</span>
-          <div>Nenhum dado de receita para exibir.</div>
-        </div>
-      </div>
+    <div class="table-card">
+      <h3>Receitas de <span id="receitasMesTitulo">Março 2026</span></h3>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Endereço</th>
+            <th>Locatário</th>
+            <th>Tipo</th>
+            <th>Tx Adm (R$)</th>
+            <th>Venda (R$)</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="receitasTableBody">
+          <!-- Receitas will be loaded here -->
+        </tbody>
+      </table>
     </div>
   </div>
 
-  <!-- DESPESAS PAGE -->
+  <!-- Despesas Page -->
   <div id="despesas" class="page">
     <div class="ph">
       <div>
         <h1>Despesas</h1>
-        <div class="sub">Detalhes de todas as despesas da agência.</div>
+        <p class="sub">Detalhes de todas as despesas da imobiliária.</p>
       </div>
       <div class="mbar">
         <select id="dMes">
-          <option value="JANEIRO2026">Janeiro 2026</option>
-          <option value="FEVEREIRO2026">Fevereiro 2026</option>
           <option value="MARCO2026">Março 2026</option>
+          <option value="FEVEREIRO2026">Fevereiro 2026</option>
+          <option value="JANEIRO2026">Janeiro 2026</option>
         </select>
       </div>
     </div>
-    <div class="panel">
-      <h3>Lista de Despesas</h3>
-      <div id="despesasTable" class="table-wrap">
-        <div class="empty-state">
-          <span class="icon">💳</span>
-          <div>Nenhum dado de despesa para exibir.</div>
-        </div>
-      </div>
+    <div class="table-card">
+      <h3>Despesas de <span id="despesasMesTitulo">Março 2026</span></h3>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>CNPJ/CPF</th>
+            <th>Valor Pago (R$)</th>
+            <th>Vencimento</th>
+          </tr>
+        </thead>
+        <tbody id="despesasTableBody">
+          <!-- Despesas will be loaded here -->
+        </tbody>
+      </table>
     </div>
   </div>
 
-  <!-- FUTUROS PAGE -->
+  <!-- Futuros Page -->
   <div id="futuros" class="page">
     <div class="ph">
       <div>
         <h1>Futuros</h1>
-        <div class="sub">Previsões e projeções de fluxo de caixa.</div>
+        <p class="sub">Previsões e lançamentos futuros.</p>
       </div>
     </div>
-    <div class="panel">
-      <h3>Próximas Receitas e Despesas</h3>
-      <div class="empty-state">
-        <span class="icon">🗓️</span>
-        <div>Nenhum dado futuro para exibir.</div>
-      </div>
+    <div class="table-card">
+      <h3>Próximas Receitas Futuras</h3>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Endereço</th>
+            <th>Locatário</th>
+            <th>Tipo</th>
+            <th>Tx Adm (R$)</th>
+            <th>Venda (R$)</th>
+            <th>Previsão</th>
+          </tr>
+        </thead>
+        <tbody id="futurosReceitasTableBody">
+          <tr><td colspan="6" class="text-center text-muted">Sem receitas futuras.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table-card mt-10">
+      <h3>Próximas Despesas Futuras</h3>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>CNPJ/CPF</th>
+            <th>Valor (R$)</th>
+            <th>Previsão</th>
+          </tr>
+        </thead>
+        <tbody id="futurosDespesasTableBody">
+          <tr><td colspan="4" class="text-center text-muted">Sem despesas futuras.</td></tr>
+        </tbody>
+      </table>
     </div>
   </div>
 
-  <!-- CARTEIRA IMÓVEIS PAGE -->
-  <div id="carteira" class="page">
+  <!-- Imóveis Page -->
+  <div id="imoveis" class="page">
     <div class="ph">
       <div>
-        <h1>Carteira de Imóveis</h1>
-        <div class="sub">Visão geral dos imóveis sob gestão.</div>
+        <h1>Imóveis</h1>
+        <p class="sub">Gerenciamento da carteira de imóveis.</p>
       </div>
     </div>
-    <div class="panel">
-      <h3>Imóveis Ativos</h3>
-      <div id="carteiraTable" class="table-wrap">
-        <div class="empty-state">
-          <span class="icon">🏢</span>
-          <div>Nenhum imóvel na carteira para exibir.</div>
-        </div>
-      </div>
+    <div class="table-card">
+      <h3>Imóveis na Carteira</h3>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Endereço</th>
+            <th>Locatário</th>
+            <th>Aluguel Total (R$)</th>
+            <th>Tx Adm (R$)</th>
+            <th>Condomínio (R$)</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="imoveisTableBody">
+          <!-- Imóveis will be loaded here -->
+        </tbody>
+      </table>
     </div>
   </div>
 
-  <div class="footer">
-    Desenvolvido por Inner AI Fusion para Crédito Real Ag. São Pedro
-  </div>
 </div>
 
 <script>
-// ====================== DADOS EMBUTIDOS DA PLANILHA ======================
-// Estes dados foram extraídos da sua planilha "Controle_de_Receitas_e_Despesas_2026.xlsx"
-// e ajustados para o cálculo correto da taxa de administração.
+// Dados embutidos da planilha Controle_de_Receitas_e_Despesas_2026.xlsx
+// A lógica foi ajustada para considerar a "Tx Adm (R$)" como a receita principal de locação.
+// Se "Tx Adm (R$)" for 0 ou NaN, será calculado 10% do "Valor total (R$)".
 
 const JANEIRO2026_RECEITAS = [
-  { tipo: 'Locação', end: 'Av. São Pedro, 611 conj. 201', loc: 'Diego', aluguel: 1500, taxa: 150, cond: 150, status: 'pago' },
-  { tipo: 'Locação', end: 'Av. São Pedro, 611 conj. 202', loc: 'Luiz Carlos', aluguel: 1229.28, taxa: 122.93, cond: 150, status: 'pago' },
-  { tipo: 'Locação', end: 'Av. São Pedro, 611 conj. 203', loc: 'Jorge', aluguel: 1200, taxa: 120, cond: 150, status: 'pago' },
-  { tipo: 'Locação', end: 'Av. São Pedro, 611 conj. 204', loc: 'Douglas', aluguel: 1200, taxa: 120, cond: 150, status: 'pago' },
-  { tipo: 'Locação', end: 'Av. São Pedro, 611 conj. 301', loc: 'Marco', aluguel: 1300, taxa: 130, cond: 150, status: 'pago' },
-  { tipo: 'Locação', end: 'Av. São Pedro, 611 conj. 302', loc: 'Amanda', aluguel: 1400, taxa: 140, cond: 150, status: 'pago' },
-  { tipo: 'Locação', end: 'Av. São Pedro, 611 conj. 303', loc: 'Juliano', aluguel: 1073.65, taxa: 107.37, cond: 150, status: 'pago' },
-  { tipo: 'Locação', end: 'Av. São Pedro, 611 conj. 304', loc: 'Ivone', aluguel: 1052.67, taxa: 105.27, cond: 150, status: 'pago' },
-  { tipo: 'Locação', end: 'Av. São Pedro, 605 LOJA', loc: 'Edilson', aluguel: 2074.34, taxa: 0, cond: 0, status: 'pago' }, // Taxa 0 conforme planilha
-  { tipo: 'Locação', end: 'Av. Assis Brasil, 2884 LOJA', loc: 'Rei Midas', aluguel: 10000, taxa: 1000, cond: 0, status: 'pago' },
-  { tipo: 'Locação', end: 'Av. Assis Brasil, 2886 apto 01', loc: 'Ana Paula', aluguel: 1500, taxa: 150, cond: 160, status: 'pago' },
-  { tipo: 'Locação', end: 'Av. Assis Brasil, 2886 apto 02', loc: 'Michele', aluguel: 1439.62, taxa: 143.96, cond: 200, status: 'pago' },
-  { tipo: 'Locação', end: 'Av. Assis Brasil, 2886 apto 03', loc: 'André', aluguel: 1668.14, taxa: 166.81, cond: 160, status: 'pago' },
-  { tipo: 'Locação', end: 'Av. Assis Brasil, 2886 apto 04', loc: 'André', aluguel: 1128.28, taxa: 112.83, cond: 160, status: 'pago' },
-  { tipo: 'Locação', end: 'Av. Assis Brasil, 2888 LOJA', loc: 'Hiperdoces', aluguel: 13269.34, taxa: 1040.52, cond: 0, status: 'pago' },
-  { tipo: 'Locação', end: 'Av. João Wallig, 509', loc: 'Maria Beatriz', aluguel: 5351.5, taxa: 535.15, cond: 0, status: 'pago' },
-  { tipo: 'Locação', end: 'Alberto Pasqualine, 101. 102', loc: 'Lidiane', aluguel: 1456.91, taxa: 145.69, cond: 150, status: 'pago' },
-  { tipo: 'Locação', end: 'Alberto Pasqualine, 101. 101', loc: 'Willian', aluguel: 2353.79, taxa: 235.38, cond: 200, status: 'pago' },
-  { tipo: 'Locação', end: 'Alberto Pasqualine, 101. 103', loc: 'Lidiane', aluguel: 1088.07, taxa: 108.8, cond: 150, status: 'pago' },
-  { tipo: 'Locação', end: 'Alberto Pasqualine, 101. 201', loc: 'Nathalia', aluguel: 2216.23, taxa: 221.63, cond: 200, status: 'pago' },
-  { tipo: 'Locação', end: 'Alberto Pasqualine, 101. 202', loc: 'Nathalia', aluguel: 1926.54, taxa: 192.65, cond: 200, status: 'pago' },
-  { tipo: 'Locação', end: 'Padre Todesco, 927 apto 505', loc: 'Bernado', aluguel: 2000, taxa: 200, cond: 0, status: 'pago' },
-  { tipo: 'Locação', end: 'Doutor David Giacomini, 30, Canoas', loc: 'Vinicius', aluguel: 3425.12, taxa: 171.26, cond: 0, status: 'pago' }, // Taxa 5%
-  { tipo: 'Locação', end: 'Ary Tarragô, 3095 - APTO 1002 B', loc: 'Ariane', aluguel: 951.35, taxa: 95.13, cond: 0, status: 'pago' },
-  { tipo: 'Locação', end: 'Ary Tarragô, 3095 - APTO 1007 B', loc: 'Edison', aluguel: 976.68, taxa: 97.67, cond: 0, status: 'pago' },
-  { tipo: 'Locação', end: 'Ary Tarragô, 3095 - APTO 702 B', loc: 'Alessandra', aluguel: 1300, taxa: 130, cond: 0, status: 'pago' },
-  { tipo: 'Locação', end: 'Ary Tarragô, 3095 - APTO 706 B', loc: 'Yasmin', aluguel: 965.21, taxa: 96.52, cond: 0, status: 'pago' },
-  { tipo: 'Locação', end: 'Ary Tarragô, 3095 - APTO 1001 C', loc: 'Raimunda', aluguel: 1300, taxa: 130, cond: 0, status: 'pago' },
-  { tipo: 'Locação', end: 'Av. Ary Tarrago 3095 ap 1107 B', loc: 'Ana Paula', aluguel: 1400, taxa: 140, cond: 0, status: 'pago' },
-  { tipo: 'Locação', end: 'Av. Ary Tarrago 3095 ap 502 C', loc: 'Rafael', aluguel: 1400, taxa: 140, cond: 0, status: 'pago' }, // Taxa 10%
-  { tipo: 'Locação', end: 'Av. Jose Aloisio Filho 595 Ap 137 T J', loc: 'Claudete', aluguel: 2600, taxa: 260, cond: 0, status: 'pago' },
-  { tipo: 'Locação', end: 'Av. A.J.Renner 2050 ap 306', loc: 'Nathalia', aluguel: 1300, taxa: 130, cond: 0, status: 'pago' },
-  { tipo: 'Locação', end: 'Rua Presidente Juarez 405 casa', loc: 'Denize', aluguel: 2000, taxa: 200, cond: 0, status: 'pago' },
-  { tipo: 'Locação', end: 'Av. Patria 343 loja', loc: 'Viviane', aluguel: 2000, taxa: 200, cond: 0, status: 'pago' },
-  { tipo: 'Venda', end: 'COMISSÃO VENDA CAIRU 720/206', loc: '', aluguel: 0, taxa: 8750, cond: 0, status: 'pago' },
-  { tipo: 'Venda', end: 'COMISSÃO VENDA FARRAPOS, 3803/24', loc: '', aluguel: 0, taxa: 5400, cond: 0, status: 'pago' },
-  { tipo: 'Venda', end: 'COMISSÃO VENDA SERTORIO, 1615/36', loc: '', aluguel: 0, taxa: 9666.28, cond: 0, status: 'pago' },
-  { tipo: 'Venda', end: 'COMISSÃO VENDA OLIVEIRA VIANA, 491, Ap 130.', loc: '', aluguel: 0, taxa: 5940, cond: 0, status: 'pago' },
-  { tipo: 'Venda', end: 'COMISSÃO VENDA A J RENNER, 1800 Ap 102 A', loc: '', aluguel: 0, taxa: 5700, cond: 0, status: 'pago' },
-  { tipo: 'Venda', end: 'SAPE 780 AP 602', loc: '', aluguel: 0, taxa: 13050, cond: 0, status: 'pago' },
-  { tipo: 'Venda', end: 'PROF JOAO DE SOUZA RIBEIRO,155/116', loc: '', aluguel: 0, taxa: 2500, cond: 0, status: 'pago' },
-  { tipo: 'Venda', end: 'Jeronymo ZELMANOVITZ, 100 AP 803', loc: '', aluguel: 0, taxa: 15750, cond: 0, status: 'pago' },
+  { end: 'Av. São Pedro, 611 conj. 201', loc: 'Diego', aluguelTotal: 1500, txAdm: 150, cond: 150, venda: 0, status: 'pago' },
+  { end: 'Av. São Pedro, 611 conj. 202', loc: 'Luiz Carlos', aluguelTotal: 1229.28, txAdm: 122.93, cond: 150, venda: 0, status: 'pago' },
+  { end: 'Av. São Pedro, 611 conj. 203', loc: 'Jorge', aluguelTotal: 1200, txAdm: 120, cond: 150, venda: 0, status: 'pago' },
+  { end: 'Av. São Pedro, 611 conj. 204', loc: 'Douglas', aluguelTotal: 1200, txAdm: 120, cond: 150, venda: 0, status: 'pago' },
+  { end: 'Av. São Pedro, 611 conj. 301', loc: 'Marco', aluguelTotal: 1300, txAdm: 130, cond: 150, venda: 0, status: 'pago' },
+  { end: 'Av. São Pedro, 611 conj. 302', loc: 'Amanda', aluguelTotal: 1400, txAdm: 140, cond: 150, venda: 0, status: 'pago' },
+  { end: 'Av. São Pedro, 611 conj. 303', loc: 'Juliano', aluguelTotal: 1073.65, txAdm: 107.37, cond: 150, venda: 0, status: 'pago' },
+  { end: 'Av. São Pedro, 611 conj. 304', loc: 'Ivone', aluguelTotal: 1052.67, txAdm: 105.27, cond: 150, venda: 0, status: 'pago' },
+  { end: 'Av. São Pedro, 605 LOJA', loc: 'Edilson', aluguelTotal: 2074.34, txAdm: 0, cond: 0, venda: 0, status: 'pago' }, // Tx Adm é 0
+  { end: 'Av. Assis Brasil, 2884 LOJA', loc: 'Rei Midas', aluguelTotal: 10000, txAdm: 1000, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Av. Assis Brasil, 2886 apto 01', loc: 'Ana Paula', aluguelTotal: 1500, txAdm: 150, cond: 160, venda: 0, status: 'pago' },
+  { end: 'Av. Assis Brasil, 2886 apto 02', loc: 'Michele', aluguelTotal: 1439.62, txAdm: 143.96, cond: 200, venda: 0, status: 'pago' },
+  { end: 'Av. Assis Brasil, 2886 apto 03', loc: 'André', aluguelTotal: 1668.14, txAdm: 166.81, cond: 160, venda: 0, status: 'pago' },
+  { end: 'Av. Assis Brasil, 2886 apto 04', loc: 'André', aluguelTotal: 1128.28, txAdm: 112.83, cond: 160, venda: 0, status: 'pago' },
+  { end: 'Av. Assis Brasil, 2888 LOJA', loc: 'Hiperdoces', aluguelTotal: 13269.34, txAdm: 1040.52, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Av. João Wallig, 509', loc: 'Maria Beatriz', aluguelTotal: 5351.5, txAdm: 535.15, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Alberto Pasqualine, 101. 102', loc: 'Lidiane', aluguelTotal: 1456.91, txAdm: 145.69, cond: 150, venda: 0, status: 'pago' },
+  { end: 'Alberto Pasqualine, 101. 101', loc: 'Willian', aluguelTotal: 2353.79, txAdm: 235.38, cond: 200, venda: 0, status: 'pago' },
+  { end: 'Alberto Pasqualine, 101. 103', loc: 'Lidiane', aluguelTotal: 1088.07, txAdm: 108.8, cond: 150, venda: 0, status: 'pago' },
+  { end: 'Alberto Pasqualine, 101. 201', loc: 'Nathalia', aluguelTotal: 2216.23, txAdm: 221.63, cond: 200, venda: 0, status: 'pago' },
+  { end: 'Alberto Pasqualine, 101. 202', loc: 'Nathalia', aluguelTotal: 1926.54, txAdm: 192.65, cond: 200, venda: 0, status: 'pago' },
+  { end: 'Andradas,711/804', loc: 'N/A', aluguelTotal: 0, txAdm: 0, cond: 0, venda: 0, status: 'pago' }, // Dados vazios
+  { end: 'Padre Todesco, 927 apto 505', loc: 'Bernado', aluguelTotal: 2000, txAdm: 200, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Doutor David Giacomini, 30, Canoas', loc: 'Vinicius', aluguelTotal: 3425.12, txAdm: 171.26, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ary Tarragô, 3095 - APTO 1002 B', loc: 'Ariane', aluguelTotal: 951.35, txAdm: 95.13, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ary Tarragô, 3095 - APTO 1007 B', loc: 'Edison', aluguelTotal: 976.68, txAdm: 97.67, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ary Tarragô, 3095 - APTO 702 B', loc: 'Alessandra', aluguelTotal: 1300, txAdm: 130, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ary Tarragô, 3095 - APTO 706 B', loc: 'Yasmin', aluguelTotal: 965.21, txAdm: 96.52, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ary Tarragô, 3095 - APTO 708 B', loc: 'Renata', aluguelTotal: 962.53, txAdm: 96.25, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ary Tarragô, 3095 - APTO 906 B', loc: 'Alzira', aluguelTotal: 950.07, txAdm: 95.01, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ary Tarragô, 3095 - APTO 808 B', loc: 'Raquel', aluguelTotal: 965.21, txAdm: 96.52, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ary Tarragô, 3095 - APTO 602 B', loc: 'Gabriel', aluguelTotal: 1300, txAdm: 130, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ary Tarragô, 3095 - APTO 403 A', loc: 'Leticia', aluguelTotal: 1052.67, txAdm: 105.26, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ary Tarragô, 3095 - APTO 402 C', loc: 'Rafael', aluguelTotal: 1193.72, txAdm: 119.37, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ary Tarragô, 3095 - APTO 302 B', loc: 'Davi', aluguelTotal: 1054.73, txAdm: 105.47, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ary Tarragô, 3095 - APTO 703 A', loc: 'Adriano', aluguelTotal: 1300, txAdm: 130, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ary Tarragô, 3095 - APTO 208 C', loc: 'Ana', aluguelTotal: 1100, txAdm: 110, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ary Tarragô, 3095 - APTO 708 C', loc: 'Marina', aluguelTotal: 946.34, txAdm: 94.63, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ary Tarragô, 3095 - APTO 803 A', loc: 'Jeferson', aluguelTotal: 1300, txAdm: 130, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ary Tarragô, 3095 - APTO 208 B', loc: 'Elis', aluguelTotal: 948.21, txAdm: 94.82, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ary Tarragô, 3095 - APTO 602 C', loc: 'Michele', aluguelTotal: 1193.72, txAdm: 119.37, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ary Tarragô, 3095 - APTO 406 C', loc: 'Carla', aluguelTotal: 1193.72, txAdm: 119.37, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ary Tarragô, 3095 - APTO 307 B', loc: 'Roberto', aluguelTotal: 1177.33, txAdm: 117.73, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ary Tarragô, 3095 - APTO 903 A', loc: 'Fabricio', aluguelTotal: 1400, txAdm: 140, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ary Tarragô, 3095 - APTO 206 B', loc: 'Leonardo', aluguelTotal: 1070.3, txAdm: 107.03, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ary Tarragô, 3095 - APTO 1203 A', loc: 'Thiago', aluguelTotal: 1391.39, txAdm: 139.14, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ary Tarragô, 3095 - APTO 402 B', loc: 'Marcelo', aluguelTotal: 1300, txAdm: 130, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Av Cascais, 99 Ap 1101', loc: 'N/A', aluguelTotal: 0, txAdm: 0, cond: 0, venda: 0, status: 'pago' }, // Dados vazios
+  { end: 'Av.A. J. Renner 2050 Ap 104', loc: 'Rodrigo', aluguelTotal: 957.62, txAdm: 95.76, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Santos Dumont, 1500, 402', loc: 'N/A', aluguelTotal: 0, txAdm: 0, cond: 0, venda: 0, status: 'pago' }, // Dados vazios
+  { end: 'Bahia 801 pavilhão', loc: 'Sistemak', aluguelTotal: 5859.77, txAdm: 585.97, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Panamericana 150/242', loc: 'Beatriz', aluguelTotal: 1300, txAdm: 130, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Praça Navegantes', loc: 'Jorge', aluguelTotal: 852.32, txAdm: 85.23, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Benno Mentz, 100 apto 1701', loc: 'Lauro', aluguelTotal: 3780, txAdm: 378, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Benno Mentz, 100 apto 1502', loc: 'Bruna', aluguelTotal: 2663.53, txAdm: 266.36, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Celeste Gobbato, 99, 201', loc: 'Mariana', aluguelTotal: 1010.13, txAdm: 101.01, cond: 0, venda: 0, status: 'pago' },
+  { end: 'José Juliano, 30 101', loc: 'Anita', aluguelTotal: 978.22, txAdm: 97.82, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Pernambuco, 1401, 22', loc: 'Victoria', aluguelTotal: 1284.36, txAdm: 128.44, cond: 0, venda: 0, status: 'pago' },
+  { end: 'São Pedro, 720, Sl 302', loc: 'Glaucia', aluguelTotal: 747.25, txAdm: 74.72, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ernesto Alves, 289, 203', loc: 'Marta', aluguelTotal: 921.83, txAdm: 92.18, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ten Ary Tarragô, 3095 Aptº 1102', loc: 'Gustavo', aluguelTotal: 1177.33, txAdm: 117.73, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Rua Buarque de Macedo, 90, 06', loc: 'Gabriel', aluguelTotal: 1500, txAdm: 150, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Rua Sadi de Castro 896 ap 208', loc: 'Mariana', aluguelTotal: 1723, txAdm: 172.3, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Rua Conde de Poa, 201, Ap 32', loc: 'Celeste', aluguelTotal: 965.83, txAdm: 96.58, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Edmundo Bastian', loc: 'Luiza', aluguelTotal: 1451.96, txAdm: 145.19, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Pres. Franklin Roosevelt, 984 ap 04', loc: 'Giordano', aluguelTotal: 1074.19, txAdm: 107.42, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Rua Itapeva, nº 151, apartamento 202', loc: 'Chiara', aluguelTotal: 2024.28, txAdm: 202.43, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Rua Marco Polo, nº 505 - Apto 517', loc: 'Stefanie', aluguelTotal: 2600, txAdm: 260, cond: 0, venda: 0, status: 'pago' },
+  { end: 'COMISSÃO VENDA CAIRU 720/206', loc: 'N/A', aluguelTotal: 0, txAdm: 0, cond: 0, venda: 8750, status: 'pago' },
+  { end: 'COMISSÃO VENDA FARRAPOS, 3803/24', loc: 'N/A', aluguelTotal: 0, txAdm: 0, cond: 0, venda: 5400, status: 'pago' },
+  { end: 'COMISSÃO VENDA SERTORIO, 1615/36', loc: 'N/A', aluguelTotal: 0, txAdm: 0, cond: 0, venda: 9666.28, status: 'pago' },
+  { end: 'COMISSÃO VENDA OLIVEIRA VIANA, 491, Ap 130.', loc: 'N/A', aluguelTotal: 0, txAdm: 0, cond: 0, venda: 5940, status: 'pago' },
+  { end: 'COMISSÃO VENDA A J RENNER, 1800 Ap 102 A', loc: 'N/A', aluguelTotal: 0, txAdm: 0, cond: 0, venda: 5700, status: 'pago' },
+  { end: 'SAPE 780 AP 602', loc: 'N/A', aluguelTotal: 0, txAdm: 0, cond: 0, venda: 13050, status: 'pago' },
+  { end: 'PROF JOAO DE SOUZA RIBEIRO,155/116', loc: 'N/A', aluguelTotal: 0, txAdm: 0, cond: 0, venda: 2500, status: 'pago' },
+  { end: 'Jeronymo ZELMANOVITZ, 100 AP 803', loc: 'N/A', aluguelTotal: 0, txAdm: 0, cond: 0, venda: 15750, status: 'pago' },
 ];
 
 const JANEIRO2026_DESPESAS = [
@@ -377,67 +553,131 @@ const JANEIRO2026_DESPESAS = [
   { nome: 'Conta Energia - CEEE-D', cnpj: '08.467.115/0001-00', valor: 287.15, vencimento: '2022-02-01' },
   { nome: 'DMAE', cnpj: '929249010001-98', valor: 37.31, vencimento: '2022-02-15' },
   { nome: 'CLARO NET Fone', cnpj: '40.432.544/0101-00', valor: 152.88, vencimento: '2022-02-10' },
-  { nome: 'Camila Prest Serv. Adm', cnpj: '', valor: 2705.73, vencimento: '' },
+  { nome: 'Camila Prest Serv. Adm', cnpj: '', valor: 2705.73, vencimento: 'N/A' },
   { nome: 'DAS', cnpj: 'SIMPLES NACIONAL', valor: 4409.88, vencimento: '2022-02-20' },
-  { nome: 'Guia de ISSQN', cnpj: '', valor: 287.53, vencimento: '' },
-  { nome: 'RP Vigilância', cnpj: '28.480.078/0001-70', valor: 150, vencimento: '' },
-  { nome: 'Royaties Crédito Real', cnpj: '92.691.336/0001-66', valor: 7069.19, vencimento: '' },
-  { nome: 'Despesas seguros', cnpj: '', valor: 204.33, vencimento: '' },
-  { nome: 'Diversos (Placas, fotos, cartao de visita)', cnpj: '', valor: 480, vencimento: '' },
-  { nome: 'Despesas SERV GERAIS', cnpj: '', valor: 2180, vencimento: '' },
-  { nome: 'Desp. Manutenção Prédio', cnpj: '', valor: 0, vencimento: '' },
-  { nome: 'Despesas de Marketing', cnpj: '', valor: 2105, vencimento: '' },
-  { nome: 'Material de consumo', cnpj: '', valor: 300, vencimento: '' },
+  { nome: 'Guia de ISSQN', cnpj: '', valor: 287.53, vencimento: 'N/A' },
+  { nome: 'RP Vigilância', cnpj: '28.480.078/0001-70', valor: 150, vencimento: 'N/A' },
+  { nome: 'Royaties Crédito Real', cnpj: '92.691.336/0001-66', valor: 7069.19, vencimento: 'N/A' },
+  { nome: 'Despesas seguros', cnpj: '', valor: 204.33, vencimento: 'N/A' },
+  { nome: 'Diversos (Placas, fotos, cartao de visita)', cnpj: '', valor: 480, vencimento: 'N/A' },
+  { nome: 'Despesas SERV GERAIS', cnpj: '', valor: 2180, vencimento: 'N/A' },
+  { nome: 'Desp. Manutenção Prédio', cnpj: '', valor: 0, vencimento: 'N/A' },
+  { nome: 'Despesas de Marketing', cnpj: '', valor: 2105, vencimento: 'N/A' },
+  { nome: 'Material de consumo', cnpj: '', valor: 300, vencimento: 'N/A' },
 ];
 
 const FEVEREIRO2026_RECEITAS = [
-  // Dados de Fevereiro (adaptados da sua planilha)
-  { tipo: 'Locação', end: 'Av. São Pedro, 611 conj. 201', loc: 'Diego', aluguel: 1500, taxa: 150, cond: 150, status: 'pago' },
-  { tipo: 'Locação', end: 'Av. São Pedro, 611 conj. 202', loc: 'Luiz Carlos', aluguel: 1229.28, taxa: 122.93, cond: 150, status: 'pago' },
-  { tipo: 'Locação', end: 'Av. São Pedro, 611 conj. 203', loc: 'Jorge', aluguel: 1200, taxa: 120, cond: 150, status: 'pago' },
-  { tipo: 'Locação', end: 'Av. São Pedro, 611 conj. 204', loc: 'Douglas', aluguel: 1200, taxa: 120, cond: 150, status: 'pago' },
-  { tipo: 'Locação', end: 'Av. São Pedro, 611 conj. 301', loc: 'Marco', aluguel: 1300, taxa: 130, cond: 150, status: 'pago' },
-  { tipo: 'Locação', end: 'Av. São Pedro, 611 conj. 302', loc: 'Amanda', aluguel: 1400, taxa: 140, cond: 150, status: 'pago' },
-  { tipo: 'Locação', end: 'Av. São Pedro, 611 conj. 303', loc: 'Juliano', aluguel: 1073.65, taxa: 107.37, cond: 150, status: 'pago' },
-  { tipo: 'Locação', end: 'Av. São Pedro, 611 conj. 304', loc: 'Ivone', aluguel: 1052.67, taxa: 105.27, cond: 150, status: 'pago' },
-  { tipo: 'Locação', end: 'Av. São Pedro, 605 LOJA', loc: 'Edilson', aluguel: 2074.34, taxa: 0, cond: 0, status: 'pago' },
-  { tipo: 'Locação', end: 'Av. Assis Brasil, 2884 LOJA', loc: 'Rei Midas', aluguel: 10000, taxa: 1000, cond: 0, status: 'pago' },
-  { tipo: 'Locação', end: 'Av. Assis Brasil, 2886 apto 01', loc: 'Ana Paula', aluguel: 1500, taxa: 150, cond: 160, status: 'pago' },
-  { tipo: 'Locação', end: 'Av. Assis Brasil, 2886 apto 02', loc: 'Michele', aluguel: 1439.62, taxa: 143.96, cond: 200, status: 'pago' },
-  { tipo: 'Locação', end: 'Av. Assis Brasil, 2886 apto 03', loc: 'André', aluguel: 1668.14, taxa: 166.81, cond: 160, status: 'pago' },
-  { tipo: 'Locação', end: 'Av. Assis Brasil, 2886 apto 04', loc: 'André', aluguel: 1128.28, taxa: 112.83, cond: 160, status: 'pago' },
-  { tipo: 'Locação', end: 'Av. Assis Brasil, 2888 LOJA', loc: 'Hiperdoces', aluguel: 13269.34, taxa: 1040.52, cond: 0, status: 'pago' },
-  { tipo: 'Locação', end: 'Av. João Wallig, 509', loc: 'Maria Beatriz', aluguel: 5351.5, taxa: 535.15, cond: 0, status: 'pago' },
-  { tipo: 'Locação', end: 'Alberto Pasqualine, 101. 102', loc: 'Lidiane', aluguel: 1456.91, taxa: 145.69, cond: 150, status: 'pago' },
-  { tipo: 'Locação', end: 'Alberto Pasqualine, 101. 101', loc: 'Willian', aluguel: 2353.79, taxa: 235.38, cond: 200, status: 'pago' },
-  { tipo: 'Locação', end: 'Alberto Pasqualine, 101. 103', loc: 'Lidiane', aluguel: 1088.07, taxa: 108.8, cond: 150, status: 'pago' },
-  { tipo: 'Locação', end: 'Alberto Pasqualine, 101. 201', loc: 'Nathalia', aluguel: 2216.23, taxa: 221.63, cond: 200, status: 'pago' },
-  { tipo: 'Locação', end: 'Alberto Pasqualine, 101. 202', loc: 'Nathalia', aluguel: 1926.54, taxa: 192.65, cond: 200, status: 'pago' },
-  { tipo: 'Locação', end: 'Padre Todesco, 927 apto 505', loc: 'Bernado', aluguel: 2000, taxa: 200, cond: 0, status: 'pago' },
-  { tipo: 'Locação', end: 'Doutor David Giacomini, 30, Canoas', loc: 'Vinicius', aluguel: 3425.12, taxa: 171.26, cond: 0, status: 'pago' },
-  { tipo: 'Locação', end: 'Ary Tarragô, 3095 - APTO 1002 B', loc: 'Ariane', aluguel: 951.35, taxa: 95.13, cond: 0, status: 'pago' },
-  { tipo: 'Locação', end: 'Ary Tarragô, 3095 - APTO 1007 B', loc: 'Edison', aluguel: 976.68, taxa: 97.67, cond: 0, status: 'pago' },
-  { tipo: 'Locação', end: 'Ary Tarragô, 3095 - APTO 702 B', loc: 'Alessandra', aluguel: 1300, taxa: 130, cond: 0, status: 'pago' },
-  { tipo: 'Locação', end: 'Ary Tarragô, 3095 - APTO 706 B', loc: 'Yasmin', aluguel: 965.21, taxa: 96.52, cond: 0, status: 'pago' },
-  { tipo: 'Locação', end: 'Ary Tarragô, 3095 - APTO 1001 C', loc: 'Raimunda', aluguel: 1300, taxa: 130, cond: 0, status: 'pago' },
-  { tipo: 'Locação', end: 'Av. Ary Tarrago 3095 ap 1107 B', loc: 'Ana Paula', aluguel: 1400, taxa: 140, cond: 0, status: 'pago' },
-  { tipo: 'Locação', end: 'Av. Ary Tarrago 3095 ap 502 C', loc: 'Rafael', aluguel: 1400, taxa: 140, cond: 0, status: 'pago' },
-  { tipo: 'Locação', end: 'Av. Jose Aloisio Filho 595 Ap 137 T J', loc: 'Claudete', aluguel: 2600, taxa: 260, cond: 0, status: 'pago' },
-  { tipo: 'Locação', end: 'Av. A.J.Renner 2050 ap 306', loc: 'Nathalia', aluguel: 1300, taxa: 130, cond: 0, status: 'pago' },
-  { tipo: 'Locação', end: 'Rua Presidente Juarez 405 casa', loc: 'Denize', aluguel: 2000, taxa: 200, cond: 0, status: 'pago' },
-  { tipo: 'Locação', end: 'Av. Patria 343 loja', loc: 'Viviane', aluguel: 2000, taxa: 200, cond: 0, status: 'pago' },
-  { tipo: 'Venda', end: 'COMISSÃO VENDA CAIRU 720/206', loc: '', aluguel: 0, taxa: 8750, cond: 0, status: 'pago' },
-  { tipo: 'Venda', end: 'COMISSÃO VENDA FARRAPOS, 3803/24', loc: '', aluguel: 0, taxa: 5400, cond: 0, status: 'pago' },
-  { tipo: 'Venda', end: 'COMISSÃO VENDA SERTORIO, 1615/36', loc: '', aluguel: 0, taxa: 9666.28, cond: 0, status: 'pago' },
-  { tipo: 'Venda', end: 'COMISSÃO VENDA OLIVEIRA VIANA, 491, Ap 130.', loc: '', aluguel: 0, taxa: 5940, cond: 0, status: 'pago' },
-  { tipo: 'Venda', end: 'COMISSÃO VENDA A J RENNER, 1800 Ap 102 A', loc: '', aluguel: 0, taxa: 5700, cond: 0, status: 'pago' },
-  { tipo: 'Venda', end: 'SAPE 780 AP 602', loc: '', aluguel: 0, taxa: 13050, cond: 0, status: 'pago' },
-  { tipo: 'Venda', end: 'PROF JOAO DE SOUZA RIBEIRO,155/116', loc: '', aluguel: 0, taxa: 2500, cond: 0, status: 'pago' },
-  { tipo: 'Venda', end: 'Jeronymo ZELMANOVITZ, 100 AP 803', loc: '', aluguel: 0, taxa: 15750, cond: 0, status: 'pago' },
+  { end: 'Av. São Pedro, 611 conj. 201', loc: 'Diego', aluguelTotal: 1500, txAdm: 150, cond: 150, venda: 0, status: 'pago' },
+  { end: 'Av. São Pedro, 611 conj. 202', loc: 'Luiz Carlos', aluguelTotal: 1229.28, txAdm: 122.93, cond: 150, venda: 0, status: 'pago' },
+  { end: 'Av. São Pedro, 611 conj. 203', loc: 'Jorge', aluguelTotal: 1200, txAdm: 120, cond: 150, venda: 0, status: 'pago' },
+  { end: 'Av. São Pedro, 611 conj. 204', loc: 'Douglas', aluguelTotal: 1200, txAdm: 120, cond: 150, venda: 0, status: 'pago' },
+  { end: 'Av. São Pedro, 611 conj. 301', loc: 'Marco', aluguelTotal: 1300, txAdm: 130, cond: 150, venda: 0, status: 'pago' },
+  { end: 'Av. São Pedro, 611 conj. 302', loc: 'Amanda', aluguelTotal: 1400, txAdm: 140, cond: 150, venda: 0, status: 'pago' },
+  { end: 'Av. São Pedro, 611 conj. 303', loc: 'Juliano', aluguelTotal: 1073.65, txAdm: 107.37, cond: 150, venda: 0, status: 'pago' },
+  { end: 'Av. São Pedro, 611 conj. 304', loc: 'Ivone', aluguelTotal: 1052.67, txAdm: 105.27, cond: 150, venda: 0, status: 'pago' },
+  { end: 'Av. São Pedro, 605 LOJA', loc: 'Edilson', aluguelTotal: 2074.34, txAdm: 0, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Av. Assis Brasil, 2884 LOJA', loc: 'Rei Midas', aluguelTotal: 10000, txAdm: 1000, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Av. Assis Brasil, 2886 apto 01', loc: 'Ana Paula', aluguelTotal: 1500, txAdm: 150, cond: 160, venda: 0, status: 'pago' },
+  { end: 'Av. Assis Brasil, 2886 apto 02', loc: 'Michele', aluguelTotal: 1439.62, txAdm: 143.96, cond: 200, venda: 0, status: 'pago' },
+  { end: 'Av. Assis Brasil, 2886 apto 03', loc: 'André', aluguelTotal: 1668.14, txAdm: 166.81, cond: 160, venda: 0, status: 'pago' },
+  { end: 'Av. Assis Brasil, 2886 apto 04', loc: 'André', aluguelTotal: 1128.28, txAdm: 112.83, cond: 160, venda: 0, status: 'pago' },
+  { end: 'Av. Assis Brasil, 2888 LOJA', loc: 'Hiperdoces', aluguelTotal: 13269.34, txAdm: 1040.52, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Av. João Wallig, 509', loc: 'Maria Beatriz', aluguelTotal: 5351.5, txAdm: 535.15, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Alberto Pasqualine, 101. 102', loc: 'Lidiane', aluguelTotal: 1456.91, txAdm: 145.69, cond: 150, venda: 0, status: 'pago' },
+  { end: 'Alberto Pasqualine, 101. 101', loc: 'Willian', aluguelTotal: 2353.79, txAdm: 235.38, cond: 200, venda: 0, status: 'pago' },
+  { end: 'Alberto Pasqualine, 101. 103', loc: 'Lidiane', aluguelTotal: 1088.07, txAdm: 108.8, cond: 150, venda: 0, status: 'pago' },
+  { end: 'Alberto Pasqualine, 101. 201', loc: 'Nathalia', aluguelTotal: 2216.23, txAdm: 221.63, cond: 200, venda: 0, status: 'pago' },
+  { end: 'Alberto Pasqualine, 101. 202', loc: 'Nathalia', aluguelTotal: 1926.54, txAdm: 192.65, cond: 200, venda: 0, status: 'pago' },
+  { end: 'Padre Todesco, 927 apto 505', loc: 'Bernado', aluguelTotal: 2000, txAdm: 200, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Doutor David Giacomini, 30, Canoas', loc: 'Vinicius', aluguelTotal: 3425.12, txAdm: 171.26, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ary Tarragô, 3095 - APTO 1002 B', loc: 'Ariane', aluguelTotal: 951.35, txAdm: 95.13, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ary Tarragô, 3095 - APTO 1007 B', loc: 'Edison', aluguelTotal: 976.68, txAdm: 97.67, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ary Tarragô, 3095 - APTO 702 B', loc: 'Alessandra', aluguelTotal: 1300, txAdm: 130, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ary Tarragô, 3095 - APTO 706 B', loc: 'Yasmin', aluguelTotal: 965.21, txAdm: 96.52, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ary Tarragô, 3095 - APTO 708 B', loc: 'Renata', aluguelTotal: 962.53, txAdm: 96.25, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ary Tarragô, 3095 - APTO 906 B', loc: 'Alzira', aluguelTotal: 950.07, txAdm: 95.01, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ary Tarragô, 3095 - APTO 808 B', loc: 'Raquel', aluguelTotal: 965.21, txAdm: 96.52, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ary Tarragô, 3095 - APTO 602 B', loc: 'Gabriel', aluguelTotal: 1300, txAdm: 130, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ary Tarragô, 3095 - APTO 403 A', loc: 'Leticia', aluguelTotal: 1052.67, txAdm: 105.26, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ary Tarragô, 3095 - APTO 402 C', loc: 'Rafael', aluguelTotal: 1193.72, txAdm: 119.37, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ary Tarragô, 3095 - APTO 302 B', loc: 'Davi', aluguelTotal: 1054.73, txAdm: 105.47, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ary Tarragô, 3095 - APTO 703 A', loc: 'Adriano', aluguelTotal: 1300, txAdm: 130, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ary Tarragô, 3095 - APTO 208 C', loc: 'Ana', aluguelTotal: 1100, txAdm: 110, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ary Tarragô, 3095 - APTO 708 C', loc: 'Marina', aluguelTotal: 946.34, txAdm: 94.63, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ary Tarragô, 3095 - APTO 803 A', loc: 'Jeferson', aluguelTotal: 1300, txAdm: 130, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ary Tarragô, 3095 - APTO 208 B', loc: 'Elis', aluguelTotal: 948.21, txAdm: 94.82, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ary Tarragô, 3095 - APTO 602 C', loc: 'Michele', aluguelTotal: 1193.72, txAdm: 119.37, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ary Tarragô, 3095 - APTO 406 C', loc: 'Carla', aluguelTotal: 1193.72, txAdm: 119.37, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ary Tarragô, 3095 - APTO 307 B', loc: 'Roberto', aluguelTotal: 1177.33, txAdm: 117.73, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ary Tarragô, 3095 - APTO 903 A', loc: 'Fabricio', aluguelTotal: 1400, txAdm: 140, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ary Tarragô, 3095 - APTO 206 B', loc: 'Leonardo', aluguelTotal: 1070.3, txAdm: 107.03, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ary Tarragô, 3095 - APTO 1203 A', loc: 'Thiago', aluguelTotal: 1391.39, txAdm: 139.14, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ary Tarragô, 3095 - APTO 402 B', loc: 'Marcelo', aluguelTotal: 1300, txAdm: 130, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Av.A. J. Renner 2050 Ap 104', loc: 'Rodrigo', aluguelTotal: 957.62, txAdm: 95.76, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Bahia 801 pavilhão', loc: 'Sistemak', aluguelTotal: 5859.77, txAdm: 585.97, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Panamericana 150/242', loc: 'Beatriz', aluguelTotal: 1300, txAdm: 130, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Praça Navegantes', loc: 'Jorge', aluguelTotal: 852.32, txAdm: 85.23, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Benno Mentz, 100 apto 1701', loc: 'Lauro', aluguelTotal: 3780, txAdm: 378, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Benno Mentz, 100 apto 1502', loc: 'Bruna', aluguelTotal: 2663.53, txAdm: 266.36, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Celeste Gobbato, 99, 201', loc: 'Mariana', aluguelTotal: 1010.13, txAdm: 101.01, cond: 0, venda: 0, status: 'pago' },
+  { end: 'José Juliano, 30 101', loc: 'Anita', aluguelTotal: 978.22, txAdm: 97.82, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Pernambuco, 1401, 22', loc: 'Victoria', aluguelTotal: 1284.36, txAdm: 128.44, cond: 0, venda: 0, status: 'pago' },
+  { end: 'São Pedro, 720, Sl 302', loc: 'Glaucia', aluguelTotal: 747.25, txAdm: 74.72, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ernesto Alves, 289, 203', loc: 'Marta', aluguelTotal: 921.83, txAdm: 92.18, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ten Ary Tarragô, 3095 Aptº 1102', loc: 'Gustavo', aluguelTotal: 1177.33, txAdm: 117.73, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Rua Buarque de Macedo, 90, 06', loc: 'Gabriel', aluguelTotal: 1500, txAdm: 150, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Rua Sadi de Castro 896 ap 208', loc: 'Mariana', aluguelTotal: 1723, txAdm: 172.3, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Rua Conde de Poa, 201, Ap 32', loc: 'Celeste', aluguelTotal: 965.83, txAdm: 96.58, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Edmundo Bastian', loc: 'Luiza', aluguelTotal: 1451.96, txAdm: 145.19, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Pres. Franklin Roosevelt, 984 ap 04', loc: 'Giordano', aluguelTotal: 1074.19, txAdm: 107.42, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Rua Itapeva, nº 151, apartamento 202', loc: 'Chiara', aluguelTotal: 2024.28, txAdm: 202.43, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Rua Marco Polo, nº 505 - Apto 517', loc: 'Stefanie', aluguelTotal: 2600, txAdm: 260, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Av. Ipiranga 8355 Ap 703', loc: 'Gerson', aluguelTotal: 2210.84, txAdm: 2033.97, cond: 176.87, venda: 0, status: 'pago' },
+  { end: 'Av. Jose Aloisio Filho 595 Ap 115 T D', loc: 'Luis Felipe', aluguelTotal: 1311.96, txAdm: 1180.76, cond: 131.2, venda: 0, status: 'pago' },
+  { end: 'Av. Guido Mondim 55 Ap 02', loc: 'Francisco', aluguelTotal: 1513.8, txAdm: 1362.42, cond: 151.38, venda: 0, status: 'pago' },
+  { end: 'Av. Lavras 22 casa', loc: 'Gustavo', aluguelTotal: 6693.05, txAdm: 6023.74, cond: 669.31, venda: 0, status: 'pago' },
+  { end: 'Av. Jose Aloisio Filho 595 Ap 136 T I', loc: 'Ana Paula', aluguelTotal: 1248, txAdm: 1123.2, cond: 124.8, venda: 0, status: 'pago' },
+  { end: 'Rua Cipo 318 Ap 233', loc: 'Antony', aluguelTotal: 2000, txAdm: 1800, cond: 200, venda: 0, status: 'pago' },
+  { end: 'Av. Amazonas 1093 Ap 204', loc: 'Emerson', aluguelTotal: 900, txAdm: 810, cond: 90, venda: 0, status: 'pago' },
+  { end: 'Rua Frederico O.D. Barbosa50 Ap1005', loc: 'SKHAR', aluguelTotal: 3300, txAdm: 2970, cond: 330, venda: 0, status: 'pago' },
+  { end: 'Gomes De Freitas 325 Ap 408', loc: 'Carolina', aluguelTotal: 1000, txAdm: 950, cond: 50, venda: 0, status: 'pago' },
+  { end: 'Av. São Paulo 1016 Ap 02', loc: 'Andressa', aluguelTotal: 1299, txAdm: 1169.1, cond: 129.9, venda: 0, status: 'pago' },
+  { end: 'Rua Moura Azevedo 162 Ap 05', loc: 'Luana', aluguelTotal: 850, txAdm: 765, cond: 85, venda: 0, status: 'pago' },
+  { end: 'Rua Alcides Maia, 553 casa', loc: 'Walpa', aluguelTotal: 5500, txAdm: 4950, cond: 550, venda: 0, status: 'pago' },
+  { end: 'Av.Taquara 264 loja', loc: 'Celoir', aluguelTotal: 2700, txAdm: 2430, cond: 270, venda: 0, status: 'pago' },
+  { end: 'Rua Moura Azevedo 150 Ap 02', loc: 'Eliezer', aluguelTotal: 1000, txAdm: 900, cond: 100, venda: 0, status: 'pago' },
+  { end: 'Av Eudoro Berlink 629 ap 304', loc: 'Caren', aluguelTotal: 1850, txAdm: 1702, cond: 148, venda: 0, status: 'pago' },
+  { end: 'Av São Pedro 844 sala 402', loc: 'Luana', aluguelTotal: 620, txAdm: 558, cond: 62, venda: 0, status: 'pago' },
+  { end: 'Av. Aparicio borges 168 Ap 206', loc: 'Bruna', aluguelTotal: 1800, txAdm: 1620, cond: 180, venda: 0, status: 'pago' },
+  { end: 'Av. Aparicio borges 910 ap 406', loc: 'Amanda', aluguelTotal: 1300, txAdm: 1170, cond: 130, venda: 0, status: 'pago' },
+  { end: 'Rua Itarare 110 ap 603', loc: 'Ana Cristina', aluguelTotal: 1200, txAdm: 1080, cond: 120, venda: 0, status: 'pago' },
+  { end: 'Av. Benno 100 ap 602', loc: 'Felipe', aluguelTotal: 3000, txAdm: 2700, cond: 300, venda: 0, status: 'pago' },
+  { end: 'Av. Cavalhada 5793 ap 203', loc: 'Marcelo', aluguelTotal: 3300, txAdm: 2970, cond: 330, venda: 0, status: 'pago' },
+  { end: 'Av. Ary Tarrago 3095 ap 202 B', loc: 'N/A', aluguelTotal: 0, txAdm: 0, cond: 0, venda: 0, status: 'pago' }, // Tx Adm é 0
+  { end: 'Av. Ary Tarrago 3095 ap 703 B', loc: 'Kayque', aluguelTotal: 1300, txAdm: 1170, cond: 130, venda: 0, status: 'pago' },
+  { end: 'Av. Ary Tarrago 3095 ap 1002 C', loc: 'Maria Ivone', aluguelTotal: 1400, txAdm: 1260, cond: 140, venda: 0, status: 'pago' },
+  { end: 'Av. Ary Tarrago 3095 ap 207 A', loc: 'Jair', aluguelTotal: 1300, txAdm: 1170, cond: 130, venda: 0, status: 'pago' },
+  { end: 'Av. Ary Tarrago 3095 ap 707 C', loc: 'Fabiano', aluguelTotal: 1300, txAdm: 1170, cond: 130, venda: 0, status: 'pago' },
+  { end: 'Av. Ary Tarrago 3095 ap 801 B', loc: 'Fabiano', aluguelTotal: 1300, txAdm: 1170, cond: 130, venda: 0, status: 'pago' },
+  { end: 'Av. Ary Tarrago 3095 ap 207 B', loc: 'Mauricio', aluguelTotal: 1300, txAdm: 1170, cond: 130, venda: 0, status: 'pago' },
+  { end: 'Av. Ary Tarrago 3095 ap 207 C', loc: 'Raimunda', aluguelTotal: 1300, txAdm: 1170, cond: 130, venda: 0, status: 'pago' },
+  { end: 'Av. Ary Tarrago 3095 ap 1107 B', loc: 'Ana Paula', aluguelTotal: 1400, txAdm: 1260, cond: 140, venda: 0, status: 'pago' },
+  { end: 'Av. Ary Tarrago 3095 ap 502 C', loc: 'Rafael', aluguelTotal: 1400, txAdm: 1400, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Av. Jose Aloisio Filho 595 Ap 137 T J', loc: 'Claudete', aluguelTotal: 2600, txAdm: 2340, cond: 260, venda: 0, status: 'pago' },
+  { end: 'Av. A.J.Renner 2050 ap 306', loc: 'Nathalia', aluguelTotal: 1300, txAdm: 1170, cond: 130, venda: 0, status: 'pago' },
+  { end: 'Rua Presidente Juarez 405 casa', loc: 'Denize', aluguelTotal: 2000, txAdm: 1800, cond: 200, venda: 0, status: 'pago' },
+  { end: 'Av. Patria 343 loja', loc: 'Viviane', aluguelTotal: 2000, txAdm: 1800, cond: 200, venda: 0, status: 'pago' },
+  { end: 'COMISSÃO VENDA CAIRU 720/206', loc: 'N/A', aluguelTotal: 0, txAdm: 0, cond: 0, venda: 8750, status: 'pago' },
+  { end: 'COMISSÃO VENDA FARRAPOS, 3803/24', loc: 'N/A', aluguelTotal: 0, txAdm: 0, cond: 0, venda: 5400, status: 'pago' },
+  { end: 'COMISSÃO VENDA SERTORIO, 1615/36', loc: 'N/A', aluguelTotal: 0, txAdm: 0, cond: 0, venda: 9666.28, status: 'pago' },
+  { end: 'COMISSÃO VENDA OLIVEIRA VIANA, 491, Ap 130.', loc: 'N/A', aluguelTotal: 0, txAdm: 0, cond: 0, venda: 5940, status: 'pago' },
+  { end: 'COMISSÃO VENDA A J RENNER, 1800 Ap 102 A', loc: 'N/A', aluguelTotal: 0, txAdm: 0, cond: 0, venda: 5700, status: 'pago' },
+  { end: 'SAPE 780 AP 602', loc: 'N/A', aluguelTotal: 0, txAdm: 0, cond: 0, venda: 13050, status: 'pago' },
+  { end: 'PROF JOAO DE SOUZA RIBEIRO,155/116', loc: 'N/A', aluguelTotal: 0, txAdm: 0, cond: 0, venda: 2500, status: 'pago' },
+  { end: 'Jeronymo ZELMANOVITZ, 100 AP 803', loc: 'N/A', aluguelTotal: 0, txAdm: 0, cond: 0, venda: 15750, status: 'pago' },
 ];
 
 const FEVEREIRO2026_DESPESAS = [
-  // Dados de Fevereiro (adaptados da sua planilha)
   { nome: 'Chaves na Mão - FBS Mídia Eireli - ME', cnpj: '11.351.276/0001-30', valor: 459, vencimento: '2022-03-10' },
   { nome: 'Vista Software e Internet Ltda', cnpj: '07.646.081/0001-40', valor: 575.7, vencimento: '2022-03-21' },
   { nome: 'ZAP Viva Real-ADYEN BR LTDA', cnpj: '11.334.990/0001-10', valor: 2184, vencimento: '2022-03-28' },
@@ -446,214 +686,428 @@ const FEVEREIRO2026_DESPESAS = [
   { nome: 'EMOVEL', cnpj: '', valor: 466.55, vencimento: '2022-03-22' },
   { nome: 'TAXA MARK SDR', cnpj: '', valor: 0, vencimento: '2022-03-25' },
   { nome: 'Ricardo A. da Cruz', cnpj: '09.101.421/0001-83', valor: 252.49, vencimento: '2022-03-10' },
-  { nome: 'Conta Energia - CEEE-D', cnpj: '08.467.115/0001-00', valor: 220.00, vencimento: '2022-03-01' }, // Valor alterado para exemplo
-  { nome: 'DMAE', cnpj: '929249010001-98', valor: 40.00, vencimento: '2022-03-15' }, // Valor alterado para exemplo
+  { nome: 'Conta Energia - CEEE-D', cnpj: '08.467.115/0001-00', valor: 287.15, vencimento: '2022-03-01' },
+  { nome: 'DMAE', cnpj: '929249010001-98', valor: 37.31, vencimento: '2022-03-15' },
   { nome: 'CLARO NET Fone', cnpj: '40.432.544/0101-00', valor: 152.88, vencimento: '2022-03-10' },
-  { nome: 'Camila Prest Serv. Adm', cnpj: '', valor: 2705.73, vencimento: '' },
+  { nome: 'Camila Prest Serv. Adm', cnpj: '', valor: 2705.73, vencimento: 'N/A' },
   { nome: 'DAS', cnpj: 'SIMPLES NACIONAL', valor: 4409.88, vencimento: '2022-03-20' },
-  { nome: 'Guia de ISSQN', cnpj: '', valor: 287.53, vencimento: '' },
-  { nome: 'RP Vigilância', cnpj: '28.480.078/0001-70', valor: 150, vencimento: '' },
-  { nome: 'Royaties Crédito Real', cnpj: '92.691.336/0001-66', valor: 7069.19, vencimento: '' },
-  { nome: 'Despesas seguros', cnpj: '', valor: 204.33, vencimento: '' },
-  { nome: 'Diversos (Placas, fotos, cartao de visita)', cnpj: '', valor: 480, vencimento: '' },
-  { nome: 'Despesas SERV GERAIS', cnpj: '', valor: 2180, vencimento: '' },
-  { nome: 'Desp. Manutenção Prédio', cnpj: '', valor: 0, vencimento: '' },
-  { nome: 'Despesas de Marketing', cnpj: '', valor: 2105, vencimento: '' },
-  { nome: 'Material de consumo', cnpj: '', valor: 300, vencimento: '' },
+  { nome: 'Guia de ISSQN', cnpj: '', valor: 287.53, vencimento: 'N/A' },
+  { nome: 'RP Vigilância', cnpj: '28.480.078/0001-70', valor: 150, vencimento: 'N/A' },
+  { nome: 'Royaties Crédito Real', cnpj: '92.691.336/0001-66', valor: 7069.19, vencimento: 'N/A' },
+  { nome: 'Despesas seguros', cnpj: '', valor: 204.33, vencimento: 'N/A' },
+  { nome: 'Diversos (Placas, fotos, cartao de visita)', cnpj: '', valor: 480, vencimento: 'N/A' },
+  { nome: 'Despesas SERV GERAIS', cnpj: '', valor: 2180, vencimento: 'N/A' },
+  { nome: 'Desp. Manutenção Prédio', cnpj: '', valor: 0, vencimento: 'N/A' },
+  { nome: 'Despesas de Marketing', cnpj: '', valor: 2105, vencimento: 'N/A' },
+  { nome: 'Material de consumo', cnpj: '', valor: 300, vencimento: 'N/A' },
 ];
 
 const MARCO2026_RECEITAS = [
-  // Adicione os dados de Março aqui, seguindo o mesmo formato
-  // Exemplo:
-  // { mes: 'MARCO2026', tipo: 'Locação', end: 'Rua X, 123', loc: 'Cliente Y', aluguel: 1200, taxa: 120, cond: 100, status: 'pago' },
+  { end: 'Av. São Pedro, 611 conj. 201', loc: 'Diego', aluguelTotal: 1500, txAdm: 150, cond: 150, venda: 0, status: 'pago' },
+  { end: 'Av. São Pedro, 611 conj. 202', loc: 'Luiz Carlos', aluguelTotal: 1229.28, txAdm: 122.93, cond: 150, venda: 0, status: 'pago' },
+  { end: 'Av. São Pedro, 611 conj. 203', loc: 'Jorge', aluguelTotal: 1200, txAdm: 120, cond: 150, venda: 0, status: 'pago' },
+  { end: 'Av. São Pedro, 611 conj. 204', loc: 'Douglas', aluguelTotal: 1200, txAdm: 120, cond: 150, venda: 0, status: 'pago' },
+  { end: 'Av. São Pedro, 611 conj. 301', loc: 'Marco', aluguelTotal: 1300, txAdm: 130, cond: 150, venda: 0, status: 'pago' },
+  { end: 'Av. São Pedro, 611 conj. 302', loc: 'Amanda', aluguelTotal: 1400, txAdm: 140, cond: 150, venda: 0, status: 'pago' },
+  { end: 'Av. São Pedro, 611 conj. 303', loc: 'Juliano', aluguelTotal: 1073.65, txAdm: 107.37, cond: 150, venda: 0, status: 'pago' },
+  { end: 'Av. São Pedro, 611 conj. 304', loc: 'Ivone', aluguelTotal: 1052.67, txAdm: 105.27, cond: 150, venda: 0, status: 'pago' },
+  { end: 'Av. São Pedro, 605 LOJA', loc: 'Edilson', aluguelTotal: 2074.34, txAdm: 0, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Av. Assis Brasil, 2884 LOJA', loc: 'Rei Midas', aluguelTotal: 10000, txAdm: 1000, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Av. Assis Brasil, 2886 apto 01', loc: 'Ana Paula', aluguelTotal: 1500, txAdm: 150, cond: 160, venda: 0, status: 'pago' },
+  { end: 'Av. Assis Brasil, 2886 apto 02', loc: 'Michele', aluguelTotal: 1439.62, txAdm: 143.96, cond: 200, venda: 0, status: 'pago' },
+  { end: 'Av. Assis Brasil, 2886 apto 03', loc: 'André', aluguelTotal: 1668.14, txAdm: 166.81, cond: 160, venda: 0, status: 'pago' },
+  { end: 'Av. Assis Brasil, 2886 apto 04', loc: 'André', aluguelTotal: 1128.28, txAdm: 112.83, cond: 160, venda: 0, status: 'pago' },
+  { end: 'Av. Assis Brasil, 2888 LOJA', loc: 'Hiperdoces', aluguelTotal: 13269.34, txAdm: 1040.52, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Av. João Wallig, 509', loc: 'Maria Beatriz', aluguelTotal: 5351.5, txAdm: 535.15, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Alberto Pasqualine, 101. 102', loc: 'Lidiane', aluguelTotal: 1456.91, txAdm: 145.69, cond: 150, venda: 0, status: 'pago' },
+  { end: 'Alberto Pasqualine, 101. 101', loc: 'Willian', aluguelTotal: 2353.79, txAdm: 235.38, cond: 200, venda: 0, status: 'pago' },
+  { end: 'Alberto Pasqualine, 101. 103', loc: 'Lidiane', aluguelTotal: 1088.07, txAdm: 108.8, cond: 150, venda: 0, status: 'pago' },
+  { end: 'Alberto Pasqualine, 101. 201', loc: 'Nathalia', aluguelTotal: 2216.23, txAdm: 221.63, cond: 200, venda: 0, status: 'pago' },
+  { end: 'Alberto Pasqualine, 101. 202', loc: 'Nathalia', aluguelTotal: 1926.54, txAdm: 192.65, cond: 200, venda: 0, status: 'pago' },
+  { end: 'Padre Todesco, 927 apto 505', loc: 'Bernado', aluguelTotal: 2000, txAdm: 200, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Doutor David Giacomini, 30, Canoas', loc: 'Vinicius', aluguelTotal: 3425.12, txAdm: 171.26, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ary Tarragô, 3095 - APTO 1002 B', loc: 'Ariane', aluguelTotal: 951.35, txAdm: 95.13, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ary Tarragô, 3095 - APTO 1007 B', loc: 'Edison', aluguelTotal: 976.68, txAdm: 97.67, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ary Tarragô, 3095 - APTO 702 B', loc: 'Alessandra', aluguelTotal: 1300, txAdm: 130, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ary Tarragô, 3095 - APTO 706 B', loc: 'Yasmin', aluguelTotal: 965.21, txAdm: 96.52, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ary Tarragô, 3095 - APTO 708 B', loc: 'Renata', aluguelTotal: 962.53, txAdm: 96.25, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ary Tarragô, 3095 - APTO 906 B', loc: 'Alzira', aluguelTotal: 950.07, txAdm: 95.01, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ary Tarragô, 3095 - APTO 808 B', loc: 'Raquel', aluguelTotal: 965.21, txAdm: 96.52, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ary Tarragô, 3095 - APTO 602 B', loc: 'Gabriel', aluguelTotal: 1300, txAdm: 130, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ary Tarragô, 3095 - APTO 403 A', loc: 'Leticia', aluguelTotal: 1052.67, txAdm: 105.26, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ary Tarragô, 3095 - APTO 402 C', loc: 'Rafael', aluguelTotal: 1193.72, txAdm: 119.37, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ary Tarragô, 3095 - APTO 302 B', loc: 'Davi', aluguelTotal: 1054.73, txAdm: 105.47, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ary Tarragô, 3095 - APTO 703 A', loc: 'Adriano', aluguelTotal: 1300, txAdm: 130, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ary Tarragô, 3095 - APTO 208 C', loc: 'Ana', aluguelTotal: 1100, txAdm: 110, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ary Tarragô, 3095 - APTO 708 C', loc: 'Marina', aluguelTotal: 946.34, txAdm: 94.63, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ary Tarragô, 3095 - APTO 803 A', loc: 'Jeferson', aluguelTotal: 1300, txAdm: 130, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ary Tarragô, 3095 - APTO 208 B', loc: 'Elis', aluguelTotal: 948.21, txAdm: 94.82, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ary Tarragô, 3095 - APTO 602 C', loc: 'Michele', aluguelTotal: 1193.72, txAdm: 119.37, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ary Tarragô, 3095 - APTO 406 C', loc: 'Carla', aluguelTotal: 1193.72, txAdm: 119.37, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ary Tarragô, 3095 - APTO 307 B', loc: 'Roberto', aluguelTotal: 1177.33, txAdm: 117.73, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ary Tarragô, 3095 - APTO 903 A', loc: 'Fabricio', aluguelTotal: 1400, txAdm: 140, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ary Tarragô, 3095 - APTO 206 B', loc: 'Leonardo', aluguelTotal: 1070.3, txAdm: 107.03, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ary Tarragô, 3095 - APTO 1203 A', loc: 'Thiago', aluguelTotal: 1391.39, txAdm: 139.14, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ary Tarragô, 3095 - APTO 402 B', loc: 'Marcelo', aluguelTotal: 1300, txAdm: 130, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Av.A. J. Renner 2050 Ap 104', loc: 'Rodrigo', aluguelTotal: 957.62, txAdm: 95.76, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Bahia 801 pavilhão', loc: 'Sistemak', aluguelTotal: 5859.77, txAdm: 585.97, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Panamericana 150/242', loc: 'Beatriz', aluguelTotal: 1300, txAdm: 130, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Praça Navegantes', loc: 'Jorge', aluguelTotal: 852.32, txAdm: 85.23, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Benno Mentz, 100 apto 1701', loc: 'Lauro', aluguelTotal: 3780, txAdm: 378, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Benno Mentz, 100 apto 1502', loc: 'Bruna', aluguelTotal: 2663.53, txAdm: 266.36, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Celeste Gobbato, 99, 201', loc: 'Mariana', aluguelTotal: 1010.13, txAdm: 101.01, cond: 0, venda: 0, status: 'pago' },
+  { end: 'José Juliano, 30 101', loc: 'Anita', aluguelTotal: 978.22, txAdm: 97.82, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Pernambuco, 1401, 22', loc: 'Victoria', aluguelTotal: 1284.36, txAdm: 128.44, cond: 0, venda: 0, status: 'pago' },
+  { end: 'São Pedro, 720, Sl 302', loc: 'Glaucia', aluguelTotal: 747.25, txAdm: 74.72, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ernesto Alves, 289, 203', loc: 'Marta', aluguelTotal: 921.83, txAdm: 92.18, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Ten Ary Tarragô, 3095 Aptº 1102', loc: 'Gustavo', aluguelTotal: 1177.33, txAdm: 117.73, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Rua Buarque de Macedo, 90, 06', loc: 'Gabriel', aluguelTotal: 1500, txAdm: 150, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Rua Sadi de Castro 896 ap 208', loc: 'Mariana', aluguelTotal: 1723, txAdm: 172.3, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Rua Conde de Poa, 201, Ap 32', loc: 'Celeste', aluguelTotal: 965.83, txAdm: 96.58, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Edmundo Bastian', loc: 'Luiza', aluguelTotal: 1451.96, txAdm: 145.19, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Pres. Franklin Roosevelt, 984 ap 04', loc: 'Giordano', aluguelTotal: 1074.19, txAdm: 107.42, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Rua Itapeva, nº 151, apartamento 202', loc: 'Chiara', aluguelTotal: 2024.28, txAdm: 202.43, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Rua Marco Polo, nº 505 - Apto 517', loc: 'Stefanie', aluguelTotal: 2600, txAdm: 260, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Av. Ipiranga 8355 Ap 703', loc: 'Gerson', aluguelTotal: 2210.84, txAdm: 2033.97, cond: 176.87, venda: 0, status: 'pago' },
+  { end: 'Av. Jose Aloisio Filho 595 Ap 115 T D', loc: 'Luis Felipe', aluguelTotal: 1311.96, txAdm: 1180.76, cond: 131.2, venda: 0, status: 'pago' },
+  { end: 'Av. Guido Mondim 55 Ap 02', loc: 'Francisco', aluguelTotal: 1513.8, txAdm: 1362.42, cond: 151.38, venda: 0, status: 'pago' },
+  { end: 'Av. Lavras 22 casa', loc: 'Gustavo', aluguelTotal: 6693.05, txAdm: 6023.74, cond: 669.31, venda: 0, status: 'pago' },
+  { end: 'Av. Jose Aloisio Filho 595 Ap 136 T I', loc: 'Ana Paula', aluguelTotal: 1248, txAdm: 1123.2, cond: 124.8, venda: 0, status: 'pago' },
+  { end: 'Rua Cipo 318 Ap 233', loc: 'Antony', aluguelTotal: 2000, txAdm: 1800, cond: 200, venda: 0, status: 'pago' },
+  { end: 'Av. Amazonas 1093 Ap 204', loc: 'Emerson', aluguelTotal: 900, txAdm: 810, cond: 90, venda: 0, status: 'pago' },
+  { end: 'Rua Frederico O.D. Barbosa50 Ap1005', loc: 'SKHAR', aluguelTotal: 3300, txAdm: 2970, cond: 330, venda: 0, status: 'pago' },
+  { end: 'Gomes De Freitas 325 Ap 408', loc: 'Carolina', aluguelTotal: 1000, txAdm: 950, cond: 50, venda: 0, status: 'pago' },
+  { end: 'Av. São Paulo 1016 Ap 02', loc: 'Andressa', aluguelTotal: 1299, txAdm: 1169.1, cond: 129.9, venda: 0, status: 'pago' },
+  { end: 'Rua Moura Azevedo 162 Ap 05', loc: 'Luana', aluguelTotal: 850, txAdm: 765, cond: 85, venda: 0, status: 'pago' },
+  { end: 'Rua Alcides Maia, 553 casa', loc: 'Walpa', aluguelTotal: 5500, txAdm: 4950, cond: 550, venda: 0, status: 'pago' },
+  { end: 'Av.Taquara 264 loja', loc: 'Celoir', aluguelTotal: 2700, txAdm: 2430, cond: 270, venda: 0, status: 'pago' },
+  { end: 'Rua Moura Azevedo 150 Ap 02', loc: 'Eliezer', aluguelTotal: 1000, txAdm: 900, cond: 100, venda: 0, status: 'pago' },
+  { end: 'Av Eudoro Berlink 629 ap 304', loc: 'Caren', aluguelTotal: 1850, txAdm: 1702, cond: 148, venda: 0, status: 'pago' },
+  { end: 'Av São Pedro 844 sala 402', loc: 'Luana', aluguelTotal: 620, txAdm: 558, cond: 62, venda: 0, status: 'pago' },
+  { end: 'Av. Aparicio borges 168 Ap 206', loc: 'Bruna', aluguelTotal: 1800, txAdm: 1620, cond: 180, venda: 0, status: 'pago' },
+  { end: 'Av. Aparicio borges 910 ap 406', loc: 'Amanda', aluguelTotal: 1300, txAdm: 1170, cond: 130, venda: 0, status: 'pago' },
+  { end: 'Rua Itarare 110 ap 603', loc: 'Ana Cristina', aluguelTotal: 1200, txAdm: 1080, cond: 120, venda: 0, status: 'pago' },
+  { end: 'Av. Benno 100 ap 602', loc: 'Felipe', aluguelTotal: 3000, txAdm: 2700, cond: 300, venda: 0, status: 'pago' },
+  { end: 'Av. Cavalhada 5793 ap 203', loc: 'Marcelo', aluguelTotal: 3300, txAdm: 2970, cond: 330, venda: 0, status: 'pago' },
+  { end: 'Av. Ary Tarrago 3095 ap 202 B', loc: 'N/A', aluguelTotal: 0, txAdm: 0, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Av. Ary Tarrago 3095 ap 703 B', loc: 'Kayque', aluguelTotal: 1300, txAdm: 1170, cond: 130, venda: 0, status: 'pago' },
+  { end: 'Av. Ary Tarrago 3095 ap 1002 C', loc: 'Maria Ivone', aluguelTotal: 1400, txAdm: 1260, cond: 140, venda: 0, status: 'pago' },
+  { end: 'Av. Ary Tarrago 3095 ap 207 A', loc: 'Jair', aluguelTotal: 1300, txAdm: 1170, cond: 130, venda: 0, status: 'pago' },
+  { end: 'Av. Ary Tarrago 3095 ap 707 C', loc: 'Fabiano', aluguelTotal: 1300, txAdm: 1170, cond: 130, venda: 0, status: 'pago' },
+  { end: 'Av. Ary Tarrago 3095 ap 801 B', loc: 'Fabiano', aluguelTotal: 1300, txAdm: 1170, cond: 130, venda: 0, status: 'pago' },
+  { end: 'Av. Ary Tarrago 3095 ap 207 B', loc: 'Mauricio', aluguelTotal: 1300, txAdm: 1170, cond: 130, venda: 0, status: 'pago' },
+  { end: 'Av. Ary Tarrago 3095 ap 207 C', loc: 'Raimunda', aluguelTotal: 1300, txAdm: 1170, cond: 130, venda: 0, status: 'pago' },
+  { end: 'Av. Ary Tarrago 3095 ap 1107 B', loc: 'Ana Paula', aluguelTotal: 1400, txAdm: 1260, cond: 140, venda: 0, status: 'pago' },
+  { end: 'Av. Ary Tarrago 3095 ap 502 C', loc: 'Rafael', aluguelTotal: 1400, txAdm: 1400, cond: 0, venda: 0, status: 'pago' },
+  { end: 'Av. Jose Aloisio Filho 595 Ap 137 T J', loc: 'Claudete', aluguelTotal: 2600, txAdm: 2340, cond: 260, venda: 0, status: 'pago' },
+  { end: 'Av. A.J.Renner 2050 ap 306', loc: 'Nathalia', aluguelTotal: 1300, txAdm: 1170, cond: 130, venda: 0, status: 'pago' },
+  { end: 'Rua Presidente Juarez 405 casa', loc: 'Denize', aluguelTotal: 2000, txAdm: 1800, cond: 200, venda: 0, status: 'pago' },
+  { end: 'Av. Patria 343 loja', loc: 'Viviane', aluguelTotal: 2000, txAdm: 1800, cond: 200, venda: 0, status: 'pago' },
+  { end: 'COMISSÃO VENDA CAIRU 720/206', loc: 'N/A', aluguelTotal: 0, txAdm: 0, cond: 0, venda: 8750, status: 'pago' },
+  { end: 'COMISSÃO VENDA FARRAPOS, 3803/24', loc: 'N/A', aluguelTotal: 0, txAdm: 0, cond: 0, venda: 5400, status: 'pago' },
+  { end: 'COMISSÃO VENDA SERTORIO, 1615/36', loc: 'N/A', aluguelTotal: 0, txAdm: 0, cond: 0, venda: 9666.28, status: 'pago' },
+  { end: 'COMISSÃO VENDA OLIVEIRA VIANA, 491, Ap 130.', loc: 'N/A', aluguelTotal: 0, txAdm: 0, cond: 0, venda: 5940, status: 'pago' },
+  { end: 'COMISSÃO VENDA A J RENNER, 1800 Ap 102 A', loc: 'N/A', aluguelTotal: 0, txAdm: 0, cond: 0, venda: 5700, status: 'pago' },
+  { end: 'SAPE 780 AP 602', loc: 'N/A', aluguelTotal: 0, txAdm: 0, cond: 0, venda: 13050, status: 'pago' },
+  { end: 'PROF JOAO DE SOUZA RIBEIRO,155/116', loc: 'N/A', aluguelTotal: 0, txAdm: 0, cond: 0, venda: 2500, status: 'pago' },
+  { end: 'Jeronymo ZELMANOVITZ, 100 AP 803', loc: 'N/A', aluguelTotal: 0, txAdm: 0, cond: 0, venda: 15750, status: 'pago' },
 ];
 
 const MARCO2026_DESPESAS = [
-  // Adicione os dados de Despesas de Março aqui, seguindo o mesmo formato
-  // Exemplo:
-  // { mes: 'MARCO2026', nome: 'Aluguel Escritório', cnpj: '', valor: 2500, vencimento: '2026-03-05' },
+  { nome: 'Chaves na Mão - FBS Mídia Eireli - ME', cnpj: '11.351.276/0001-30', valor: 459, vencimento: '2022-04-10' },
+  { nome: 'Vista Software e Internet Ltda', cnpj: '07.646.081/0001-40', valor: 575.7, vencimento: '2022-04-21' },
+  { nome: 'ZAP Viva Real-ADYEN BR LTDA', cnpj: '11.334.990/0001-10', valor: 2184, vencimento: '2022-04-28' },
+  { nome: 'Fenyx do Brasil', cnpj: '05.569.848/0001-50', valor: 661.39, vencimento: '2022-04-25' },
+  { nome: 'SAMI Sistemas', cnpj: '', valor: 429, vencimento: '2022-04-17' },
+  { nome: 'EMOVEL', cnpj: '', valor: 466.55, vencimento: '2022-04-22' },
+  { nome: 'TAXA MARK SDR', cnpj: '', valor: 0, vencimento: '2022-04-25' },
+  { nome: 'Ricardo A. da Cruz', cnpj: '09.101.421/0001-83', valor: 252.49, vencimento: '2022-04-10' },
+  { nome: 'Conta Energia - CEEE-D', cnpj: '08.467.115/0001-00', valor: 287.15, vencimento: '2022-04-01' },
+  { nome: 'DMAE', cnpj: '929249010001-98', valor: 37.31, vencimento: '2022-04-15' },
+  { nome: 'CLARO NET Fone', cnpj: '40.432.544/0101-00', valor: 152.88, vencimento: '2022-04-10' },
+  { nome: 'Camila Prest Serv. Adm', cnpj: '', valor: 2705.73, vencimento: 'N/A' },
+  { nome: 'DAS', cnpj: 'SIMPLES NACIONAL', valor: 4409.88, vencimento: '2022-04-20' },
+  { nome: 'Guia de ISSQN', cnpj: '', valor: 287.53, vencimento: 'N/A' },
+  { nome: 'RP Vigilância', cnpj: '28.480.078/0001-70', valor: 150, vencimento: 'N/A' },
+  { nome: 'Royaties Crédito Real', cnpj: '92.691.336/0001-66', valor: 7069.19, vencimento: 'N/A' },
+  { nome: 'Despesas seguros', cnpj: '', valor: 204.33, vencimento: 'N/A' },
+  { nome: 'Diversos (Placas, fotos, cartao de visita)', cnpj: '', valor: 480, vencimento: 'N/A' },
+  { nome: 'Despesas SERV GERAIS', cnpj: '', valor: 2180, vencimento: 'N/A' },
+  { nome: 'Desp. Manutenção Prédio', cnpj: '', valor: 0, vencimento: 'N/A' },
+  { nome: 'Despesas de Marketing', cnpj: '', valor: 2105, vencimento: 'N/A' },
+  { nome: 'Material de consumo', cnpj: '', valor: 300, vencimento: 'N/A' },
 ];
 
 
-// ====================== ESTADO GLOBAL ======================
+const ALL_IMOVEIS = [
+  // Janeiro 2026
+  { mes: 'JANEIRO2026', end: 'Av. São Pedro, 611 conj. 201', loc: 'Diego', aluguelTotal: 1500, txAdm: 150, cond: 150, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Av. São Pedro, 611 conj. 202', loc: 'Luiz Carlos', aluguelTotal: 1229.28, txAdm: 122.93, cond: 150, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Av. São Pedro, 611 conj. 203', loc: 'Jorge', aluguelTotal: 1200, txAdm: 120, cond: 150, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Av. São Pedro, 611 conj. 204', loc: 'Douglas', aluguelTotal: 1200, txAdm: 120, cond: 150, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Av. São Pedro, 611 conj. 301', loc: 'Marco', aluguelTotal: 1300, txAdm: 130, cond: 150, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Av. São Pedro, 611 conj. 302', loc: 'Amanda', aluguelTotal: 1400, txAdm: 140, cond: 150, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Av. São Pedro, 611 conj. 303', loc: 'Juliano', aluguelTotal: 1073.65, txAdm: 107.37, cond: 150, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Av. São Pedro, 611 conj. 304', loc: 'Ivone', aluguelTotal: 1052.67, txAdm: 105.27, cond: 150, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Av. São Pedro, 605 LOJA', loc: 'Edilson', aluguelTotal: 2074.34, txAdm: 0, cond: 0, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Av. Assis Brasil, 2884 LOJA', loc: 'Rei Midas', aluguelTotal: 10000, txAdm: 1000, cond: 0, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Av. Assis Brasil, 2886 apto 01', loc: 'Ana Paula', aluguelTotal: 1500, txAdm: 150, cond: 160, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Av. Assis Brasil, 2886 apto 02', loc: 'Michele', aluguelTotal: 1439.62, txAdm: 143.96, cond: 200, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Av. Assis Brasil, 2886 apto 03', loc: 'André', aluguelTotal: 1668.14, txAdm: 166.81, cond: 160, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Av. Assis Brasil, 2886 apto 04', loc: 'André', aluguelTotal: 1128.28, txAdm: 112.83, cond: 160, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Av. Assis Brasil, 2888 LOJA', loc: 'Hiperdoces', aluguelTotal: 13269.34, txAdm: 1040.52, cond: 0, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Av. João Wallig, 509', loc: 'Maria Beatriz', aluguelTotal: 5351.5, txAdm: 535.15, cond: 0, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Alberto Pasqualine, 101. 102', loc: 'Lidiane', aluguelTotal: 1456.91, txAdm: 145.69, cond: 150, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Alberto Pasqualine, 101. 101', loc: 'Willian', aluguelTotal: 2353.79, txAdm: 235.38, cond: 200, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Alberto Pasqualine, 101. 103', loc: 'Lidiane', aluguelTotal: 1088.07, txAdm: 108.8, cond: 150, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Alberto Pasqualine, 101. 201', loc: 'Nathalia', aluguelTotal: 2216.23, txAdm: 221.63, cond: 200, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Alberto Pasqualine, 101. 202', loc: 'Nathalia', aluguelTotal: 1926.54, txAdm: 192.65, cond: 200, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Andradas,711/804', loc: 'N/A', aluguelTotal: 0, txAdm: 0, cond: 0, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Padre Todesco, 927 apto 505', loc: 'Bernado', aluguelTotal: 2000, txAdm: 200, cond: 0, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Doutor David Giacomini, 30, Canoas', loc: 'Vinicius', aluguelTotal: 3425.12, txAdm: 171.26, cond: 0, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Ary Tarragô, 3095 - APTO 1002 B', loc: 'Ariane', aluguelTotal: 951.35, txAdm: 95.13, cond: 0, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Ary Tarragô, 3095 - APTO 1007 B', loc: 'Edison', aluguelTotal: 976.68, txAdm: 97.67, cond: 0, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Ary Tarragô, 3095 - APTO 702 B', loc: 'Alessandra', aluguelTotal: 1300, txAdm: 130, cond: 0, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Ary Tarragô, 3095 - APTO 706 B', loc: 'Yasmin', aluguelTotal: 965.21, txAdm: 96.52, cond: 0, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Ary Tarragô, 3095 - APTO 708 B', loc: 'Renata', aluguelTotal: 962.53, txAdm: 96.25, cond: 0, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Ary Tarragô, 3095 - APTO 906 B', loc: 'Alzira', aluguelTotal: 950.07, txAdm: 95.01, cond: 0, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Ary Tarragô, 3095 - APTO 808 B', loc: 'Raquel', aluguelTotal: 965.21, txAdm: 96.52, cond: 0, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Ary Tarragô, 3095 - APTO 602 B', loc: 'Gabriel', aluguelTotal: 1300, txAdm: 130, cond: 0, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Ary Tarragô, 3095 - APTO 403 A', loc: 'Leticia', aluguelTotal: 1052.67, txAdm: 105.26, cond: 0, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Ary Tarragô, 3095 - APTO 402 C', loc: 'Rafael', aluguelTotal: 1193.72, txAdm: 119.37, cond: 0, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Ary Tarragô, 3095 - APTO 302 B', loc: 'Davi', aluguelTotal: 1054.73, txAdm: 105.47, cond: 0, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Ary Tarragô, 3095 - APTO 703 A', loc: 'Adriano', aluguelTotal: 1300, txAdm: 130, cond: 0, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Ary Tarragô, 3095 - APTO 208 C', loc: 'Ana', aluguelTotal: 1100, txAdm: 110, cond: 0, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Ary Tarragô, 3095 - APTO 708 C', loc: 'Marina', aluguelTotal: 946.34, txAdm: 94.63, cond: 0, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Ary Tarragô, 3095 - APTO 803 A', loc: 'Jeferson', aluguelTotal: 1300, txAdm: 130, cond: 0, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Ary Tarragô, 3095 - APTO 208 B', loc: 'Elis', aluguelTotal: 948.21, txAdm: 94.82, cond: 0, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Ary Tarragô, 3095 - APTO 602 C', loc: 'Michele', aluguelTotal: 1193.72, txAdm: 119.37, cond: 0, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Ary Tarragô, 3095 - APTO 406 C', loc: 'Carla', aluguelTotal: 1193.72, txAdm: 119.37, cond: 0, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Ary Tarragô, 3095 - APTO 307 B', loc: 'Roberto', aluguelTotal: 1177.33, txAdm: 117.73, cond: 0, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Ary Tarragô, 3095 - APTO 903 A', loc: 'Fabricio', aluguelTotal: 1400, txAdm: 140, cond: 0, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Ary Tarragô, 3095 - APTO 206 B', loc: 'Leonardo', aluguelTotal: 1070.3, txAdm: 107.03, cond: 0, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Ary Tarragô, 3095 - APTO 1203 A', loc: 'Thiago', aluguelTotal: 1391.39, txAdm: 139.14, cond: 0, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Ary Tarragô, 3095 - APTO 402 B', loc: 'Marcelo', aluguelTotal: 1300, txAdm: 130, cond: 0, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Av Cascais, 99 Ap 1101', loc: 'N/A', aluguelTotal: 0, txAdm: 0, cond: 0, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Av.A. J. Renner 2050 Ap 104', loc: 'Rodrigo', aluguelTotal: 957.62, txAdm: 95.76, cond: 0, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Santos Dumont, 1500, 402', loc: 'N/A', aluguelTotal: 0, txAdm: 0, cond: 0, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Bahia 801 pavilhão', loc: 'Sistemak', aluguelTotal: 5859.77, txAdm: 585.97, cond: 0, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Panamericana 150/242', loc: 'Beatriz', aluguelTotal: 1300, txAdm: 130, cond: 0, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Praça Navegantes', loc: 'Jorge', aluguelTotal: 852.32, txAdm: 85.23, cond: 0, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Benno Mentz, 100 apto 1701', loc: 'Lauro', aluguelTotal: 3780, txAdm: 378, cond: 0, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Benno Mentz, 100 apto 1502', loc: 'Bruna', aluguelTotal: 2663.53, txAdm: 266.36, cond: 0, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Celeste Gobbato, 99, 201', loc: 'Mariana', aluguelTotal: 1010.13, txAdm: 101.01, cond: 0, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'José Juliano, 30 101', loc: 'Anita', aluguelTotal: 978.22, txAdm: 97.82, cond: 0, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Pernambuco, 1401, 22', loc: 'Victoria', aluguelTotal: 1284.36, txAdm: 128.44, cond: 0, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'São Pedro, 720, Sl 302', loc: 'Glaucia', aluguelTotal: 747.25, txAdm: 74.72, cond: 0, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Ernesto Alves, 289, 203', loc: 'Marta', aluguelTotal: 921.83, txAdm: 92.18, cond: 0, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Ten Ary Tarragô, 3095 Aptº 1102', loc: 'Gustavo', aluguelTotal: 1177.33, txAdm: 117.73, cond: 0, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Rua Buarque de Macedo, 90, 06', loc: 'Gabriel', aluguelTotal: 1500, txAdm: 150, cond: 0, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Rua Sadi de Castro 896 ap 208', loc: 'Mariana', aluguelTotal: 1723, txAdm: 172.3, cond: 0, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Rua Conde de Poa, 201, Ap 32', loc: 'Celeste', aluguelTotal: 965.83, txAdm: 96.58, cond: 0, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Edmundo Bastian', loc: 'Luiza', aluguelTotal: 1451.96, txAdm: 145.19, cond: 0, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Pres. Franklin Roosevelt, 984 ap 04', loc: 'Giordano', aluguelTotal: 1074.19, txAdm: 107.42, cond: 0, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Rua Itapeva, nº 151, apartamento 202', loc: 'Chiara', aluguelTotal: 2024.28, txAdm: 202.43, cond: 0, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Rua Marco Polo, nº 505 - Apto 517', loc: 'Stefanie', aluguelTotal: 2600, txAdm: 260, cond: 0, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Av. Ipiranga 8355 Ap 703', loc: 'Gerson', aluguelTotal: 2210.84, txAdm: 2033.97, cond: 176.87, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Av. Jose Aloisio Filho 595 Ap 115 T D', loc: 'Luis Felipe', aluguelTotal: 1311.96, txAdm: 1180.76, cond: 131.2, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Av. Guido Mondim 55 Ap 02', loc: 'Francisco', aluguelTotal: 1513.8, txAdm: 1362.42, cond: 151.38, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Av. Lavras 22 casa', loc: 'Gustavo', aluguelTotal: 6693.05, txAdm: 6023.74, cond: 669.31, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Av. Jose Aloisio Filho 595 Ap 136 T I', loc: 'Ana Paula', aluguelTotal: 1248, txAdm: 1123.2, cond: 124.8, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Rua Cipo 318 Ap 233', loc: 'Antony', aluguelTotal: 2000, txAdm: 1800, cond: 200, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Av. Amazonas 1093 Ap 204', loc: 'Emerson', aluguelTotal: 900, txAdm: 810, cond: 90, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Rua Frederico O.D. Barbosa50 Ap1005', loc: 'SKHAR', aluguelTotal: 3300, txAdm: 2970, cond: 330, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Gomes De Freitas 325 Ap 408', loc: 'Carolina', aluguelTotal: 1000, txAdm: 950, cond: 50, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Av. São Paulo 1016 Ap 02', loc: 'Andressa', aluguelTotal: 1299, txAdm: 1169.1, cond: 129.9, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Rua Moura Azevedo 162 Ap 05', loc: 'Luana', aluguelTotal: 850, txAdm: 765, cond: 85, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Rua Alcides Maia, 553 casa', loc: 'Walpa', aluguelTotal: 5500, txAdm: 4950, cond: 550, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Av.Taquara 264 loja', loc: 'Celoir', aluguelTotal: 2700, txAdm: 2430, cond: 270, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Rua Moura Azevedo 150 Ap 02', loc: 'Eliezer', aluguelTotal: 1000, txAdm: 900, cond: 100, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Av Eudoro Berlink 629 ap 304', loc: 'Caren', aluguelTotal: 1850, txAdm: 1702, cond: 148, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Av São Pedro 844 sala 402', loc: 'Luana', aluguelTotal: 620, txAdm: 558, cond: 62, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Av. Aparicio borges 168 Ap 206', loc: 'Bruna', aluguelTotal: 1800, txAdm: 1620, cond: 180, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Av. Aparicio borges 910 ap 406', loc: 'Amanda', aluguelTotal: 1300, txAdm: 1170, cond: 130, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Rua Itarare 110 ap 603', loc: 'Ana Cristina', aluguelTotal: 1200, txAdm: 1080, cond: 120, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Av. Benno 100 ap 602', loc: 'Felipe', aluguelTotal: 3000, txAdm: 2700, cond: 300, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Av. Cavalhada 5793 ap 203', loc: 'Marcelo', aluguelTotal: 3300, txAdm: 2970, cond: 330, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Av. Ary Tarrago 3095 ap 202 B', loc: 'N/A', aluguelTotal: 0, txAdm: 0, cond: 0, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Av. Ary Tarrago 3095 ap 703 B', loc: 'Kayque', aluguelTotal: 1300, txAdm: 1170, cond: 130, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Av. Ary Tarrago 3095 ap 1002 C', loc: 'Maria Ivone', aluguelTotal: 1400, txAdm: 1260, cond: 140, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Av. Ary Tarrago 3095 ap 207 A', loc: 'Jair', aluguelTotal: 1300, txAdm: 1170, cond: 130, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Av. Ary Tarrago 3095 ap 707 C', loc: 'Fabiano', aluguelTotal: 1300, txAdm: 1170, cond: 130, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Av. Ary Tarrago 3095 ap 801 B', loc: 'Fabiano', aluguelTotal: 1300, txAdm: 1170, cond: 130, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Av. Ary Tarrago 3095 ap 207 B', loc: 'Mauricio', aluguelTotal: 1300, txAdm: 1170, cond: 130, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Av. Ary Tarrago 3095 ap 207 C', loc: 'Raimunda', aluguelTotal: 1300, txAdm: 1170, cond: 130, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Av. Ary Tarrago 3095 ap 1107 B', loc: 'Ana Paula', aluguelTotal: 1400, txAdm: 1260, cond: 140, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Av. Ary Tarrago 3095 ap 502 C', loc: 'Rafael', aluguelTotal: 1400, txAdm: 1400, cond: 0, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Av. Jose Aloisio Filho 595 Ap 137 T J', loc: 'Claudete', aluguelTotal: 2600, txAdm: 2340, cond: 260, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Av. A.J.Renner 2050 ap 306', loc: 'Nathalia', aluguelTotal: 1300, txAdm: 1170, cond: 130, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Rua Presidente Juarez 405 casa', loc: 'Denize', aluguelTotal: 2000, txAdm: 1800, cond: 200, status: 'pago' },
+  { mes: 'JANEIRO2026', end: 'Av. Patria 343 loja', loc: 'Viviane', aluguelTotal: 2000, txAdm: 1800, cond: 200, status: 'pago' },
+];
+
+
+// Variáveis de estado global
 const STATE = {
-  currentMonth: 'JANEIRO2026',
-  receitas: {},
-  despesas: {},
-  imoveis: [], // Para a carteira de imóveis
-  charts: {
-    receitaDespesa: null,
-    composicaoReceitas: null,
+  currentMonth: 'MARCO2026', // Mês inicial
+  receitas: {
+    JANEIRO2026: JANEIRO2026_RECEITAS,
+    FEVEREIRO2026: FEVEREIRO2026_RECEITAS,
+    MARCO2026: MARCO2026_RECEITAS,
+  },
+  despesas: {
+    JANEIRO2026: JANEIRO2026_DESPESAS,
+    FEVEREIRO2026: FEVEREIRO2026_DESPESAS,
+    MARCO2026: MARCO2026_DESPESAS,
+  },
+  imoveis: ALL_IMOVEIS,
+  charts: {}, // Para armazenar instâncias de gráficos
+};
+
+// Funções de formatação
+const formatCurrency = (value) => {
+  return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
+};
+
+// Funções de cálculo
+const calculateTotalReceita = (month) => {
+  const receitasDoMes = STATE.receitas[month] || [];
+  return receitasDoMes.reduce((sum, r) => sum + (r.txAdm || 0) + (r.venda || 0), 0);
+};
+
+const calculateTotalDespesa = (month) => {
+  const despesasDoMes = STATE.despesas[month] || [];
+  return despesasDoMes.reduce((sum, d) => sum + (d.valor || 0), 0);
+};
+
+const calculateSaldoMes = (month) => {
+  return calculateTotalReceita(month) - calculateTotalDespesa(month);
+};
+
+const getReceitasPorTipo = (month) => {
+  const receitasDoMes = STATE.receitas[month] || [];
+  const locacao = receitasDoMes.reduce((sum, r) => sum + (r.txAdm || 0), 0);
+  const venda = receitasDoMes.reduce((sum, r) => sum + (r.venda || 0), 0);
+  // Adicione outras categorias de receita se houver
+  return { Locação: locacao, Venda: venda };
+};
+
+const getDespesasPorCategoria = (month) => {
+  const despesasDoMes = STATE.despesas[month] || [];
+  const categorias = {};
+  despesasDoMes.forEach(d => {
+    const categoria = d.nome; // Usando o nome como categoria simplificada
+    categorias[categoria] = (categorias[categoria] || 0) + (d.valor || 0);
+  });
+  return categorias;
+};
+
+const getImoveisNaCarteira = () => {
+  // Contar imóveis únicos na carteira (pode ser refinado para considerar status 'ativo' etc.)
+  const uniqueImoveis = new Set(STATE.imoveis.map(imovel => imovel.end));
+  return uniqueImoveis.size;
+};
+
+// Funções de renderização
+const renderKPIs = () => {
+  const receitaTotal = calculateTotalReceita(STATE.currentMonth);
+  const despesaTotal = calculateTotalDespesa(STATE.currentMonth);
+  const saldoMes = calculateSaldoMes(STATE.currentMonth);
+  const imoveisCarteira = getImoveisNaCarteira();
+
+  document.getElementById('kpiReceitaTotal').textContent = formatCurrency(receitaTotal);
+  document.getElementById('kpiDespesaTotal').textContent = formatCurrency(despesaTotal);
+  document.getElementById('kpiSaldoMes').textContent = formatCurrency(saldoMes);
+  document.getElementById('kpiImoveisCarteira').textContent = imoveisCarteira;
+
+  // Atualizar cor do saldo
+  const saldoElement = document.getElementById('kpiSaldoMes');
+  saldoElement.classList.remove('green', 'red');
+  if (saldoMes > 0) {
+    saldoElement.classList.add('green');
+  } else if (saldoMes < 0) {
+    saldoElement.classList.add('red');
   }
 };
 
-// ====================== FUNÇÕES DE FORMATAÇÃO ======================
-function fmt(value) {
-  if (typeof value !== 'number') return 'R$ 0,00';
-  return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-}
-
-// ====================== FUNÇÕES DE NAVEGAÇÃO ======================
-function setupNavigation() {
-  document.querySelectorAll('.nav-item').forEach(item => {
-    item.addEventListener('click', () => {
-      document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
-      item.classList.add('active');
-
-      document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
-      document.getElementById(item.dataset.page).classList.add('active');
-
-      // Renderiza novamente ao mudar de página para garantir que os gráficos sejam desenhados
-      renderAll();
-    });
-  });
-}
-
-// ====================== FUNÇÕES DE CARREGAMENTO DE DADOS ======================
-function loadAllEmbeddedData() {
-  STATE.receitas = {
-    'JANEIRO2026': JANEIRO2026_RECEITAS,
-    'FEVEREIRO2026': FEVEREIRO2026_RECEITAS,
-    'MARCO2026': MARCO2026_RECEITAS,
-  };
-  STATE.despesas = {
-    'JANEIRO2026': JANEIRO2026_DESPESAS,
-    'FEVEREIRO2026': FEVEREIRO2026_DESPESAS,
-    'MARCO2026': MARCO2026_DESPESAS,
-  };
-
-  // Processa a carteira de imóveis (única, não por mês)
-  // Pega todos os imóveis de locação de todos os meses e remove duplicatas
-  const allLocacoes = [
-    ...JANEIRO2026_RECEITAS.filter(r => r.tipo === 'Locação'),
-    ...FEVEREIRO2026_RECEITAS.filter(r => r.tipo === 'Locação'),
-    ...MARCO2026_RECEITAS.filter(r => r.tipo === 'Locação'),
+const renderReceitaDespesaChart = () => {
+  const ctx = document.getElementById('receitaDespesaChart').getContext('2d');
+  const labels = ['Janeiro 2026', 'Fevereiro 2026', 'Março 2026'];
+  const receitasData = [
+    calculateTotalReceita('JANEIRO2026'),
+    calculateTotalReceita('FEVEREIRO2026'),
+    calculateTotalReceita('MARCO2026'),
   ];
-  const uniqueImoveis = new Map();
-  allLocacoes.forEach(item => {
-    if (!uniqueImoveis.has(item.end)) {
-      uniqueImoveis.set(item.end, {
-        end: item.end,
-        loc: item.loc,
-        aluguel: item.aluguel,
-        taxa: item.taxa,
-        cond: item.cond
-      });
-    }
-  });
-  STATE.imoveis = Array.from(uniqueImoveis.values());
+  const despesasData = [
+    calculateTotalDespesa('JANEIRO2026'),
+    calculateTotalDespesa('FEVEREIRO2026'),
+    calculateTotalDespesa('MARCO2026'),
+  ];
 
-  console.log('Dados embutidos carregados automaticamente!');
-  renderAll();
-}
-
-// ====================== FUNÇÕES DE RENDERIZAÇÃO DE GRÁFICOS ======================
-function renderReceitaDespesaChart() {
-  if (STATE.charts.receitaDespesa) {
-    STATE.charts.receitaDespesa.destroy();
+  if (STATE.charts.receitaDespesaChart) {
+    STATE.charts.receitaDespesaChart.destroy();
   }
 
-  const ctx = document.getElementById('receitaDespesaChart');
-  if (!ctx) return;
-
-  const meses = ['JANEIRO2026', 'FEVEREIRO2026', 'MARCO2026'];
-  const receitasMensais = meses.map(mes => {
-    const receitasDoMes = STATE.receitas[mes] || [];
-    return receitasDoMes.reduce((sum, r) => sum + (r.tipo === 'Locação' ? r.taxa : r.taxa), 0); // Receita é a taxa de adm ou o valor da venda
-  });
-  const despesasMensais = meses.map(mes => {
-    const despesasDoMes = STATE.despesas[mes] || [];
-    return despesasDoMes.reduce((sum, d) => sum + d.valor, 0);
-  });
-
-  STATE.charts.receitaDespesa = new Chart(ctx, {
+  STATE.charts.receitaDespesaChart = new Chart(ctx, {
     type: 'bar',
     data: {
-      labels: meses.map(m => m.replace('2026', '')),
+      labels: labels,
       datasets: [
         {
-          label: 'Receitas',
-          data: receitasMensais,
-          backgroundColor: 'rgba(34, 197, 94, 0.8)', // green
-          borderColor: 'rgba(34, 197, 94, 1)',
-          borderWidth: 1
+          label: 'Receita',
+          data: receitasData,
+          backgroundColor: 'var(--green)',
         },
         {
-          label: 'Despesas',
-          data: despesasMensais,
-          backgroundColor: 'rgba(239, 68, 68, 0.8)', // red
-          borderColor: 'rgba(239, 68, 68, 1)',
-          borderWidth: 1
-        }
-      ]
+          label: 'Despesa',
+          data: despesasData,
+          backgroundColor: 'var(--red)',
+        },
+      ],
     },
     options: {
       responsive: true,
       maintainAspectRatio: false,
       scales: {
-        y: {
-          beginAtZero: true,
-          ticks: {
-            callback: function(value) { return fmt(value); },
-            color: 'var(--muted)'
-          },
-          grid: { color: 'var(--border)' }
-        },
         x: {
-          ticks: { color: 'var(--muted)' },
-          grid: { display: false }
-        }
+          stacked: false,
+          grid: { color: 'var(--border)' },
+          ticks: { color: 'var(--muted)' }
+        },
+        y: {
+          stacked: false,
+          beginAtZero: true,
+          grid: { color: 'var(--border)' },
+          ticks: { color: 'var(--muted)', callback: function(value) { return formatCurrency(value); } }
+        },
       },
       plugins: {
         legend: {
           labels: { color: 'var(--text)' }
-        },
-        tooltip: {
-          callbacks: {
-            label: function(context) {
-              let label = context.dataset.label || '';
-              if (label) {
-                label += ': ';
-              }
-              if (context.parsed.y !== null) {
-                label += fmt(context.parsed.y);
-              }
-              return label;
-            }
-          }
         }
       }
-    }
+    },
   });
-}
+};
 
-function renderComposicaoReceitasChart() {
-  if (STATE.charts.composicaoReceitas) {
-    STATE.charts.composicaoReceitas.destroy();
+const renderComposicaoReceitasChart = () => {
+  const ctx = document.getElementById('composicaoReceitasChart').getContext('2d');
+  const receitasPorTipo = getReceitasPorTipo(STATE.currentMonth);
+  const labels = Object.keys(receitasPorTipo);
+  const data = Object.values(receitasPorTipo);
+
+  if (STATE.charts.composicaoReceitasChart) {
+    STATE.charts.composicaoReceitasChart.destroy();
   }
 
-  const ctx = document.getElementById('composicaoReceitasChart');
-  if (!ctx) return;
-
-  const receitasDoMes = STATE.receitas[STATE.currentMonth] || [];
-  const totalLocacao = receitasDoMes.filter(r => r.tipo === 'Locação').reduce((sum, r) => sum + r.taxa, 0);
-  const totalVenda = receitasDoMes.filter(r => r.tipo === 'Venda').reduce((sum, r) => sum + r.taxa, 0);
-  // Adicionar outras categorias de receita se houver
-
-  const data = [totalLocacao, totalVenda];
-  const labels = ['Taxa de Locação', 'Comissão de Venda'];
-  const backgroundColors = ['rgba(79, 70, 229, 0.8)', 'rgba(124, 58, 237, 0.8)']; // accent, accent2
-
-  STATE.charts.composicaoReceitas = new Chart(ctx, {
-    type: 'doughnut',
+  STATE.charts.composicaoReceitasChart = new Chart(ctx, {
+    type: 'pie',
     data: {
       labels: labels,
       datasets: [{
         data: data,
-        backgroundColor: backgroundColors,
-        borderColor: 'var(--card2)',
-        borderWidth: 2
-      }]
+        backgroundColor: ['#4f46e5', '#7c3aed', '#eab308', '#22c55e'], // Cores para os tipos de receita
+      }],
     },
     options: {
       responsive: true,
@@ -671,245 +1125,425 @@ function renderComposicaoReceitasChart() {
                 label += ': ';
               }
               if (context.parsed !== null) {
-                label += fmt(context.parsed);
+                label += formatCurrency(context.parsed);
               }
               return label;
             }
           }
         }
       }
+    },
+  });
+};
+
+const renderMetasReceita = () => {
+  const receitasDoMes = STATE.receitas[STATE.currentMonth] || [];
+  const totalLocacao = receitasDoMes.reduce((sum, r) => sum + (r.txAdm || 0), 0);
+  const totalVenda = receitasDoMes.reduce((sum, r) => sum + (r.venda || 0), 0);
+  // Assumindo que bonificação é uma receita separada ou parte da venda
+  const totalBonificacao = 0; // Ajustar se houver dados de bonificação
+
+  document.getElementById('metaLocacao').textContent = `${formatCurrency(totalLocacao)} / R$ 150.000,00`;
+  document.getElementById('metaVenda').textContent = `${formatCurrency(totalVenda)} / R$ 70.000,00`;
+  document.getElementById('metaBonificacao').textContent = `${formatCurrency(totalBonificacao)} / R$ 10.000,00`;
+};
+
+const renderProximosVencimentos = () => {
+  const despesasDoMes = STATE.despesas[STATE.currentMonth] || [];
+  const hoje = new Date();
+  const proximos = despesasDoMes.filter(d => {
+    if (d.vencimento && d.vencimento !== 'N/A') {
+      const vencimentoDate = new Date(d.vencimento);
+      return vencimentoDate > hoje && (vencimentoDate.getTime() - hoje.getTime()) < (30 * 24 * 60 * 60 * 1000); // Próximos 30 dias
+    }
+    return false;
+  }).sort((a, b) => new Date(a.vencimento) - new Date(b.vencimento));
+
+  const proximosVencimentosElement = document.getElementById('proximosVencimentos');
+  if (proximos.length > 0) {
+    proximosVencimentosElement.innerHTML = proximos.map(d => `
+      <p>${d.nome} - ${formatCurrency(d.valor)} (Venc: ${new Date(d.vencimento).toLocaleDateString('pt-BR')})</p>
+    `).join('');
+  } else {
+    proximosVencimentosElement.textContent = 'Sem despesas futuras próximas.';
+  }
+};
+
+const renderReceitasTable = () => {
+  const receitasDoMes = STATE.receitas[STATE.currentMonth] || [];
+  const tableBody = document.getElementById('receitasTableBody');
+  tableBody.innerHTML = ''; // Limpa a tabela
+
+  if (receitasDoMes.length === 0) {
+    tableBody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">Sem dados de receita para este mês.</td></tr>';
+    return;
+  }
+
+  receitasDoMes.forEach(receita => {
+    const row = tableBody.insertRow();
+    row.insertCell().textContent = receita.end;
+    row.insertCell().textContent = receita.loc;
+    row.insertCell().textContent = receita.venda > 0 ? 'Venda' : 'Locação'; // Simplificado
+    row.insertCell().textContent = formatCurrency(receita.txAdm);
+    row.insertCell().textContent = formatCurrency(receita.venda);
+    row.insertCell().textContent = receita.status;
+  });
+  document.getElementById('receitasMesTitulo').textContent = getMonthName(STATE.currentMonth);
+};
+
+const renderDespesasTable = () => {
+  const despesasDoMes = STATE.despesas[STATE.currentMonth] || [];
+  const tableBody = document.getElementById('despesasTableBody');
+  tableBody.innerHTML = ''; // Limpa a tabela
+
+  if (despesasDoMes.length === 0) {
+    tableBody.innerHTML = '<tr><td colspan="4" class="text-center text-muted">Sem dados de despesa para este mês.</td></tr>';
+    return;
+  }
+
+  despesasDoMes.forEach(despesa => {
+    const row = tableBody.insertRow();
+    row.insertCell().textContent = despesa.nome;
+    row.insertCell().textContent = despesa.cnpj || 'N/A';
+    row.insertCell().textContent = formatCurrency(despesa.valor);
+    row.insertCell().textContent = despesa.vencimento ? new Date(despesa.vencimento).toLocaleDateString('pt-BR') : 'N/A';
+  });
+  document.getElementById('despesasMesTitulo').textContent = getMonthName(STATE.currentMonth);
+};
+
+const renderImoveisTable = () => {
+  const imoveisNaCarteira = STATE.imoveis; // Todos os imóveis
+  const tableBody = document.getElementById('imoveisTableBody');
+  tableBody.innerHTML = ''; // Limpa a tabela
+
+  if (imoveisNaCarteira.length === 0) {
+    tableBody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">Sem imóveis na carteira.</td></tr>';
+    return;
+  }
+
+  // Filtrar imóveis únicos para a tabela de imóveis, se necessário, ou listar todos
+  const uniqueImoveisMap = new Map();
+  imoveisNaCarteira.forEach(imovel => {
+    if (!uniqueImoveisMap.has(imovel.end)) {
+      uniqueImoveisMap.set(imovel.end, imovel);
     }
   });
-}
 
-// ====================== FUNÇÕES DE RENDERIZAÇÃO DE PÁGINAS ======================
-function renderDashboard() {
-  const receitasDoMes = STATE.receitas[STATE.currentMonth] || [];
-  const despesasDoMes = STATE.despesas[STATE.currentMonth] || [];
+  uniqueImoveisMap.forEach(imovel => {
+    const row = tableBody.insertRow();
+    row.insertCell().textContent = imovel.end;
+    row.insertCell().textContent = imovel.loc || 'N/A';
+    row.insertCell().textContent = formatCurrency(imovel.aluguelTotal);
+    row.insertCell().textContent = formatCurrency(imovel.txAdm);
+    row.insertCell().textContent = formatCurrency(imovel.cond);
+    row.insertCell().textContent = imovel.status || 'Ativo';
+  });
+};
 
-  const totalReceita = receitasDoMes.reduce((sum, r) => sum + (r.tipo === 'Locação' ? r.taxa : r.taxa), 0);
-  const totalDespesa = despesasDoMes.reduce((sum, d) => sum + d.valor, 0);
-  const resultadoLiquido = totalReceita - totalDespesa;
-  const imoveisAtivos = STATE.imoveis.length;
 
-  document.getElementById('kpiReceitaTotal').textContent = fmt(totalReceita);
-  document.getElementById('kpiDespesaTotal').textContent = fmt(totalDespesa);
-  document.getElementById('kpiResultadoLiquido').textContent = fmt(resultadoLiquido);
-  document.getElementById('kpiImoveisAtivos').textContent = imoveisAtivos;
+// Funções para a página de Análise IA (simuladas)
+const renderAnaliseIA = () => {
+  const iaAnaliseTexto = document.getElementById('iaAnaliseTexto');
+  iaAnaliseTexto.textContent = 'Gerando análise inteligente para ' + getMonthName(STATE.currentMonth) + '...';
 
-  // Atualiza a cor do resultado líquido
-  const resultadoElement = document.getElementById('kpiResultadoLiquido');
-  resultadoElement.classList.remove('green', 'red');
-  if (resultadoLiquido > 0) {
-    resultadoElement.classList.add('green');
-  } else if (resultadoLiquido < 0) {
-    resultadoElement.classList.add('red');
+  // Simulação de análise
+  setTimeout(() => {
+    const receita = calculateTotalReceita(STATE.currentMonth);
+    const despesa = calculateTotalDespesa(STATE.currentMonth);
+    const saldo = calculateSaldoMes(STATE.currentMonth);
+    let analise = `No mês de ${getMonthName(STATE.currentMonth)}, a receita total foi de ${formatCurrency(receita)} e a despesa total foi de ${formatCurrency(despesa)}, resultando em um saldo de ${formatCurrency(saldo)}.`;
+
+    if (saldo > 0) {
+      analise += " O desempenho foi positivo, com as receitas superando as despesas. Continue monitorando as categorias de maior impacto para otimização.";
+    } else if (saldo < 0) {
+      analise += " O desempenho foi negativo. Recomenda-se uma revisão detalhada das despesas, especialmente as de maior valor, e estratégias para aumentar as receitas de locação e venda.";
+    } else {
+      analise += " O saldo foi neutro. Analise as oportunidades de crescimento e redução de custos.";
+    }
+
+    iaAnaliseTexto.textContent = analise;
+  }, 1000); // Simula um carregamento
+};
+
+const renderReceitaDespesa6MesesChart = () => {
+  const ctx = document.getElementById('receitaDespesa6MesesChart').getContext('2d');
+  const labels = ['Out 2025', 'Nov 2025', 'Dez 2025', 'Jan 2026', 'Fev 2026', 'Mar 2026']; // Exemplo de 6 meses
+  const receitasData = [
+    Math.random() * 50000 + 10000, // Dados simulados para meses anteriores
+    Math.random() * 50000 + 10000,
+    Math.random() * 50000 + 10000,
+    calculateTotalReceita('JANEIRO2026'),
+    calculateTotalReceita('FEVEREIRO2026'),
+    calculateTotalReceita('MARCO2026'),
+  ];
+  const despesasData = [
+    Math.random() * 30000 + 5000,
+    Math.random() * 30000 + 5000,
+    Math.random() * 30000 + 5000,
+    calculateTotalDespesa('JANEIRO2026'),
+    calculateTotalDespesa('FEVEREIRO2026'),
+    calculateTotalDespesa('MARCO2026'),
+  ];
+
+  if (STATE.charts.receitaDespesa6MesesChart) {
+    STATE.charts.receitaDespesa6MesesChart.destroy();
   }
 
-  renderReceitaDespesaChart();
-  renderComposicaoReceitasChart();
+  STATE.charts.receitaDespesa6MesesChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [
+        {
+          label: 'Receita',
+          data: receitasData,
+          borderColor: 'var(--green)',
+          tension: 0.3,
+          fill: false,
+        },
+        {
+          label: 'Despesa',
+          data: despesasData,
+          borderColor: 'var(--red)',
+          tension: 0.3,
+          fill: false,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        x: {
+          grid: { color: 'var(--border)' },
+          ticks: { color: 'var(--muted)' }
+        },
+        y: {
+          beginAtZero: true,
+          grid: { color: 'var(--border)' },
+          ticks: { color: 'var(--muted)', callback: function(value) { return formatCurrency(value); } }
+        },
+      },
+      plugins: {
+        legend: {
+          labels: { color: 'var(--text)' }
+        }
+      }
+    },
+  });
+};
 
-  // Tabela de Receitas Detalhadas no Dashboard
-  const receitasDashboardTable = document.getElementById('receitasDashboardTable');
-  if (receitasDoMes.length > 0) {
-    receitasDashboardTable.innerHTML = `
-      <table class="table-sm">
-        <thead>
-          <tr>
-            <th>Tipo</th>
-            <th>Endereço</th>
-            <th>Locatário/Descrição</th>
-            <th>Valor Receita</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${receitasDoMes.map(r => `
-            <tr>
-              <td>${r.tipo}</td>
-              <td>${r.end}</td>
-              <td>${r.loc || ''}</td>
-              <td>${fmt(r.tipo === 'Locação' ? r.taxa : r.taxa)}</td>
-              <td>${r.status || 'N/A'}</td>
-            </tr>
-          `).join('')}
-        </tbody>
-      </table>
-    `;
-  } else {
-    receitasDashboardTable.innerHTML = `
-      <div class="empty-state">
-        <span class="icon">📊</span>
-        <div>Nenhum dado de receita para exibir.</div>
-      </div>
-    `;
+const renderComposicaoReceitasIaChart = () => {
+  const ctx = document.getElementById('composicaoReceitasIaChart').getContext('2d');
+  const receitasPorTipo = getReceitasPorTipo(STATE.currentMonth);
+  const labels = Object.keys(receitasPorTipo);
+  const data = Object.values(receitasPorTipo);
+
+  if (STATE.charts.composicaoReceitasIaChart) {
+    STATE.charts.composicaoReceitasIaChart.destroy();
   }
-}
 
-function renderIA() {
-  // Lógica para a página de IA (pode ser expandida depois)
-  // Por enquanto, apenas exibe a mensagem padrão
-}
+  STATE.charts.composicaoReceitasIaChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: labels,
+      datasets: [{
+        data: data,
+        backgroundColor: ['#4f46e5', '#7c3aed', '#eab308', '#22c55e'],
+      }],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'right',
+          labels: { color: 'var(--text)' }
+        },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              let label = context.label || '';
+              if (label) {
+                label += ': ';
+              }
+              if (context.parsed !== null) {
+                label += formatCurrency(context.parsed);
+              }
+              return label;
+            }
+          }
+        }
+      }
+    },
+  });
+};
 
-function renderReceitas() {
-  const receitasDoMes = STATE.receitas[STATE.currentMonth] || [];
-  const receitasTable = document.getElementById('receitasTable');
+const renderDespesasPorCategoriaIaChart = () => {
+  const ctx = document.getElementById('despesasPorCategoriaIaChart').getContext('2d');
+  const despesasPorCategoria = getDespesasPorCategoria(STATE.currentMonth);
+  const labels = Object.keys(despesasPorCategoria);
+  const data = Object.values(despesasPorCategoria);
 
-  if (receitasDoMes.length > 0) {
-    receitasTable.innerHTML = `
-      <table>
-        <thead>
-          <tr>
-            <th>Tipo</th>
-            <th>Endereço</th>
-            <th>Locatário/Descrição</th>
-            <th>Aluguel Total</th>
-            <th>Taxa Adm. / Comissão</th>
-            <th>Condomínio</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${receitasDoMes.map(r => `
-            <tr>
-              <td>${r.tipo}</td>
-              <td>${r.end}</td>
-              <td>${r.loc || ''}</td>
-              <td>${fmt(r.aluguel)}</td>
-              <td>${fmt(r.taxa)}</td>
-              <td>${fmt(r.cond)}</td>
-              <td>${r.status || 'N/A'}</td>
-            </tr>
-          `).join('')}
-        </tbody>
-      </table>
-    `;
-  } else {
-    receitasTable.innerHTML = `
-      <div class="empty-state">
-        <span class="icon">💸</span>
-        <div>Nenhum dado de receita para exibir para ${STATE.currentMonth.replace('2026', '')}.</div>
-      </div>
-    `;
+  if (STATE.charts.despesasPorCategoriaIaChart) {
+    STATE.charts.despesasPorCategoriaIaChart.destroy();
   }
-}
 
-function renderDespesas() {
-  const despesasDoMes = STATE.despesas[STATE.currentMonth] || [];
-  const despesasTable = document.getElementById('despesasTable');
+  STATE.charts.despesasPorCategoriaIaChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Despesas por Categoria',
+        data: data,
+        backgroundColor: '#ef4444',
+      }],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      indexAxis: 'y', // Barras horizontais
+      scales: {
+        x: {
+          beginAtZero: true,
+          grid: { color: 'var(--border)' },
+          ticks: { color: 'var(--muted)', callback: function(value) { return formatCurrency(value); } }
+        },
+        y: {
+          grid: { color: 'var(--border)' },
+          ticks: { color: 'var(--muted)' }
+        },
+      },
+      plugins: {
+        legend: {
+          display: false,
+        }
+      }
+    },
+  });
+};
 
-  if (despesasDoMes.length > 0) {
-    despesasTable.innerHTML = `
-      <table>
-        <thead>
-          <tr>
-            <th>Nome</th>
-            <th>CNPJ/CPF</th>
-            <th>Valor Pago</th>
-            <th>Vencimento</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${despesasDoMes.map(d => `
-            <tr>
-              <td>${d.nome}</td>
-              <td>${d.cnpj || 'N/A'}</td>
-              <td>${fmt(d.valor)}</td>
-              <td>${d.vencimento || 'N/A'}</td>
-            </tr>
-          `).join('')}
-        </tbody>
-      </table>
-    `;
-  } else {
-    despesasTable.innerHTML = `
-      <div class="empty-state">
-        <span class="icon">💳</span>
-        <div>Nenhum dado de despesa para exibir para ${STATE.currentMonth.replace('2026', '')}.</div>
-      </div>
-    `;
+const renderSaldoAcumuladoChart = () => {
+  const ctx = document.getElementById('saldoAcumuladoChart').getContext('2d');
+  const labels = ['Janeiro 2026', 'Fevereiro 2026', 'Março 2026'];
+  let saldoAcumulado = 0;
+  const saldosAcumuladosData = labels.map((_, index) => {
+    const mesKey = ['JANEIRO2026', 'FEVEREIRO2026', 'MARCO2026'][index];
+    saldoAcumulado += calculateSaldoMes(mesKey);
+    return saldoAcumulado;
+  });
+
+  if (STATE.charts.saldoAcumuladoChart) {
+    STATE.charts.saldoAcumuladoChart.destroy();
   }
-}
 
-function renderFuturos() {
-  // Lógica para a página de Futuros (pode ser expandida depois)
-  // Por enquanto, apenas exibe a mensagem padrão
-}
+  STATE.charts.saldoAcumuladoChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Saldo Acumulado',
+        data: saldosAcumuladosData,
+        borderColor: 'var(--accent)',
+        tension: 0.3,
+        fill: true,
+        backgroundColor: 'rgba(79, 70, 229, 0.2)',
+      }],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        x: {
+          grid: { color: 'var(--border)' },
+          ticks: { color: 'var(--muted)' }
+        },
+        y: {
+          beginAtZero: true,
+          grid: { color: 'var(--border)' },
+          ticks: { color: 'var(--muted)', callback: function(value) { return formatCurrency(value); } }
+        },
+      },
+      plugins: {
+        legend: {
+          labels: { color: 'var(--text)' }
+        }
+      }
+    },
+  });
+};
 
-function renderCarteira() {
-  const carteiraTable = document.getElementById('carteiraTable');
 
-  if (STATE.imoveis.length > 0) {
-    carteiraTable.innerHTML = `
-      <table>
-        <thead>
-          <tr>
-            <th>Endereço</th>
-            <th>Locatário</th>
-            <th>Aluguel Base</th>
-            <th>Taxa Adm.</th>
-            <th>Condomínio</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${STATE.imoveis.map(i => `
-            <tr>
-              <td>${i.end}</td>
-              <td>${i.loc || 'N/A'}</td>
-              <td>${fmt(i.aluguel)}</td>
-              <td>${fmt(i.taxa)}</td>
-              <td>${fmt(i.cond)}</td>
-            </tr>
-          `).join('')}
-        </tbody>
-      </table>
-    `;
-  } else {
-    carteiraTable.innerHTML = `
-      <div class="empty-state">
-        <span class="icon">🏢</span>
-        <div>Nenhum imóvel na carteira para exibir.</div>
-      </div>
-    `;
-  }
-}
+// Função para obter o nome do mês formatado
+const getMonthName = (monthKey) => {
+  const monthNames = {
+    JANEIRO2026: 'Janeiro 2026',
+    FEVEREIRO2026: 'Fevereiro 2026',
+    MARCO2026: 'Março 2026',
+  };
+  return monthNames[monthKey] || monthKey;
+};
 
-// ====================== RENDER GLOBAL ======================
-function renderAll() {
-  // Sincroniza os seletores de mês
-  const currentMonth = STATE.currentMonth;
-  document.getElementById('mesDashboard').value = currentMonth;
-  document.getElementById('iaMes').value = currentMonth;
-  document.getElementById('rMes').value = currentMonth;
-  document.getElementById('dMes').value = currentMonth;
+// Função principal de renderização de todas as partes da página ativa
+const renderAll = () => {
+  const activePageId = document.querySelector('.page.active').id;
 
-  renderDashboard();
-  renderIA();
-  renderReceitas();
-  renderDespesas();
-  renderFuturos();
-  renderCarteira();
-}
-
-// ====================== INICIALIZAÇÃO ======================
-document.addEventListener('DOMContentLoaded', () => {
-  setupNavigation(); // Configura a navegação das abas
-
-  // Define o mês inicial como Janeiro 2026
-  STATE.currentMonth = 'JANEIRO2026';
+  // Atualiza os seletores de mês para refletir o STATE.currentMonth
   document.getElementById('mesDashboard').value = STATE.currentMonth;
   document.getElementById('iaMes').value = STATE.currentMonth;
   document.getElementById('rMes').value = STATE.currentMonth;
   document.getElementById('dMes').value = STATE.currentMonth;
 
-  // Carrega os dados embutidos automaticamente ao carregar a página
-  loadAllEmbeddedData();
+  if (activePageId === 'dashboard') {
+    renderKPIs();
+    renderReceitaDespesaChart();
+    renderComposicaoReceitasChart();
+    renderMetasReceita();
+    renderProximosVencimentos();
+  } else if (activePageId === 'analise-ia') {
+    renderAnaliseIA();
+    renderReceitaDespesa6MesesChart();
+    renderComposicaoReceitasIaChart();
+    renderDespesasPorCategoriaIaChart();
+    renderSaldoAcumuladoChart();
+  } else if (activePageId === 'receitas') {
+    renderReceitasTable();
+  } else if (activePageId === 'despesas') {
+    renderDespesasTable();
+  } else if (activePageId === 'imoveis') {
+    renderImoveisTable();
+  }
+  // Futuros não tem renderização dinâmica por mês ainda, mas pode ser adicionado
+};
 
-  // Adiciona listeners para os seletores de mês
-  document.getElementById('mesDashboard').addEventListener('change', (e) => { STATE.currentMonth = e.target.value; renderAll(); });
-  document.getElementById('iaMes').addEventListener('change', (e) => { STATE.currentMonth = e.target.value; renderAll(); });
-  document.getElementById('rMes').addEventListener('change', (e) => { STATE.currentMonth = e.target.value; renderAll(); });
-  document.getElementById('dMes').addEventListener('change', (e) => { STATE.currentMonth = e.target.value; renderAll(); });
+// Event Listeners para navegação
+document.querySelectorAll('.nav-item').forEach(button => {
+  button.addEventListener('click', () => {
+    document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
+    button.classList.add('active');
+
+    document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+    document.getElementById(button.dataset.page).classList.add('active');
+
+    renderAll(); // Renderiza a nova página ativa
+  });
+});
+
+// Event Listeners para os seletores de mês
+document.getElementById('mesDashboard').addEventListener('change', (e) => { STATE.currentMonth = e.target.value; renderAll(); });
+document.getElementById('iaMes').addEventListener('change', (e) => { STATE.currentMonth = e.target.value; renderAll(); });
+document.getElementById('rMes').addEventListener('change', (e) => { STATE.currentMonth = e.target.value; renderAll(); });
+document.getElementById('dMes').addEventListener('change', (e) => { STATE.currentMonth = e.target.value; renderAll(); });
+
+// Inicialização
+document.addEventListener('DOMContentLoaded', () => {
+  // Define o mês inicial como Março 2026 nos seletores
+  document.getElementById('mesDashboard').value = STATE.currentMonth;
+  document.getElementById('iaMes').value = STATE.currentMonth;
+  document.getElementById('rMes').value = STATE.currentMonth;
+  document.getElementById('dMes').value = STATE.currentMonth;
+
+  renderAll(); // Renderiza a página inicial (Dashboard)
 });
 </script>
 </body>
