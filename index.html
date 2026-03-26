@@ -5,7 +5,6 @@
 <title>FluxoCaixa IA - Credito Real Ag. São Pedro</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.19.3/dist/xlsx.full.min.js"></script>
 <style>
 :root{
   --bg:#020617;--surface:#020617;--card:#0f172a;--card2:#020617;
@@ -163,35 +162,31 @@ tr:hover td{background:rgba(15,23,42,.8);}
       <span>Credito Real Ag. São Pedro</span>
     </div>
   </div>
-  <div>
-    <div class="nav-section">Principal</div>
-    <button class="nav-item active" onclick="goTo('dashboard')"><span>📊</span><span>Dashboard</span></button>
-    <button class="nav-item" onclick="goTo('ia')"><span>🤖</span><span>Análise IA</span></button>
-    <div class="nav-section">Operacional</div>
-    <button class="nav-item" onclick="goTo('receitas')"><span>💰</span><span>Receitas</span></button>
-    <button class="nav-item" onclick="goTo('despesas')"><span>💸</span><span>Despesas</span></button>
-    <button class="nav-item" onclick="goTo('futuros')"><span>🗓️</span><span>Futuros</span></button>
-    <div class="nav-section">Carteira</div>
-    <button class="nav-item" onclick="goTo('imoveis')"><span>🏠</span><span>Imóveis</span></button>
-  </div>
+  <div class="nav-section">Principal</div>
+  <button class="nav-item active" data-page="dashboard"><span class="icon">📊</span>Dashboard</button>
+  <button class="nav-item" data-page="analise-ia"><span class="icon">🧠</span>Análise IA</button>
+  <div class="nav-section">Operacional</div>
+  <button class="nav-item" data-page="receitas"><span class="icon">💰</span>Receitas</button>
+  <button class="nav-item" data-page="despesas"><span class="icon">💸</span>Despesas</button>
+  <button class="nav-item" data-page="futuros"><span class="icon">🗓️</span>Futuros</button>
+  <div class="nav-section">Carteira</div>
+  <button class="nav-item" data-page="imoveis"><span class="icon">🏡</span>Imóveis</button>
 </nav>
 
 <main class="main">
-  <!-- DASHBOARD PAGE -->
   <div id="dashboard" class="page active">
     <div class="ph">
       <div>
         <h1>Dashboard Financeiro</h1>
-        <p class="sub">Visão geral do fluxo de caixa da Credito Real Ag. São Pedro.</p>
+        <p class="sub">Visão geral e desempenho da imobiliária.</p>
       </div>
       <div class="mbar">
-        <select id="mesDashboard" onchange="renderAll()">
+        <select id="mesDashboard" onchange="STATE.currentMonth=this.value; renderAll();">
           <option value="JANEIRO2026">Janeiro 2026</option>
           <option value="FEVEREIRO2026">Fevereiro 2026</option>
           <option value="MARCO2026">Março 2026</option>
         </select>
-        <button class="btn btn-primary" onclick="loadExcelData()">Carregar Dados Excel</button>
-        <input type="file" id="excelFileInput" accept=".xlsx, .xls" style="display:none;">
+        <button class="btn btn-primary" onclick="loadDataFromEmbeddedExcel()">Carregar Dados 2026</button>
       </div>
     </div>
 
@@ -201,12 +196,12 @@ tr:hover td{background:rgba(15,23,42,.8);}
 
     <div class="grid2">
       <div class="panel">
-        <h3>Receita x Despesa — meses carregados</h3>
-        <div class="chart-wrap"><canvas id="chartRecDesp"></canvas></div>
+        <h3>Receita x Despesa — <span id="chartMesesCarregados"></span></h3>
+        <div class="chart-wrap"><canvas id="chartReceitaDespesa"></canvas></div>
       </div>
       <div class="panel">
         <h3>Composição das Receitas</h3>
-        <div class="chart-wrap"><canvas id="chartRecComp"></canvas></div>
+        <div class="chart-wrap"><canvas id="chartComposicaoReceitas"></canvas></div>
       </div>
     </div>
 
@@ -226,15 +221,14 @@ tr:hover td{background:rgba(15,23,42,.8);}
     </div>
   </div>
 
-  <!-- ANÁLISE IA PAGE -->
-  <div id="ia" class="page">
+  <div id="analise-ia" class="page">
     <div class="ph">
       <div>
-        <h1>Análise de IA</h1>
-        <p class="sub">Insights e recomendações baseadas nos dados financeiros.</p>
+        <h1>Análise IA</h1>
+        <p class="sub">Insights e recomendações baseadas nos seus dados.</p>
       </div>
       <div class="mbar">
-        <select id="iaMes" onchange="renderIA()">
+        <select id="iaMes" onchange="STATE.currentMonth=this.value; renderIA();">
           <option value="JANEIRO2026">Janeiro 2026</option>
           <option value="FEVEREIRO2026">Fevereiro 2026</option>
           <option value="MARCO2026">Março 2026</option>
@@ -243,20 +237,20 @@ tr:hover td{background:rgba(15,23,42,.8);}
     </div>
     <div class="ia-box">
       <div class="ia-header">
-        <span>🤖</span><strong>Análise do Mês</strong>
+        <span>💡</span>
+        <strong>Análise Inteligente para <span id="iaMesAtual"></span></strong>
       </div>
-      <div class="ia-body" id="iaTexto">
-        <p>Carregue os dados do Excel no Dashboard para liberar a análise de IA.</p>
+      <div class="ia-body" id="iaContent">
+        <p>Carregue os dados do Excel para a IA gerar insights.</p>
       </div>
     </div>
   </div>
 
-  <!-- RECEITAS PAGE -->
   <div id="receitas" class="page">
     <div class="ph">
       <div>
-        <h1>Gestão de Receitas</h1>
-        <p class="sub">Adicione e visualize todas as receitas da imobiliária.</p>
+        <h1>Receitas</h1>
+        <p class="sub">Gerencie todas as entradas financeiras da imobiliária.</p>
       </div>
       <div class="mbar">
         <select id="rMes">
@@ -284,8 +278,8 @@ tr:hover td{background:rgba(15,23,42,.8);}
           <input type="text" id="rDesc" placeholder="Ex: Aluguel Imóvel X">
         </div>
         <div class="form-group">
-          <label for="rValor">Valor (R$)</label>
-          <input type="number" id="rValor" step="0.01" value="0">
+          <label for="rValor">Valor</label>
+          <input type="number" id="rValor" placeholder="0.00">
         </div>
         <div class="form-group">
           <label for="rStatus">Status</label>
@@ -297,19 +291,18 @@ tr:hover td{background:rgba(15,23,42,.8);}
       </div>
     </div>
     <div class="panel mt-3">
-      <h3>Receitas Lançadas</h3>
+      <h3>Lista de Receitas</h3>
       <div id="tabReceitas">
         <div class="empty">Sem receitas lançadas.</div>
       </div>
     </div>
   </div>
 
-  <!-- DESPESAS PAGE -->
   <div id="despesas" class="page">
     <div class="ph">
       <div>
-        <h1>Gestão de Despesas</h1>
-        <p class="sub">Adicione e visualize todas as despesas da imobiliária.</p>
+        <h1>Despesas</h1>
+        <p class="sub">Controle todas as saídas financeiras da imobiliária.</p>
       </div>
       <div class="mbar">
         <select id="dMes">
@@ -317,7 +310,7 @@ tr:hover td{background:rgba(15,23,42,.8);}
           <option value="FEVEREIRO2026">Fevereiro 2026</option>
           <option value="MARCO2026">Março 2026</option>
         </select>
-        <button class="btn btn-danger" onclick="addDespesa()">Adicionar Despesa</button>
+        <button class="btn btn-primary" onclick="addDespesa()">Adicionar Despesa</button>
       </div>
     </div>
     <div class="panel">
@@ -330,10 +323,8 @@ tr:hover td{background:rgba(15,23,42,.8);}
             <option value="Sistemas">Sistemas</option>
             <option value="Água/Luz">Água/Luz</option>
             <option value="Impostos">Impostos</option>
-            <option value="Empréstimos">Empréstimos</option>
-            <option value="Manutenção">Manutenção</option>
-            <option value="Serviços Gerais">Serviços Gerais</option>
             <option value="Seguros">Seguros</option>
+            <option value="Serviços Gerais">Serviços Gerais</option>
             <option value="Material de Consumo">Material de Consumo</option>
             <option value="Outros">Outros</option>
           </select>
@@ -343,8 +334,8 @@ tr:hover td{background:rgba(15,23,42,.8);}
           <input type="text" id="dDesc" placeholder="Ex: Conta de Luz">
         </div>
         <div class="form-group">
-          <label for="dValor">Valor (R$)</label>
-          <input type="number" id="dValor" step="0.01" value="0">
+          <label for="dValor">Valor</label>
+          <input type="number" id="dValor" placeholder="0.00">
         </div>
         <div class="form-group">
           <label for="dData">Data Vencimento</label>
@@ -360,18 +351,19 @@ tr:hover td{background:rgba(15,23,42,.8);}
       </div>
     </div>
     <div class="panel mt-3">
-      <h3>Despesas Lançadas</h3>
+      <h3>Lista de Despesas</h3>
       <div id="tabDespesas">
         <div class="empty">Sem despesas lançadas.</div>
       </div>
     </div>
   </div>
 
-  <!-- FUTUROS PAGE -->
   <div id="futuros" class="page">
     <div class="ph">
-      <h1>Lançamentos Futuros</h1>
-      <p class="sub">Receitas e despesas previstas para os próximos meses.</p>
+      <div>
+        <h1>Lançamentos Futuros</h1>
+        <p class="sub">Receitas e despesas previstas para os próximos meses.</p>
+      </div>
     </div>
     <div class="grid2">
       <div class="panel">
@@ -389,17 +381,18 @@ tr:hover td{background:rgba(15,23,42,.8);}
     </div>
   </div>
 
-  <!-- IMÓVEIS PAGE -->
   <div id="imoveis" class="page">
     <div class="ph">
-      <h1>Carteira de Imóveis</h1>
-      <p class="sub">Detalhes dos imóveis sob gestão da imobiliária.</p>
+      <div>
+        <h1>Carteira de Imóveis</h1>
+        <p class="sub">Visão geral dos imóveis sob gestão.</p>
+      </div>
     </div>
     <div class="kpi-grid" id="kpisCart">
       <!-- KPIs da carteira serão renderizados aqui -->
     </div>
-    <div class="panel mt-3">
-      <h3>Imóveis Cadastrados</h3>
+    <div class="panel">
+      <h3>Imóveis Ativos</h3>
       <div id="tabCart">
         <div class="empty">A carteira será preenchida ao carregar os dados do Excel.</div>
       </div>
@@ -416,41 +409,39 @@ const STATE = {
   receitas: [],
   despesas: [],
   imoveis: [],
-  charts: {}, // Para armazenar instâncias de gráficos
 };
 
 const DESP_LABELS = {
-  'Mídias': { label: 'Mídias', icon: '📢' },
-  'Sistemas': { label: 'Sistemas', icon: '💻' },
-  'Água/Luz': { label: 'Água/Luz', icon: '💡' },
-  'Impostos': { label: 'Impostos', icon: '🧾' },
-  'Empréstimos': { label: 'Empréstimos', icon: '🏦' },
-  'Manutenção': { label: 'Manutenção', icon: '🛠️' },
-  'Serviços Gerais': { label: 'Serviços Gerais', icon: '🧹' },
+  'Mídias': { label: 'Mídias/Marketing', icon: '📣' },
+  'Sistemas': { label: 'Sistemas/Software', icon: '💻' },
+  'Água/Luz': { label: 'Água e Luz', icon: '💧💡' },
+  'Impostos': { label: 'Impostos/Taxas', icon: '🧾' },
   'Seguros': { label: 'Seguros', icon: '🛡️' },
-  'Material de Consumo': { label: 'Material de Consumo', icon: '🛒' },
-  'Outros': { label: 'Outros', icon: '❓' },
+  'Serviços Gerais': { label: 'Serviços Gerais', icon: '🧹' },
+  'Material de Consumo': { label: 'Material de Consumo', icon: '✏️' },
+  'Outros': { label: 'Outras Despesas', icon: '📦' },
 };
+
+let charts = {}; // Objeto para armazenar instâncias de gráficos
 
 // ====================== UTILS ======================
 function fmt(value) {
-  return (value || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
 }
-function pct(value) {
-  return (value || 0).toLocaleString('pt-BR', { style: 'percent', minimumFractionDigits: 2, maximumFractionDigits: 2 });
-}
+
 function monthLabel(mes) {
   const map = {
-    'JANEIRO2026': 'Janeiro 2026',
-    'FEVEREIRO2026': 'Fevereiro 2026',
-    'MARCO2026': 'Março 2026',
+    'JANEIRO2026': 'Jan 2026',
+    'FEVEREIRO2026': 'Fev 2026',
+    'MARCO2026': 'Mar 2026',
   };
   return map[mes] || mes;
 }
+
 function today() {
-  const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  return new Date().toISOString().split('T')[0];
 }
+
 function toast(message, isError = false) {
   const el = document.getElementById('toast');
   el.textContent = message;
@@ -462,113 +453,123 @@ function toast(message, isError = false) {
   }, 3000);
 }
 
-// ====================== NAVEGAÇÃO ======================
-function goTo(pageId) {
-  document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
-  document.getElementById(pageId).classList.add('active');
-  document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-  document.querySelector(`.nav-item[onclick="goTo('${pageId}')"]`).classList.add('active');
-  renderAll(); // Re-renderiza tudo ao mudar de página para garantir dados atualizados
+function destroyChart(chartId) {
+  if (charts[chartId]) {
+    charts[chartId].destroy();
+    delete charts[chartId];
+  }
 }
 
-// ====================== LÓGICA DE DADOS DO MÊS ======================
-function dadosMes(mes) {
+// ====================== NAVEGAÇÃO ======================
+document.querySelectorAll('.nav-item').forEach(item => {
+  item.addEventListener('click', () => {
+    document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+    item.classList.add('active');
+    document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+    document.getElementById(item.dataset.page).classList.add('active');
+  });
+});
+
+// ====================== RENDER DASHBOARD ======================
+function getMonthData(mes) {
   const receitasMes = STATE.receitas.filter(r => r.mes === mes && r.status === 'pago');
   const despesasMes = STATE.despesas.filter(d => d.mes === mes && d.status === 'pago');
   const despesasVencidas = STATE.despesas.filter(d => d.mes === mes && d.status === 'previsto' && d.data < today());
 
   const loc = receitasMes.filter(r => r.tipo === 'Locação').reduce((sum, r) => sum + r.valor, 0);
   const venda = receitasMes.filter(r => r.tipo === 'Venda').reduce((sum, r) => sum + r.valor, 0);
-  const bon = receitasMes.filter(r => r.tipo === 'Bonificação').reduce((sum, r) => sum + r.valor, 0);
-  const outrosRec = receitasMes.filter(r => r.tipo === 'Outros').reduce((sum, r) => sum + r.valor, 0);
+  const bonificacao = receitasMes.filter(r => r.tipo === 'Bonificação').reduce((sum, r) => sum + r.valor, 0);
+  const outrasRec = receitasMes.filter(r => r.tipo === 'Outros').reduce((sum, r) => sum + r.valor, 0);
 
-  const totalRec = loc + venda + bon + outrosRec;
-  const totalDesp = despesasMes.reduce((sum, d) => sum + d.valor, 0);
-  const saldo = totalRec - totalDesp;
+  const totalReceitas = loc + venda + bonificacao + outrasRec;
+  const totalDespesas = despesasMes.reduce((sum, d) => sum + d.valor, 0);
+  const saldo = totalReceitas - totalDespesas;
   const vencidos = despesasVencidas.reduce((sum, d) => sum + d.valor, 0);
 
-  return { loc, venda, bon, outrosRec, totalRec, totalDesp, saldo, vencidos };
-}
-
-// ====================== RENDER DASHBOARD ======================
-function destroyChart(chartId) {
-  if (STATE.charts[chartId]) {
-    STATE.charts[chartId].destroy();
-    delete STATE.charts[chartId];
-  }
+  return { loc, venda, bonificacao, outrasRec, totalReceitas, totalDespesas, saldo, vencidos };
 }
 
 function renderDashboard() {
-  const mes = STATE.currentMonth;
-  const D = dadosMes(mes);
-  const kpisEl = document.getElementById('kpisDashboard');
+  const currentMonth = STATE.currentMonth;
+  const D = getMonthData(currentMonth);
 
-  if (STATE.receitas.length === 0 && STATE.despesas.length === 0) {
-    kpisEl.innerHTML = `
-      <div class="kpi-card"><div class="lbl">Receita Total</div><div class="val">-</div><div class="sub">Importe o Excel</div></div>
-      <div class="kpi-card"><div class="lbl">Despesa Total</div><div class="val">-</div><div class="sub">para ver os números</div></div>
-      <div class="kpi-card"><div class="lbl">Saldo Líquido</div><div class="val">-</div><div class="sub">reais.</div></div>
-      <div class="kpi-card"><div class="lbl">Margem Líquida</div><div class="val">-</div><div class="sub"></div></div>
-    `;
-    document.getElementById('progress-receitas').innerHTML = '<div class="empty">Sem dados carregados.</div>';
-    document.getElementById('proximos-venc').innerHTML = '<div class="empty">Sem dados carregados.</div>';
-    destroyChart('chartRecDesp');
-    destroyChart('chartRecComp');
-    return;
-  }
-
-  const margem = D.totalRec > 0 ? (D.saldo / D.totalRec) : 0;
-  const margemClass = margem >= 0.3 ? 'green' : (margem >= 0.1 ? 'yellow' : 'red');
-
-  kpisEl.innerHTML = `
-    <div class="kpi-card"><div class="lbl">Receita Total</div><div class="val green">${fmt(D.totalRec)}</div></div>
-    <div class="kpi-card"><div class="lbl">Despesa Total</div><div class="val red">${fmt(D.totalDesp)}</div></div>
-    <div class="kpi-card"><div class="lbl">Saldo Líquido</div><div class="val ${D.saldo >= 0 ? 'blue' : 'red'}">${fmt(D.saldo)}</div></div>
-    <div class="kpi-card"><div class="lbl">Margem Líquida</div><div class="val ${margemClass}">${pct(margem)}</div></div>
+  // KPIs
+  document.getElementById('kpisDashboard').innerHTML = `
+    <div class="kpi-card">
+      <div class="lbl">Receita Total</div>
+      <div class="val ${D.totalReceitas > 0 ? 'green' : ''}">${fmt(D.totalReceitas)}</div>
+    </div>
+    <div class="kpi-card">
+      <div class="lbl">Despesa Total</div>
+      <div class="val ${D.totalDespesas > 0 ? 'red' : ''}">${fmt(D.totalDespesas)}</div>
+    </div>
+    <div class="kpi-card">
+      <div class="lbl">Saldo do Mês</div>
+      <div class="val ${D.saldo >= 0 ? 'blue' : 'red'}">${fmt(D.saldo)}</div>
+    </div>
+    <div class="kpi-card">
+      <div class="lbl">Despesas Vencidas</div>
+      <div class="val ${D.vencidos > 0 ? 'yellow' : ''}">${fmt(D.vencidos)}</div>
+    </div>
   `;
 
   // CHART: Receita x Despesa
-  destroyChart('chartRecDesp');
-  STATE.charts['chartRecDesp'] = new Chart(document.getElementById('chartRecDesp'), {
+  const months = ['JANEIRO2026', 'FEVEREIRO2026', 'MARCO2026']; // Meses para o gráfico
+  const labels = months.map(monthLabel);
+  const receitasData = months.map(m => getMonthData(m).totalReceitas);
+  const despesasData = months.map(m => getMonthData(m).totalDespesas);
+
+  document.getElementById('chartMesesCarregados').textContent = `${monthLabel(months[0])} - ${monthLabel(months[months.length - 1])}`;
+
+  destroyChart('chartReceitaDespesa');
+  charts['chartReceitaDespesa'] = new Chart(document.getElementById('chartReceitaDespesa'), {
     type: 'bar',
     data: {
-      labels: ['Receita', 'Despesa'],
+      labels: labels,
       datasets: [
-        { label: 'Valor', data: [D.totalRec, D.totalDesp], backgroundColor: ['rgba(34,197,94,.7)', 'rgba(239,68,68,.7)'], borderRadius: 6 }
+        { label: 'Receitas', data: receitasData, backgroundColor: 'rgba(79,70,229,0.8)', borderRadius: 6 },
+        { label: 'Despesas', data: despesasData, backgroundColor: 'rgba(239,68,68,0.8)', borderRadius: 6 }
       ]
     },
     options: {
-      responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { labels: { color: var('--text') } } },
       scales: {
-        x: { ticks: { color: '#64748b' }, grid: { color: '#1e293b' } },
-        y: { ticks: { color: '#64748b', callback: v => 'R$' + v.toLocaleString('pt-BR') }, grid: { color: '#1e293b' } }
+        x: { ticks: { color: var('--muted') }, grid: { color: var('--border') } },
+        y: { ticks: { color: var('--muted'), callback: v => 'R$' + v.toLocaleString('pt-BR') }, grid: { color: var('--border') } }
       }
     }
   });
 
-  // CHART: Composição Receitas
-  destroyChart('chartRecComp');
-  STATE.charts['chartRecComp'] = new Chart(document.getElementById('chartRecComp'), {
+  // CHART: Composição das Receitas
+  const receitaTypes = ['Locação', 'Venda', 'Bonificação', 'Outros'];
+  const receitaValues = [D.loc, D.venda, D.bonificacao, D.outrasRec];
+  const receitaColors = ['#4f46e5', '#22c55e', '#eab308', '#7c3aed'];
+
+  destroyChart('chartComposicaoReceitas');
+  charts['chartComposicaoReceitas'] = new Chart(document.getElementById('chartComposicaoReceitas'), {
     type: 'doughnut',
     data: {
-      labels: ['🏘️ Locação', '🤝 Vendas', '⭐ Bonificações', 'Outros'],
+      labels: receitaTypes,
       datasets: [{
-        data: [D.loc || 0, D.venda || 0, D.bon || 0, D.outrosRec || 0],
-        backgroundColor: ['rgba(79,70,229,.8)', 'rgba(34,197,94,.8)', 'rgba(124,58,237,.8)', 'rgba(234,179,8,.8)'],
-        borderWidth: 2, borderColor: '#0f172a'
+        data: receitaValues,
+        backgroundColor: receitaColors,
+        borderWidth: 2,
+        borderColor: var('--card2')
       }]
     },
     options: {
-      responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#e2e8f0', padding: 12 } } }
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'bottom', labels: { color: var('--text'), padding: 12 } } }
     }
   });
 
   // PROGRESS METAS
-  const metaLoc = 20000, metaVnd = 50000, metaBon = 10000; // Metas de exemplo
+  const metaLoc = 20000, metaVnd = 50000, metaBon = 10000;
   document.getElementById('progress-receitas').innerHTML = [
     { label: '🏘️ Locação', val: D.loc, meta: metaLoc, color: '#4f46e5' },
     { label: '🤝 Vendas', val: D.venda, meta: metaVnd, color: '#22c55e' },
-    { label: '⭐ Bonificações', val: D.bon, meta: metaBon, color: '#a78bfa' },
+    { label: '⭐ Bonificações', val: D.bonificacao, meta: metaBon, color: '#a78bfa' },
   ].map(p => {
     const pct = Math.min(p.meta > 0 ? (p.val / p.meta * 100) : 0, 100);
     return `<div class="prog-wrap">
@@ -587,29 +588,33 @@ function renderDashboard() {
     ? `<div class="table-wrap"><table><thead><tr><th>Venc.</th><th>Descrição</th><th>Valor</th></tr></thead><tbody>
         ${prox.map(d => `<tr><td>${d.data}</td><td>${DESP_LABELS[d.cat]?.label || d.cat} ${d.desc}</td><td style="color:var(--yellow)">${fmt(d.valor)}</td></tr>`).join('')}
        </tbody></table></div>`
-    : '<div class="empty">Sem próximos vencimentos.</div>';
+    : '<div class="empty">Sem despesas futuras próximas.</div>';
 }
 
-// ====================== IA ======================
+// ====================== RENDER ANÁLISE IA ======================
 function renderIA() {
-  const el = document.getElementById('iaTexto');
-  const mes = document.getElementById('iaMes').value;
-  const D = dadosMes(mes);
+  const currentMonth = STATE.currentMonth;
+  document.getElementById('iaMesAtual').textContent = monthLabel(currentMonth);
+  const el = document.getElementById('iaContent');
+  const D = getMonthData(currentMonth);
 
   if (STATE.receitas.length === 0 && STATE.despesas.length === 0) {
-    el.innerHTML = '<p>Carregue os dados do Excel para liberar a análise de IA.</p>';
+    el.innerHTML = '<p>Carregue os dados do Excel para a IA gerar insights.</p>';
     return;
   }
 
-  const margem = D.totalRec > 0 ? (D.saldo / D.totalRec * 100) : 0;
-  const txt = [];
-  txt.push(`<p>Em <strong>${monthLabel(mes)}</strong>, a Credito Real Ag. São Pedro faturou <strong>${fmt(D.totalRec)}</strong> e teve despesas de <strong>${fmt(D.totalDesp)}</strong>, gerando um saldo de <strong>${fmt(D.saldo)}</strong>.</p>`);
-  if (margem >= 30) {
-    txt.push(`<p class="ok">A margem líquida de <strong>${pct(margem)}</strong> é muito saudável para uma imobiliária. Dá para atravessar meses com menos vendas sem estresse de caixa.</p>`);
-  } else if (margem >= 10) {
-    txt.push(`<p class="warn">A margem líquida de <strong>${pct(margem)}</strong> é razoável. Vale revisar custos de mídias, sistemas e serviços para tentar ganhar 3–5 pontos percentuais.</p>`);
+  let txt = [];
+  txt.push(`<p>Análise Financeira para <strong>${monthLabel(currentMonth)}</strong>:</p>`);
+  txt.push(`<p>O saldo do mês foi de <strong>${fmt(D.saldo)}</strong>. ${D.saldo >= 0 ? '<span class="ok">Positivo</span>, indicando boa gestão financeira.' : '<span class="bad">Negativo</span>, o que requer atenção para equilibrar receitas e despesas.'}</p>`);
+
+  if (D.totalDespesas > D.totalReceitas * 0.7) { // Se despesas > 70% da receita
+    txt.push(`<p class="warn">As despesas representam uma parcela significativa das receitas (${(D.totalDespesas / D.totalReceitas * 100).toFixed(1)}%). Avalie oportunidades de otimização de custos.</p>`);
   } else {
-    txt.push(`<p class="bad">A margem líquida de <strong>${pct(margem)}</strong> está apertada. Qualquer queda na carteira de locação ou atraso de comissão de venda pode pressionar o caixa.</p>`);
+    txt.push(`<p class="ok">As despesas estão controladas em relação às receitas, indicando eficiência operacional.</p>`);
+  }
+
+  if (D.venda === 0 && D.bonificacao === 0 && D.loc > 0) {
+    txt.push(`<p class="warn">A dependência de receitas de locação é alta. Explore estratégias para aumentar as receitas de vendas e bonificações, diversificando as fontes de renda.</p>`);
   }
   txt.push(`<p>As receitas de <strong>locação</strong> somaram ${fmt(D.loc)}, garantindo recorrência mensal. As receitas de <strong>vendas</strong> chegaram a ${fmt(D.venda)}, que turbinam o resultado nos meses em que acontecem.</p>`);
   if (D.vencidos > 0) {
@@ -641,7 +646,7 @@ function addDespesa() {
   const cat = document.getElementById('dCat').value;
   const desc = document.getElementById('dDesc').value.trim();
   const valor = parseFloat(document.getElementById('dValor').value || '0');
-  const data = document.getElementById('dData').value || `${mes.slice(0, -4)}-10`; // Default to 10th of the month
+  const data = document.getElementById('dData').value || `${mes.slice(-4)}-${{JANEIRO:'01',FEVEREIRO:'02',MARCO:'03'}[mes.slice(0,-4)] || '01'}-10`;
   const status = document.getElementById('dStatus').value;
   if (!desc || !valor) { toast('Descrição e valor são obrigatórios.', true); return; }
   STATE.despesas.push({ mes, cat, desc, valor, data, status });
@@ -699,7 +704,7 @@ function renderCarteira() {
   const t = document.getElementById('tabCart');
   if (!STATE.imoveis.length) {
     k.innerHTML = '';
-    t.innerHTML = '<div class="empty">A carteira será preenchida ao carregar os dados do Excel.</div>';
+    t.innerHTML = '<div class="empty">A carteira será preenchida ao carregar os dados.</div>';
     return;
   }
   const qtd = STATE.imoveis.length;
@@ -715,142 +720,435 @@ function renderCarteira() {
   }</tbody></table></div>`;
 }
 
-// ====================== LEITURA DO EXCEL ======================
-async function loadExcelData() {
-  const fileInput = document.getElementById('excelFileInput');
-  fileInput.click(); // Abre o seletor de arquivos
+// ====================== LEITURA DE DADOS EMBUTIDOS (SUA PLANILHA) ======================
+function parseExcelData(sheetName, rawData) {
+  const receitas = [];
+  const despesas = [];
+  const imoveis = [];
 
-  fileInput.onchange = async (event) => {
-    const file = event.target.files[0];
-    if (!file) {
-      toast('Nenhum arquivo selecionado.', true);
-      return;
+  // Mapeamento de colunas para RECEITAS (começa na linha 3, índice 2)
+  const COL_ENDERECO = 0;
+  const COL_LOCATARIO = 1;
+  const COL_VALOR_TOTAL_ALUGUEL = 2;
+  const COL_TX_ADM = 3;
+  const COL_CONDOMINIO = 4;
+  const COL_RECEITA_VENDA = 5;
+
+  // Mapeamento de colunas para DESPESAS (começa na linha 3, índice 2)
+  const COL_NOME_DESPESA = 7;
+  const COL_VALOR_PAGO_DESPESA = 9;
+  const COL_DT_VENCIMENTO_DESPESA = 10;
+
+  for (let i = 3; i < rawData.length; i++) { // Começa da linha 4 da planilha (índice 3 no array)
+    const row = rawData[i];
+
+    // --- Processar Receitas ---
+    const endereco = row[COL_ENDERECO];
+    const locatario = row[COL_LOCATARIO];
+    let valorTotalAluguel = parseFloat(row[COL_VALOR_TOTAL_ALUGUEL]) || 0;
+    let txAdm = parseFloat(row[COL_TX_ADM]) || 0;
+    const condominio = parseFloat(row[COL_CONDOMINIO]) || 0;
+    const receitaVenda = parseFloat(row[COL_RECEITA_VENDA]) || 0;
+
+    if (endereco && locatario && valorTotalAluguel > 0) {
+      if (isNaN(txAdm) || txAdm === 0) { // Se Tx Adm não for número ou for 0, calcula 10%
+        txAdm = valorTotalAluguel * 0.10;
+      }
+      receitas.push({
+        mes: sheetName,
+        tipo: 'Locação',
+        desc: `Aluguel ${endereco} - ${locatario}`,
+        valor: txAdm,
+        status: 'pago'
+      });
+      if (!imoveis.some(im => im.end === endereco)) {
+        imoveis.push({
+          end: endereco,
+          loc: locatario,
+          aluguel: valorTotalAluguel,
+          taxa: txAdm,
+          cond: condominio
+        });
+      }
+    }
+    if (receitaVenda > 0) {
+      receitas.push({
+        mes: sheetName,
+        tipo: 'Venda',
+        desc: `Comissão Venda Imóvel ${endereco || 'Desconhecido'}`,
+        valor: receitaVenda,
+        status: 'pago'
+      });
     }
 
-    const reader = new FileReader();
-    reader.onload = async (e) => {
-      try {
-        const data = new Uint8Array(e.target.result);
-        const workbook = XLSX.read(data, { type: 'array' });
+    // --- Processar Despesas ---
+    const nomeDespesa = row[COL_NOME_DESPESA];
+    const valorPagoDespesa = parseFloat(row[COL_VALOR_PAGO_DESPESA]) || 0;
+    let dtVencimentoDespesa = row[COL_DT_VENCIMENTO_DESPESA];
 
-        STATE.receitas = [];
-        STATE.despesas = [];
-        STATE.imoveis = [];
-
-        const sheetsToProcess = ['JANEIRO2026', 'FEVEREIRO2026', 'MARCO2026']; // Adicione MARCO2026 aqui
-
-        for (const sheetName of sheetsToProcess) {
-          if (workbook.SheetNames.includes(sheetName)) {
-            const worksheet = workbook.Sheets[sheetName];
-            const json = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-
-            // --- Processar Receitas ---
-            // As receitas começam na linha 3 (índice 2) e coluna 0 (ENDEREÇO)
-            // Colunas: ENDEREÇO (0), LOCATÁRIO (1), Valor total (R$) (2), Tx Adm (R$) (3), Condominio (R$) (4), Receita de Venda Imóveis (5)
-            for (let i = 3; i < json.length; i++) {
-              const row = json[i];
-              const endereco = row[0];
-              const locatario = row[1];
-              let valorTotal = parseFloat(row[2]) || 0;
-              let txAdm = parseFloat(row[3]) || 0;
-              const condominio = parseFloat(row[4]) || 0;
-              const receitaVenda = parseFloat(row[5]) || 0;
-
-              if (endereco && locatario && valorTotal > 0) {
-                // Se a Tx Adm não for preenchida, calcula 10% do valor total
-                if (txAdm === 0 && valorTotal > 0) {
-                    txAdm = valorTotal * 0.10;
-                }
-                STATE.receitas.push({
-                  mes: sheetName,
-                  tipo: 'Locação',
-                  desc: `Aluguel ${endereco} - ${locatario}`,
-                  valor: txAdm, // A receita da imobiliária é a taxa de administração
-                  status: 'pago'
-                });
-                // Adiciona o imóvel à carteira se ainda não existir
-                if (!STATE.imoveis.some(im => im.end === endereco)) {
-                  STATE.imoveis.push({
-                    end: endereco,
-                    loc: locatario,
-                    aluguel: valorTotal,
-                    taxa: txAdm,
-                    cond: condominio
-                  });
-                }
-              }
-              // Adicionar receita de venda se houver
-              if (receitaVenda > 0) {
-                STATE.receitas.push({
-                  mes: sheetName,
-                  tipo: 'Venda',
-                  desc: `Comissão Venda Imóvel ${endereco || 'Desconhecido'}`,
-                  valor: receitaVenda,
-                  status: 'pago'
-                });
-              }
-            }
-
-            // --- Processar Despesas ---
-            // As despesas começam na linha 3 (índice 2) e coluna 7 (Nome)
-            // Colunas: Nome (7), Valor pago (9), Dt Vencimento (10)
-            for (let i = 3; i < json.length; i++) {
-              const row = json[i];
-              const nomeDespesa = row[7];
-              const valorPago = parseFloat(row[9]) || 0;
-              let dtVencimento = row[10];
-
-              if (nomeDespesa && valorPago > 0) {
-                let categoria = 'Outros';
-                if (nomeDespesa.includes('Chaves na Mão') || nomeDespesa.includes('ZAP Viva Real') || nomeDespesa.includes('EMOVEL') || nomeDespesa.includes('Marketing')) {
-                  categoria = 'Mídias';
-                } else if (nomeDespesa.includes('Vista Software') || nomeDespesa.includes('Fenyx') || nomeDespesa.includes('SAMI Sistemas')) {
-                  categoria = 'Sistemas';
-                } else if (nomeDespesa.includes('CEEE-D') || nomeDespesa.includes('DMAE')) {
-                  categoria = 'Água/Luz';
-                } else if (nomeDespesa.includes('DAS') || nomeDespesa.includes('ISSQN')) {
-                  categoria = 'Impostos';
-                } else if (nomeDespesa.includes('Despesas seguros')) {
-                  categoria = 'Seguros';
-                } else if (nomeDespesa.includes('Despesas SERV GERAIS')) {
-                  categoria = 'Serviços Gerais';
-                } else if (nomeDespesa.includes('Material de consumo')) {
-                  categoria = 'Material de Consumo';
-                }
-
-                // Converter data do Excel para formato YYYY-MM-DD
-                if (typeof dtVencimento === 'number') { // Se for número, é data do Excel
-                  const excelDate = new Date(Math.round((dtVencimento - 25569) * 86400 * 1000));
-                  dtVencimento = excelDate.toISOString().split('T')[0];
-                } else if (typeof dtVencimento === 'string' && dtVencimento.includes(' ')) { // Se for string com hora
-                  dtVencimento = dtVencimento.split(' ')[0];
-                } else if (!dtVencimento) { // Se não tiver data, usa o dia 10 do mês
-                  const year = sheetName.slice(-4);
-                  const monthNum = { 'JANEIRO': '01', 'FEVEREIRO': '02', 'MARCO': '03' }[sheetName.slice(0, -4)];
-                  dtVencimento = `${year}-${monthNum}-10`;
-                }
-
-                STATE.despesas.push({
-                  mes: sheetName,
-                  cat: categoria,
-                  desc: nomeDespesa,
-                  valor: valorPago,
-                  data: dtVencimento,
-                  status: 'pago'
-                });
-              }
-            }
-          }
-        }
-        toast('Dados do Excel carregados com sucesso!');
-        renderAll();
-      } catch (error) {
-        console.error('Erro ao processar o arquivo Excel:', error);
-        toast('Erro ao processar o arquivo Excel. Verifique o formato.', true);
+    if (nomeDespesa && valorPagoDespesa > 0) {
+      let categoria = 'Outros';
+      if (nomeDespesa.includes('Chaves na Mão') || nomeDespesa.includes('ZAP Viva Real') || nomeDespesa.includes('EMOVEL') || nomeDespesa.includes('Marketing')) {
+        categoria = 'Mídias';
+      } else if (nomeDespesa.includes('Vista Software') || nomeDespesa.includes('Fenyx') || nomeDespesa.includes('SAMI Sistemas')) {
+        categoria = 'Sistemas';
+      } else if (nomeDespesa.includes('CEEE-D') || nomeDespesa.includes('DMAE')) {
+        categoria = 'Água/Luz';
+      } else if (nomeDespesa.includes('DAS') || nomeDespesa.includes('ISSQN')) {
+        categoria = 'Impostos';
+      } else if (nomeDespesa.includes('Despesas seguros')) {
+        categoria = 'Seguros';
+      } else if (nomeDespesa.includes('Despesas SERV GERAIS')) {
+        categoria = 'Serviços Gerais';
+      } else if (nomeDespesa.includes('Material de consumo')) {
+        categoria = 'Material de Consumo';
       }
-    };
-    reader.readAsArrayBuffer(file);
+
+      // Converter data do Excel para formato YYYY-MM-DD
+      if (typeof dtVencimentoDespesa === 'number') { // Se for número, é data do Excel
+        const excelDate = new Date(Math.round((dtVencimentoDespesa - 25569) * 86400 * 1000));
+        dtVencimentoDespesa = excelDate.toISOString().split('T')[0];
+      } else if (typeof dtVencimentoDespesa === 'string' && dtVencimentoDespesa.includes(' ')) { // Se for string com hora
+        dtVencimentoDespesa = dtVencimentoDespesa.split(' ')[0];
+      } else if (!dtVencimentoDespesa) { // Se não tiver data, usa o dia 10 do mês
+        const year = sheetName.slice(-4);
+        const monthNum = { 'JANEIRO': '01', 'FEVEREIRO': '02', 'MARCO': '03' }[sheetName.slice(0, -4)];
+        dtVencimentoDespesa = `${year}-${monthNum}-10`;
+      }
+
+      despesas.push({
+        mes: sheetName,
+        cat: categoria,
+        desc: nomeDespesa,
+        valor: valorPagoDespesa,
+        data: dtVencimentoDespesa,
+        status: 'pago'
+      });
+    }
+  }
+  return { receitas, despesas, imoveis };
+}
+
+// Dados da sua planilha em formato de array de arrays (JSON de cada aba)
+// JANEIRO2026
+const JANEIRO2026_DATA = [
+  [ '2026-01-01 00:00:00', null, null, null, null, null, null, '2026-01-01 00:00:00.1', null, null, null ],
+  [ 'Receitas ingresso', null, null, null, null, null, null, 'Despesas', null, null, null ],
+  [ 'ENDEREÇO', 'LOCATÁRIO', 'Valor total (R$)', 'Tx Adm (R$)', 'Condominio (R$)', 'Receita de Venda Imóveis', null, 'Nome', 'CNPJ/CPF', 'Valor pago', 'Dt Vencimento' ],
+  [ 'Av. São Pedro, 611 conj. 201', 'Diego', 1500, NaN, 150, NaN, null, 'Chaves na Mão - FBS Mídia Eireli - ME', '11.351.276/0001-30', 459, 44598 ],
+  [ 'Av. São Pedro, 611 conj. 202', 'Luiz Carlos', 1229.28, NaN, 150, NaN, null, 'Vista Software e Internet Ltda', '07.646.081/0001-40', 575.7, 44609 ],
+  [ 'Av. São Pedro, 611 conj. 203', 'Jorge', 1200, NaN, 150, NaN, null, 'ZAP Viva Real-ADYEN BR LTDA', '11.334.990/0001-10', 2184, 44616 ],
+  [ 'Av. São Pedro, 611 conj. 204', 'Douglas', 1200, NaN, 150, NaN, null, 'Fenyx do Brasil', '05.569.848/0001-50', 661.39, 44613 ],
+  [ 'Av. São Pedro, 611 conj. 301', 'Marco', 1300, NaN, 150, NaN, null, 'SAMI Sistemas', NaN, 429, 44605 ],
+  [ 'Av. São Pedro, 611 conj. 302', 'Amanda', 1400, NaN, 150, NaN, null, 'EMOVEL', NaN, 466.55, 44610 ],
+  [ 'Av. São Pedro, 611 conj. 303', 'Juliano', 1073.65, NaN, 150, NaN, null, 'TAXA MARK SDR', NaN, 0, 44613 ],
+  [ 'Av. São Pedro, 611 conj. 304', 'Ivone', 1052.67, NaN, 150, NaN, null, 'Ricardo A. da Cruz', '09.101.421/0001-83', 252.49, 44598 ],
+  [ 'Av. São Pedro, 605 LOJA', 'Edilson', 2074.34, 0, 0, NaN, null, 'Conta Energia - CEEE-D', '08.467.115/0001-00', 287.15, 44589 ],
+  [ 'Av. Assis Brasil, 2884 LOJA', 'Rei Midas', 10000, 1000, 0, NaN, null, 'DMAE', '929249010001-98', 37.31, 44603 ],
+  [ 'Av. Assis Brasil, 2886 apto 01', 'Ana Paula', 1500, 150, 160, NaN, null, 'CLARO NET Fone', '40.432.544/0101-00', 152.88, 44598 ],
+  [ 'Av. Assis Brasil, 2886 apto 02', 'Michele', 1439.62, 143.96, 200, NaN, null, 'Camila Prest Serv. Adm', NaN, 2705.73, NaN ],
+  [ 'Av. Assis Brasil, 2886 apto 03', 'André', 1668.14, 166.81, 160, NaN, null, 'DAS', 'SIMPLES NACIONAL', 4409.88, 44608 ],
+  [ 'Av. Assis Brasil, 2886 apto 04', 'André', 1128.28, 112.83, 160, NaN, null, 'Guia de ISSQN', NaN, 287.53, NaN ],
+  [ 'Av. Assis Brasil, 2888 LOJA', 'Hiperdoces', 13269.34, 1040.52, 0, NaN, null, 'RP Vigilância', '28.480.078/0001-70', 150, NaN ],
+  [ 'Av. João Wallig, 509', 'Maria Beatriz', 5351.5, 535.15, NaN, NaN, null, 'Royaties Crédito Real', '92.691.336/0001-66', 7069.19, NaN ],
+  [ 'Alberto Pasqualine, 101. 102', 'Lidiane', 1456.91, 145.69, 150, NaN, null, 'Despesas seguros', NaN, 204.33, NaN ],
+  [ 'Alberto Pasqualine, 101. 101', 'Willian', 2353.79, 235.38, 200, NaN, null, 'Diversos (Placas, fotos, cartao de visita)', NaN, 480, NaN ],
+  [ 'Alberto Pasqualine, 101. 103', 'Lidiane', 1088.07, 108.8, 150, NaN, null, 'Despesas SERV GERAIS', NaN, 2180, NaN ],
+  [ 'Alberto Pasqualine, 101. 201', 'Nathalia', 2216.23, 221.63, 200, NaN, null, 'Desp. Manutenção Prédio', NaN, 0, NaN ],
+  [ 'Alberto Pasqualine, 101. 202', 'Nathalia', 1926.54, 192.65, 200, NaN, null, 'Despesas de Marketing', NaN, 2105, NaN ],
+  [ 'Andradas,711/804', NaN, NaN, NaN, NaN, NaN, null, 'Material de consumo', NaN, 300, NaN ],
+  [ 'Padre Todesco, 927 apto 505', 'Bernado', 2000, 200, NaN, NaN, null, 'TOTAL', NaN, 25397.13, NaN ],
+  [ 'Doutor David Giacomini, 30, Canoas', 'Vinicius', 3425.12, 171.256, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Ary Tarragô, 3095 - APTO 1002 B', 'Ariane', 951.35, 95.13, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Ary Tarragô, 3095 - APTO 1007 B', 'Edison', 976.68, 97.67, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Ary Tarragô, 3095 - APTO 702 B', 'Alessandra', 1300, 130, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Ary Tarragô, 3095 - APTO 706 B', 'Yasmin', 965.21, 96.52, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Ary Tarragô, 3095 - APTO 708 B', 'Renata', 962.53, 96.25, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Ary Tarragô, 3095 - APTO 906 B', 'Alzira', 950.07, 95.01, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Ary Tarragô, 3095 - APTO 808 B', 'Raquel', 965.21, 96.52, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Ary Tarragô, 3095 - APTO 602 B', 'Gabriel', 1300, 130, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Ary Tarragô, 3095 - APTO 403 A', 'Leticia', 1052.67, 105.26, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Ary Tarragô, 3095 - APTO 402 C', 'Rafael', 1193.72, 119.37, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Ary Tarragô, 3095 - APTO 302 B', 'Davi', 1054.73, 105.47, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Ary Tarragô, 3095 - APTO 703 A', 'Adriano', 1300, 130, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Ary Tarragô, 3095 - APTO 208 C', 'Ana', 1100, 110, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Ary Tarragô, 3095 - APTO 708 C', 'Marina', 946.34, 94.63, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Ary Tarragô, 3095 - APTO 803 A', 'Jeferson', 1300, 130, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Ary Tarragô, 3095 - APTO 208 B', 'Elis', 948.21, 94.82, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Ary Tarragô, 3095 - APTO 602 C', 'Michele', 1193.72, 119.37, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Ary Tarragô, 3095 - APTO 406 C', 'Carla', 1193.72, 119.37, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Ary Tarragô, 3095 - APTO 307 B', 'Roberto', 1177.33, 117.73, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Ary Tarragô, 3095 - APTO 903 A', 'Fabricio', 1400, 140, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Ary Tarragô, 3095 - APTO 206 B', 'Leonardo', 1070.3, 107.03, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Ary Tarragô, 3095 - APTO 1203 A', 'Thiago', 1391.39, 139.14, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Ary Tarragô, 3095 - APTO 402 B', 'Marcelo', 1300, 130, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av Cascais, 99 Ap 1101', NaN, NaN, NaN, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av.A. J. Renner 2050 Ap 104', 'Rodrigo', 957.62, 95.76, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Santos Dumont, 1500, 402', NaN, 0, 0, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Bahia 801 pavilhão', 'Sistemak', 5859.77, 585.97, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Panamericana 150/242', 'Beatriz', 1300, 130, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Praça Navegantes', 'Jorge', 852.32, 85.23, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Benno Mentz, 100 apto 1701', 'Lauro', 3780, 378, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Benno Mentz, 100 apto 1502', 'Bruna', 2663.53, 266.36, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Celeste Gobbato, 99, 201', 'Mariana', 1010.13, 101.01, NaN, NaN, null, NaN, null, null, null ],
+  [ 'José Juliano, 30 101', 'Anita', 978.22, 97.82, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Pernambuco, 1401, 22', 'Victoria', 1284.36, 128.44, NaN, NaN, null, NaN, null, null, null ],
+  [ 'São Pedro, 720, Sl 302', 'Glaucia', 747.25, 74.72, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Ernesto Alves, 289, 203', 'Marta', 921.83, 92.18, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Ten Ary Tarragô, 3095 Aptº 1102', 'Gustavo', 1177.33, 117.73, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Rua Buarque de Macedo, 90, 06', 'Gabriel', 1500, 150, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Rua Sadi de Castro 896 ap 208', 'Mariana', 1723, 172.3, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Rua Conde de Poa, 201, Ap 32', 'Celeste', 965.83, 96.58, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Edmundo Bastian', 'Luiza', 1451.96, 145.19, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Pres. Franklin Roosevelt, 984 ap 04', 'Giordano', 1074.19, 107.42, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Rua Itapeva, nº 151, apartamento 202', 'Chiara', 2024.28, 202.43, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Rua Marco Polo, nº 505 - Apto 517', 'Stefanie', 2600, 260, NaN, NaN, null, NaN, null, null, null ],
+  [ null, null, null, null, null, null, null, null, null, null, null ],
+  [ 'Rua Conselheiro Travassos, nº 582 - sobrado', 'Ismael', 2500, 250, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av. Assis Brasil 1800 sala 606', 'Gloria', 427, 42.7, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av. Forte, nº 940 Apto 405', 'Fabiane', 1355.63, 135.56, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Rua Carlos Estevão 17 Apto 413', 'Natalina', 1177.33, 117.33, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av. Jose Aloisio filho 595 Apto 358', 'Marcela', 1691.07, 169.11, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av. Jose Aloisio filho 595 Apto 552', 'Jose Agnelo', 1699.01, 169.9, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av. Jose Aloisio filho 595 Apto 548 L', 'Antonio', 1800, 180, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Rua Manoel Py 222 Apto 101', 'Sarita', 1100, 110, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Rua Alcides Maia, 562 casa', 'Lisiane', 2850, 285, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av. Amazonas 1093 Ap 303', 'Beatriz', 1029.7, 102.97, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av. Amazonas 1396 Ap 001', 'Giselle', 1029.7, 102.97, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av. Ipiranga 8355 Ap 703', 'Gerson', 2210.84, 176.87, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av. Jose Aloisio Filho 595 Ap 115 T D', 'Luis Felipe', 1311.96, 131.2, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av. Guido Mondim 55 Ap 02', 'Francisco', 1513.8, 151.38, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av. Protasio Alves, 5986 terreno', 'Natan', 2000, 200, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av. Lavras 22 casa', 'Gustavo', 6693.05, 669.31, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av. Jose Aloisio Filho 595 Ap 136 T I', 'Ana Paula', 1248, 124.8, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Rua Cipo 318 Ap 233', 'Antony', 2000, 200, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av. Amazonas 1093 Ap 204', 'Emerson', 900, 90, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Rua Frederico O.D. Barbosa50 Ap1005', 'SKHAR', 3300, 330, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Gomes De Freitas 325 Ap 408', 'Carolina', 1000, 50, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av. São Paulo 1016 Ap 02', 'Andressa', 1299, 129.9, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Rua Moura Azevedo 162 Ap 05', 'Luana', 850, 85, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Rua Alcides Maia, 553 casa', 'Walpa', 5500, 550, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av.Taquara 264 loja', 'Celoir', 2700, 270, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Rua Moura Azevedo 150 Ap 02', 'Eliezer', 1000, 100, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av Eudoro Berlink 629 ap 304', 'Caren', 1850, 148, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av São Pedro 844 sala 402', 'Luana', 620, 62, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av. Aparicio borges 168 Ap 206', 'Bruna', 1800, 180, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av. Aparicio borges 910 ap 406', 'Amanda', 1300, 130, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Rua Itarare 110 ap 603', 'Ana Cristina', 1200, 120, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av. Benno 100 ap 602', 'Felipe', 3000, 300, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av. Cavalhada 5793 ap 203', 'Marcelo', 3300, 330, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av. Ary Tarrago 3095 ap 202 B', NaN, NaN, NaN, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av. Ary Tarrago 3095 ap 703 B', 'Kayque', 1300, 130, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av. Ary Tarrago 3095 ap 1002 C', 'Maria Ivone', 1400, 140, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av. Ary Tarrago 3095 ap 207 A', 'Jair', 1300, 130, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av. Ary Tarrago 3095 ap 707 C', 'Fabiano', 1300, 130, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av. Ary Tarrago 3095 ap 801 B', 'Fabiano', 1300, 130, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av. Ary Tarrago 3095 ap 207 B', 'Mauricio', 1300, 130, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av. Ary Tarrago 3095 ap 207 C', 'Raimunda', 1300, 130, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av. Ary Tarrago 3095 ap 1107 B', 'Ana Paula', 1400, 140, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av. Ary Tarrago 3095 ap 502 C', 'Rafael', 1400, NaN, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av. Jose Aloisio Filho 595 Ap 137 T J', 'Claudete', 2600, 260, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av. A.J.Renner 2050 ap 306', 'Nathalia', 1300, 130, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Rua Presidente Juarez 405 casa', 'Denize', 2000, 200, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av. Patria 343 loja', 'Viviane', 2000, 200, NaN, NaN, null, NaN, null, null, null ],
+  [ 'COMISSÃO VENDA CAIRU 720/206', NaN, NaN, NaN, NaN, 8750, null, 'ZO', 4583, NaN, null ],
+  [ 'COMISSÃO VENDA FARRAPOS, 3803/24', NaN, NaN, NaN, NaN, 5400, null, NaN, null, null, null ],
+  [ 'COMISSÃO VENDA SERTORIO, 1615/36', NaN, NaN, NaN, NaN, 9666.28, null, 'ZO', 3866, NaN, null ],
+  [ 'COMISSÃO VENDA OLIVEIRA VIANA, 491, Ap 130.', NaN, NaN, NaN, NaN, 5940, null, NaN, 16049, NaN, null ],
+  [ 'COMISSÃO VENDA A J RENNER, 1800 Ap 102 A', NaN, NaN, NaN, NaN, 5700, null, '???????', NaN, null, null ],
+  [ 'SAPE 780 AP 602', NaN, NaN, NaN, NaN, 13050, null, NaN, null, null, null ],
+  [ 'PROF JOAO DE SOUZA RIBEIRO,155/116', NaN, NaN, NaN, NaN, 2500, null, 'ZO ??????????', NaN, null, null ],
+  [ 'Jeronymo ZELMANOVITZ, 100 AP 803', NaN, NaN, NaN, NaN, 15750, null, NaN, null, null, null ],
+  [ 'TOTAL GERAL', NaN, 198024.37, 17870.106, 2780, 66756.28, null, NaN, null, null, null ],
+  [ 'RECEITA LIQUIDA', NaN, 87406.386, NaN, NaN, NaN, null, NaN, null, null, null ],
+  [ 'RESULTADO LÍQUIDO', NaN, null, NaN, NaN, NaN, null, NaN, null, null, null ],
+  [ null, null, null, null, null, null, null, null, null, null, null ],
+  [ null, null, null, null, null, null, null, null, null, null, null ],
+  [ null, null, null, null, null, null, null, null, null, null, null ],
+  [ null, null, null, null, null, null, null, null, null, null, null ],
+  [ null, null, null, null, null, null, null, null, null, null, null ],
+  [ 'camila', null, null, 893.5053, null, null, null, null, null, null, null ]
+];
+
+// FEVEREIRO2026
+const FEVEREIRO2026_DATA = [
+  [ '2026-02-01 00:00:00', null, null, null, null, null, null, '2026-02-01 00:00:00.1', null, null, null ],
+  [ 'Receitas ingresso', null, null, null, null, null, null, 'Despesas', null, null, null ],
+  [ 'ENDEREÇO', 'LOCATÁRIO', 'Valor total (R$)', 'Tx Adm (R$)', 'Condominio (R$)', 'Receita de Venda Imóveis', null, 'Nome', 'CNPJ/CPF', 'Valor pago', 'Dt Vencimento' ],
+  [ 'Av. São Pedro, 611 conj. 201', 'Diego', 1500, NaN, 150, NaN, null, 'Chaves na Mão - FBS Mídia Eireli - ME', '11.351.276/0001-30', 459, 44627 ],
+  [ 'Av. São Pedro, 611 conj. 202', 'Luiz Carlos', 1229.28, NaN, 150, NaN, null, 'Vista Software e Internet Ltda', '07.646.081/0001-40', 575.7, 44636 ],
+  [ 'Av. São Pedro, 611 conj. 203', 'Jorge', 1200, NaN, 150, NaN, null, 'ZAP Viva Real-ADYEN BR LTDA', '11.334.990/0001-10', 2184, 44643 ],
+  [ 'Av. São Pedro, 611 conj. 204', 'Douglas', 1200, NaN, 150, NaN, null, 'Fenyx do Brasil', '05.569.848/0001-50', 661.39, 44640 ],
+  [ 'Av. São Pedro, 611 conj. 301', 'Marco', 1300, NaN, 150, NaN, null, 'SAMI Sistemas', NaN, 429, 44632 ],
+  [ 'Av. São Pedro, 611 conj. 302', 'Amanda', 1400, NaN, 150, NaN, null, 'EMOVEL', NaN, 466.55, 44637 ],
+  [ 'Av. São Pedro, 611 conj. 303', 'Juliano', 1073.65, NaN, 150, NaN, null, 'TAXA MARK SDR', NaN, 0, 44640 ],
+  [ 'Av. São Pedro, 611 conj. 304', 'Ivone', 1052.67, NaN, 150, NaN, null, 'Ricardo A. da Cruz', '09.101.421/0001-83', 252.49, 44627 ],
+  [ 'Av. São Pedro, 605 LOJA', 'Edilson', 2074.34, 0, 0, NaN, null, 'Conta Energia - CEEE-D', '08.467.115/0001-00', 287.15, 44620 ],
+  [ 'Av. Assis Brasil, 2884 LOJA', 'Rei Midas', 10000, 1000, 0, NaN, null, 'DMAE', '929249010001-98', 37.31, 44630 ],
+  [ 'Av. Assis Brasil, 2886 apto 01', 'Ana Paula', 1500, 150, 160, NaN, null, 'CLARO NET Fone', '40.432.544/0101-00', 152.88, 44627 ],
+  [ 'Av. Assis Brasil, 2886 apto 02', 'Michele', 1439.62, 143.96, 200, NaN, null, 'Camila Prest Serv. Adm', NaN, 2705.73, NaN ],
+  [ 'Av. Assis Brasil, 2886 apto 03', 'André', 1668.14, 166.81, 160, NaN, null, 'DAS', 'SIMPLES NACIONAL', 4409.88, 44635 ],
+  [ 'Av. Assis Brasil, 2886 apto 04', 'André', 1128.28, 112.83, 160, NaN, null, 'Guia de ISSQN', NaN, 287.53, NaN ],
+  [ 'Av. Assis Brasil, 2888 LOJA', 'Hiperdoces', 13269.34, 1040.52, 0, NaN, null, 'RP Vigilância', '28.480.078/0001-70', 150, NaN ],
+  [ 'Av. João Wallig, 509', 'Maria Beatriz', 5351.5, 535.15, NaN, NaN, null, 'Royaties Crédito Real', '92.691.336/0001-66', 7069.19, NaN ],
+  [ 'Alberto Pasqualine, 101. 102', 'Lidiane', 1456.91, 145.69, 150, NaN, null, 'Despesas seguros', NaN, 204.33, NaN ],
+  [ 'Alberto Pasqualine, 101. 101', 'Willian', 2353.79, 235.38, 200, NaN, null, 'Diversos (Placas, fotos, cartao de visita)', NaN, 480, NaN ],
+  [ 'Alberto Pasqualine, 101. 103', 'Lidiane', 1088.07, 108.8, 150, NaN, null, 'Despesas SERV GERAIS', NaN, 2180, NaN ],
+  [ 'Alberto Pasqualine, 101. 201', 'Nathalia', 2216.23, 221.63, 200, NaN, null, 'Desp. Manutenção Prédio', NaN, 0, NaN ],
+  [ 'Alberto Pasqualine, 101. 202', 'Nathalia', 1926.54, 192.65, 200, NaN, null, 'Despesas de Marketing', NaN, 2105, NaN ],
+  [ 'Andradas,711/804', NaN, NaN, NaN, NaN, NaN, null, 'Material de consumo', NaN, 300, NaN ],
+  [ 'Padre Todesco, 927 apto 505', 'Bernado', 2000, 200, NaN, NaN, null, 'TOTAL', NaN, 25397.13, NaN ],
+  [ 'Doutor David Giacomini, 30, Canoas', 'Vinicius', 3425.12, 171.256, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Ary Tarragô, 3095 - APTO 1002 B', 'Ariane', 951.35, 95.13, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Ary Tarragô, 3095 - APTO 1007 B', 'Edison', 976.68, 97.67, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Ary Tarragô, 3095 - APTO 702 B', 'Alessandra', 1300, 130, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Ary Tarragô, 3095 - APTO 706 B', 'Yasmin', 965.21, 96.52, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Ary Tarragô, 3095 - APTO 708 B', 'Renata', 962.53, 96.25, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Ary Tarragô, 3095 - APTO 906 B', 'Alzira', 950.07, 95.01, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Ary Tarragô, 3095 - APTO 808 B', 'Raquel', 965.21, 96.52, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Ary Tarragô, 3095 - APTO 602 B', 'Gabriel', 1300, 130, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Ary Tarragô, 3095 - APTO 403 A', 'Leticia', 1052.67, 105.26, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Ary Tarragô, 3095 - APTO 402 C', 'Rafael', 1193.72, 119.37, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Ary Tarragô, 3095 - APTO 302 B', 'Davi', 1054.73, 105.47, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Ary Tarragô, 3095 - APTO 703 A', 'Adriano', 1300, 130, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Ary Tarragô, 3095 - APTO 208 C', 'Ana', 1100, 110, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Ary Tarragô, 3095 - APTO 708 C', 'Marina', 946.34, 94.63, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Ary Tarragô, 3095 - APTO 803 A', 'Jeferson', 1300, 130, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Ary Tarragô, 3095 - APTO 208 B', 'Elis', 948.21, 94.82, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Ary Tarragô, 3095 - APTO 602 C', 'Michele', 1193.72, 119.37, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Ary Tarragô, 3095 - APTO 406 C', 'Carla', 1193.72, 119.37, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Ary Tarragô, 3095 - APTO 307 B', 'Roberto', 1177.33, 117.73, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Ary Tarragô, 3095 - APTO 903 A', 'Fabricio', 1400, 140, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Ary Tarragô, 3095 - APTO 206 B', 'Leonardo', 1070.3, 107.03, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Ary Tarragô, 3095 - APTO 1203 A', 'Thiago', 1391.39, 139.14, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Ary Tarragô, 3095 - APTO 402 B', 'Marcelo', 1300, 130, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av Cascais, 99 Ap 1101', NaN, NaN, NaN, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av.A. J. Renner 2050 Ap 104', 'Rodrigo', 957.62, 95.76, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Santos Dumont, 1500, 402', NaN, 0, 0, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Bahia 801 pavilhão', 'Sistemak', 5859.77, 585.97, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Panamericana 150/242', 'Beatriz', 1300, 130, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Praça Navegantes', 'Jorge', 852.32, 85.23, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Benno Mentz, 100 apto 1701', 'Lauro', 3780, 378, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Benno Mentz, 100 apto 1502', 'Bruna', 2663.53, 266.36, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Celeste Gobbato, 99, 201', 'Mariana', 1010.13, 101.01, NaN, NaN, null, NaN, null, null, null ],
+  [ 'José Juliano, 30 101', 'Anita', 978.22, 97.82, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Pernambuco, 1401, 22', 'Victoria', 1284.36, 128.44, NaN, NaN, null, NaN, null, null, null ],
+  [ 'São Pedro, 720, Sl 302', 'Glaucia', 747.25, 74.72, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Ernesto Alves, 289, 203', 'Marta', 921.83, 92.18, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Ten Ary Tarragô, 3095 Aptº 1102', 'Gustavo', 1177.33, 117.73, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Rua Buarque de Macedo, 90, 06', 'Gabriel', 1500, 150, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Rua Sadi de Castro 896 ap 208', 'Mariana', 1723, 172.3, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Rua Conde de Poa, 201, Ap 32', 'Celeste', 965.83, 96.58, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Edmundo Bastian', 'Luiza', 1451.96, 145.19, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Pres. Franklin Roosevelt, 984 ap 04', 'Giordano', 1074.19, 107.42, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Rua Itapeva, nº 151, apartamento 202', 'Chiara', 2024.28, 202.43, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Rua Marco Polo, nº 505 - Apto 517', 'Stefanie', 2600, 260, NaN, NaN, null, NaN, null, null, null ],
+  [ null, null, null, null, null, null, null, null, null, null, null ],
+  [ 'Rua Conselheiro Travassos, nº 582 - sobrado', 'Ismael', 2500, 250, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av. Assis Brasil 1800 sala 606', 'Gloria', 427, 42.7, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av. Forte, nº 940 Apto 405', 'Fabiane', 1355.63, 135.56, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Rua Carlos Estevão 17 Apto 413', 'Natalina', 1177.33, 117.33, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av. Jose Aloisio filho 595 Apto 358', 'Marcela', 1691.07, 169.11, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av. Jose Aloisio filho 595 Apto 552', 'Jose Agnelo', 1699.01, 169.9, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av. Jose Aloisio filho 595 Apto 548 L', 'Antonio', 1800, 180, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Rua Manoel Py 222 Apto 101', 'Sarita', 1100, 110, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Rua Alcides Maia, 562 casa', 'Lisiane', 2850, 285, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av. Amazonas 1093 Ap 303', 'Beatriz', 1029.7, 102.97, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av. Amazonas 1396 Ap 001', 'Giselle', 1029.7, 102.97, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av. Ipiranga 8355 Ap 703', 'Gerson', 2210.84, 176.87, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av. Jose Aloisio Filho 595 Ap 115 T D', 'Luis Felipe', 1311.96, 131.2, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av. Guido Mondim 55 Ap 02', 'Francisco', 1513.8, 151.38, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av. Protasio Alves, 5986 terreno', 'Natan', 2000, 200, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av. Lavras 22 casa', 'Gustavo', 6693.05, 669.31, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av. Jose Aloisio Filho 595 Ap 136 T I', 'Ana Paula', 1248, 124.8, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Rua Cipo 318 Ap 233', 'Antony', 2000, 200, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av. Amazonas 1093 Ap 204', 'Emerson', 900, 90, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Rua Frederico O.D. Barbosa50 Ap1005', 'SKHAR', 3300, 330, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Gomes De Freitas 325 Ap 408', 'Carolina', 1000, 50, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av. São Paulo 1016 Ap 02', 'Andressa', 1299, 129.9, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Rua Moura Azevedo 162 Ap 05', 'Luana', 850, 85, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Rua Alcides Maia, 553 casa', 'Walpa', 5500, 550, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av.Taquara 264 loja', 'Celoir', 2700, 270, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Rua Moura Azevedo 150 Ap 02', 'Eliezer', 1000, 100, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av Eudoro Berlink 629 ap 304', 'Caren', 1850, 148, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av São Pedro 844 sala 402', 'Luana', 620, 62, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av. Aparicio borges 168 Ap 206', 'Bruna', 1800, 180, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av. Aparicio borges 910 ap 406', 'Amanda', 1300, 130, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Rua Itarare 110 ap 603', 'Ana Cristina', 1200, 120, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av. Benno 100 ap 602', 'Felipe', 3000, 300, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av. Cavalhada 5793 ap 203', 'Marcelo', 3300, 330, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av. Ary Tarrago 3095 ap 202 B', NaN, NaN, NaN, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av. Ary Tarrago 3095 ap 703 B', 'Kayque', 1300, 130, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av. Ary Tarrago 3095 ap 1002 C', 'Maria Ivone', 1400, 140, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av. Ary Tarrago 3095 ap 207 A', 'Jair', 1300, 130, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av. Ary Tarrago 3095 ap 707 C', 'Fabiano', 1300, 130, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av. Ary Tarrago 3095 ap 801 B', 'Fabiano', 1300, 130, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av. Ary Tarrago 3095 ap 207 B', 'Mauricio', 1300, 130, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av. Ary Tarrago 3095 ap 207 C', 'Raimunda', 1300, 130, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av. Ary Tarrago 3095 ap 1107 B', 'Ana Paula', 1400, 140, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av. Ary Tarrago 3095 ap 502 C', 'Rafael', 1400, NaN, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av. Jose Aloisio Filho 595 Ap 137 T J', 'Claudete', 2600, 260, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av. A.J.Renner 2050 ap 306', 'Nathalia', 1300, 130, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Rua Presidente Juarez 405 casa', 'Denize', 2000, 200, NaN, NaN, null, NaN, null, null, null ],
+  [ 'Av. Patria 343 loja', 'Viviane', 2000, 200, NaN, NaN, null, NaN, null, null, null ],
+  [ 'COMISSÃO VENDA CAIRU 720/206', NaN, NaN, NaN, NaN, 8750, null, 'ZO', 4583, NaN, null ],
+  [ 'COMISSÃO VENDA FARRAPOS, 3803/24', NaN, NaN, NaN, NaN, 5400, null, NaN, null, null, null ],
+  [ 'COMISSÃO VENDA SERTORIO, 1615/36', NaN, NaN, NaN, NaN, 9666.28, null, 'ZO', 3866, NaN, null ],
+  [ 'COMISSÃO VENDA OLIVEIRA VIANA, 491, Ap 130.', NaN, NaN, NaN, NaN, 5940, null, NaN, 16049, NaN, null ],
+  [ 'COMISSÃO VENDA A J RENNER, 1800 Ap 102 A', NaN, NaN, NaN, NaN, 5700, null, '???????', NaN, null, null ],
+  [ 'SAPE 780 AP 602', NaN, NaN, NaN, NaN, 13050, null, NaN, null, null, null ],
+  [ 'PROF JOAO DE SOUZA RIBEIRO,155/116', NaN, NaN, NaN, NaN, 2500, null, 'ZO ??????????', NaN, null, null ],
+  [ 'Jeronymo ZELMANOVITZ, 100 AP 803', NaN, NaN, NaN, NaN, 15750, null, NaN, null, null, null ],
+  [ 'TOTAL GERAL', NaN, 198024.37, 17870.106, 2780, 66756.28, null, NaN, null, null, null ],
+  [ 'RECEITA LIQUIDA', NaN, 87406.386, NaN, NaN, NaN, null, NaN, null, null, null ],
+  [ 'RESULTADO LÍQUIDO', NaN, null, NaN, NaN, NaN, null, NaN, null, null, null ],
+  [ null, null, null, null, null, null, null, null, null, null, null ],
+  [ null, null, null, null, null, null, null, null, null, null, null ],
+  [ null, null, null, null, null, null, null, null, null, null, null ],
+  [ null, null, null, null, null, null, null, null, null, null, null ],
+  [ null, null, null, null, null, null, null, null, null, null, null ],
+  [ 'camila', null, null, 893.5053, null, null, null, null, null, null, null ]
+];
+
+// MARCO2026 (Exemplo, você pode preencher com os dados reais de Março)
+const MARCO2026_DATA = [
+  [ '2026-03-01 00:00:00', null, null, null, null, null, null, '2026-03-01 00:00:00.1', null, null, null ],
+  [ 'Receitas ingresso', null, null, null, null, null, null, 'Despesas', null, null, null ],
+  [ 'ENDEREÇO', 'LOCATÁRIO', 'Valor total (R$)', 'Tx Adm (R$)', 'Condominio (R$)', 'Receita de Venda Imóveis', null, 'Nome', 'CNPJ/CPF', 'Valor pago', 'Dt Vencimento' ],
+  // Adicione aqui as linhas de dados de Março, seguindo o mesmo formato das outras abas
+  // Exemplo de linha:
+  // [ 'Av. São Pedro, 611 conj. 201', 'Diego', 1500, NaN, 150, NaN, null, 'Chaves na Mão - FBS Mídia Eireli - ME', '11.351.276/0001-30', 459, 44656 ],
+  // ...
+  [ 'TOTAL GERAL', NaN, 0, 0, 0, 0, null, NaN, null, 0, null ], // Totais de exemplo para Março
+  [ 'RECEITA LIQUIDA', NaN, 0, NaN, NaN, NaN, null, NaN, null, null, null ],
+  [ 'RESULTADO LÍQUIDO', NaN, null, NaN, NaN, NaN, null, NaN, null, null, null ],
+];
+
+
+function loadAllEmbeddedData() {
+  STATE.receitas = [];
+  STATE.despesas = [];
+  STATE.imoveis = [];
+
+  const sheets = {
+    'JANEIRO2026': JANEIRO2026_DATA,
+    'FEVEREIRO2026': FEVEREIRO2026_DATA,
+    'MARCO2026': MARCO2026_DATA, // Inclua Março aqui
   };
+
+  for (const sheetName in sheets) {
+    const { receitas: r, despesas: d, imoveis: i } = parseExcelData(sheetName, sheets[sheetName]);
+    STATE.receitas.push(...r);
+    STATE.despesas.push(...d);
+    // Para imóveis, precisamos garantir que não haja duplicatas ao adicionar de diferentes meses
+    i.forEach(newImovel => {
+      if (!STATE.imoveis.some(existingImovel => existingImovel.end === newImovel.end)) {
+        STATE.imoveis.push(newImovel);
+      }
+    });
+  }
+  toast('Dados de Janeiro, Fevereiro e Março de 2026 carregados automaticamente!');
+  renderAll();
 }
 
 // ====================== RENDER GLOBAL ======================
@@ -879,13 +1177,11 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('rMes').value = STATE.currentMonth;
   document.getElementById('dMes').value = STATE.currentMonth;
 
-  // Adiciona o listener para o botão de importação
-  document.querySelector('.mbar .btn-primary').addEventListener('click', () => {
-    document.getElementById('excelFileInput').click();
-  });
+  // Carrega os dados embutidos automaticamente ao carregar a página
+  loadAllEmbeddedData();
 
-  // Renderiza tudo inicialmente (vai mostrar as mensagens de "carregar dados" até o Excel ser importado)
-  renderAll();
+  // O botão "Carregar Dados 2026" agora chama a função que carrega os dados embutidos
+  document.querySelector('.mbar .btn-primary').addEventListener('click', loadAllEmbeddedData);
 });
 </script>
 </body>
