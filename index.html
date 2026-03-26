@@ -5,7 +5,6 @@
 <title>FluxoCaixa IA - Credito Real Ag. São Pedro</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.19.3/dist/xlsx.full.min.js"></script>
 <style>
 :root{
   --bg:#020617;--surface:#020617;--card:#0f172a;--card2:#020617;
@@ -175,33 +174,32 @@ tr:hover td{background:rgba(15,23,42,.8);}
 </nav>
 
 <main class="main">
+  <!-- DASHBOARD PAGE -->
   <div id="dashboard" class="page active">
     <div class="ph">
       <div>
         <h1>Dashboard Financeiro</h1>
-        <p class="sub">Visão geral e desempenho da imobiliária.</p>
+        <p class="sub">Visão geral das finanças da Credito Real Ag. São Pedro.</p>
       </div>
       <div class="mbar">
-        <select id="mesDashboard" onchange="STATE.currentMonth=this.value; renderAll();">
+        <select id="mesDashboard">
           <option value="JANEIRO2026">Janeiro 2026</option>
           <option value="FEVEREIRO2026">Fevereiro 2026</option>
           <option value="MARCO2026">Março 2026</option>
         </select>
-        <input type="file" id="excelFileInput" accept=".xlsx, .xls" style="display:none;" onchange="handleExcelUpload(event)">
-        <button class="btn btn-primary" onclick="document.getElementById('excelFileInput').click()">Importar Excel 2026</button>
       </div>
     </div>
 
     <div class="kpi-grid" id="kpisDashboard">
-      <div class="kpi-card"><div class="lbl">Receita Total</div><div class="val green" id="kpiReceitaTotal">R$ 0,00</div></div>
-      <div class="kpi-card"><div class="lbl">Despesa Total</div><div class="val red" id="kpiDespesaTotal">R$ 0,00</div></div>
-      <div class="kpi-card"><div class="lbl">Saldo do Mês</div><div class="val" id="kpiSaldoMes">R$ 0,00</div></div>
-      <div class="kpi-card"><div class="lbl">Imóveis na Carteira</div><div class="val blue" id="kpiImoveisCarteira">0</div></div>
+      <div class="kpi-card"><div class="lbl">Receita Total</div><div class="val green">R$ 0,00</div></div>
+      <div class="kpi-card"><div class="lbl">Despesa Total</div><div class="val red">R$ 0,00</div></div>
+      <div class="kpi-card"><div class="lbl">Saldo do Mês</div><div class="val blue">R$ 0,00</div></div>
+      <div class="kpi-card"><div class="lbl">Taxa Adm.</div><div class="val">R$ 0,00</div></div>
     </div>
 
     <div class="grid2">
       <div class="panel">
-        <h3>Receita x Despesa — <span id="chartMesesCarregados"></span></h3>
+        <h3>Receita x Despesa — meses carregados</h3>
         <div class="chart-wrap"><canvas id="chartReceitaDespesa"></canvas></div>
       </div>
       <div class="panel">
@@ -213,50 +211,51 @@ tr:hover td{background:rgba(15,23,42,.8);}
     <div class="grid2">
       <div class="panel">
         <h3>Metas de Receita</h3>
-        <div id="progressMetas">
+        <div id="progress-metas">
           <div class="empty">Sem dados carregados.</div>
         </div>
       </div>
       <div class="panel">
         <h3>Próximos Vencimentos</h3>
-        <div id="proximosVencimentos">
+        <div id="proximos-venc">
           <div class="empty">Sem dados carregados.</div>
         </div>
       </div>
     </div>
   </div>
 
+  <!-- ANÁLISE IA PAGE -->
   <div id="analise-ia" class="page">
     <div class="ph">
       <div>
         <h1>Análise IA</h1>
-        <p class="sub">Insights e recomendações baseadas nos seus dados.</p>
+        <p class="sub">Insights e recomendações baseadas nos seus dados financeiros.</p>
       </div>
       <div class="mbar">
-        <select id="iaMes" onchange="STATE.currentMonth=this.value; renderAll();">
+        <select id="iaMes">
           <option value="JANEIRO2026">Janeiro 2026</option>
           <option value="FEVEREIRO2026">Fevereiro 2026</option>
           <option value="MARCO2026">Março 2026</option>
         </select>
-        <button class="btn btn-primary" onclick="renderIA()">Pedir Análise IA</button>
       </div>
     </div>
-    <div class="ia-box" id="iaContent">
-      <div class="ia-header"><span class="icon">🧠</span><strong>Inteligência Artificial — Análise do Mês</strong></div>
+    <div class="ia-box" id="ia-insights">
+      <div class="ia-header"><span class="icon">💡</span><strong>Análise do Mês</strong></div>
       <div class="ia-body">
-        <p>Carregando análise...</p>
+        <p>Carregue os dados do Excel para que a IA possa gerar insights.</p>
       </div>
     </div>
   </div>
 
+  <!-- RECEITAS PAGE -->
   <div id="receitas" class="page">
     <div class="ph">
       <div>
         <h1>Receitas</h1>
-        <p class="sub">Gerencie todas as entradas financeiras.</p>
+        <p class="sub">Gerencie todas as receitas da imobiliária.</p>
       </div>
       <div class="mbar">
-        <select id="rMes" onchange="STATE.currentMonth=this.value; renderAll();">
+        <select id="rMes">
           <option value="JANEIRO2026">Janeiro 2026</option>
           <option value="FEVEREIRO2026">Fevereiro 2026</option>
           <option value="MARCO2026">Março 2026</option>
@@ -264,53 +263,49 @@ tr:hover td{background:rgba(15,23,42,.8);}
         <button class="btn btn-primary" onclick="addReceita()">+ Nova Receita</button>
       </div>
     </div>
-    <div class="panel">
-      <h3>Lançamentos de Receita</h3>
-      <div id="tabReceitas">
-        <div class="empty">Sem receitas lançadas.</div>
-      </div>
+    <div id="tabReceitas" class="panel">
+      <div class="empty">Sem receitas lançadas para este mês.</div>
     </div>
   </div>
 
+  <!-- DESPESAS PAGE -->
   <div id="despesas" class="page">
     <div class="ph">
       <div>
         <h1>Despesas</h1>
-        <p class="sub">Controle todas as saídas financeiras.</p>
+        <p class="sub">Gerencie todas as despesas da imobiliária.</p>
       </div>
       <div class="mbar">
-        <select id="dMes" onchange="STATE.currentMonth=this.value; renderAll();">
+        <select id="dMes">
           <option value="JANEIRO2026">Janeiro 2026</option>
           <option value="FEVEREIRO2026">Fevereiro 2026</option>
           <option value="MARCO2026">Março 2026</option>
         </select>
-        <button class="btn btn-danger" onclick="addDespesa()">+ Nova Despesa</button>
+        <button class="btn btn-primary" onclick="addDespesa()">+ Nova Despesa</button>
       </div>
     </div>
-    <div class="panel">
-      <h3>Lançamentos de Despesa</h3>
-      <div id="tabDespesas">
-        <div class="empty">Sem despesas lançadas.</div>
-      </div>
+    <div id="tabDespesas" class="panel">
+      <div class="empty">Sem despesas lançadas para este mês.</div>
     </div>
   </div>
 
+  <!-- FUTUROS PAGE -->
   <div id="futuros" class="page">
     <div class="ph">
       <div>
         <h1>Lançamentos Futuros</h1>
-        <p class="sub">Receitas e despesas previstas para os próximos meses.</p>
+        <p class="sub">Previsão de receitas e despesas futuras.</p>
       </div>
     </div>
     <div class="grid2">
       <div class="panel">
-        <h3>Receitas Futuras</h3>
+        <h3>Receitas Previstas</h3>
         <div id="tabFutRec">
           <div class="empty">Sem receitas futuras.</div>
         </div>
       </div>
       <div class="panel">
-        <h3>Despesas Futuras</h3>
+        <h3>Despesas Previstas</h3>
         <div id="tabFutDesp">
           <div class="empty">Sem despesas futuras.</div>
         </div>
@@ -318,6 +313,7 @@ tr:hover td{background:rgba(15,23,42,.8);}
     </div>
   </div>
 
+  <!-- IMÓVEIS PAGE -->
   <div id="imoveis" class="page">
     <div class="ph">
       <div>
@@ -326,13 +322,10 @@ tr:hover td{background:rgba(15,23,42,.8);}
       </div>
     </div>
     <div class="kpi-grid" id="kpisCart">
-      <!-- KPIs da carteira -->
+      <div class="empty">A carteira será preenchida ao carregar os dados.</div>
     </div>
-    <div class="panel">
-      <h3>Imóveis Cadastrados</h3>
-      <div id="tabCart">
-        <div class="empty">A carteira será preenchida ao importar o Excel.</div>
-      </div>
+    <div id="tabCart" class="panel">
+      <div class="empty">A carteira será preenchida ao carregar os dados.</div>
     </div>
   </div>
 </main>
@@ -340,47 +333,355 @@ tr:hover td{background:rgba(15,23,42,.8);}
 <div id="toast"></div>
 
 <script>
-// ====================== ESTADO GLOBAL ======================
+// ====================== DADOS EMBUTIDOS DA PLANILHA ======================
+// Dados de JANEIRO2026
+const JANEIRO2026_DATA = [
+  // Linhas de Receita de Locação (começando da linha 4 da planilha)
+  { end: 'Av. São Pedro, 611 conj. 201', loc: 'Diego', aluguel: 1500, taxa: 150, cond: 150, venda: 0 },
+  { end: 'Av. São Pedro, 611 conj. 202', loc: 'Luiz Carlos', aluguel: 1229.28, taxa: 122.93, cond: 150, venda: 0 },
+  { end: 'Av. São Pedro, 611 conj. 203', loc: 'Jorge', aluguel: 1200, taxa: 120, cond: 150, venda: 0 },
+  { end: 'Av. São Pedro, 611 conj. 204', loc: 'Douglas', aluguel: 1200, taxa: 120, cond: 150, venda: 0 },
+  { end: 'Av. São Pedro, 611 conj. 301', loc: 'Marco', aluguel: 1300, taxa: 130, cond: 150, venda: 0 },
+  { end: 'Av. São Pedro, 611 conj. 302', loc: 'Amanda', aluguel: 1400, taxa: 140, cond: 150, venda: 0 },
+  { end: 'Av. São Pedro, 611 conj. 303', loc: 'Juliano', aluguel: 1073.65, taxa: 107.37, cond: 150, venda: 0 },
+  { end: 'Av. São Pedro, 611 conj. 304', loc: 'Ivone', aluguel: 1052.67, taxa: 105.27, cond: 150, venda: 0 },
+  { end: 'Av. São Pedro, 605 LOJA', loc: 'Edilson', aluguel: 2074.34, taxa: 207.43, cond: 0, venda: 0 },
+  { end: 'Av. Assis Brasil, 2884 LOJA', loc: 'Rei Midas', aluguel: 10000, taxa: 1000, cond: 0, venda: 0 },
+  { end: 'Av. Assis Brasil, 2886 apto 01', loc: 'Ana Paula', aluguel: 1500, taxa: 150, cond: 160, venda: 0 },
+  { end: 'Av. Assis Brasil, 2886 apto 02', loc: 'Michele', aluguel: 1439.62, taxa: 143.96, cond: 200, venda: 0 },
+  { end: 'Av. Assis Brasil, 2886 apto 03', loc: 'André', aluguel: 1668.14, taxa: 166.81, cond: 160, venda: 0 },
+  { end: 'Av. Assis Brasil, 2886 apto 04', loc: 'André', aluguel: 1128.28, taxa: 112.83, cond: 160, venda: 0 },
+  { end: 'Av. Assis Brasil, 2888 LOJA', loc: 'Hiperdoces', aluguel: 13269.34, taxa: 1326.93, cond: 0, venda: 0 },
+  { end: 'Av. João Wallig, 509', loc: 'Maria Beatriz', aluguel: 5351.5, taxa: 535.15, cond: 0, venda: 0 },
+  { end: 'Alberto Pasqualine, 101. 102', loc: 'Lidiane', aluguel: 1456.91, taxa: 145.69, cond: 150, venda: 0 },
+  { end: 'Alberto Pasqualine, 101. 101', loc: 'Willian', aluguel: 2353.79, taxa: 235.38, cond: 200, venda: 0 },
+  { end: 'Alberto Pasqualine, 101. 103', loc: 'Lidiane', aluguel: 1088.07, taxa: 108.8, cond: 150, venda: 0 },
+  { end: 'Alberto Pasqualine, 101. 201', loc: 'Nathalia', aluguel: 2216.23, taxa: 221.63, cond: 200, venda: 0 },
+  { end: 'Alberto Pasqualine, 101. 202', loc: 'Nathalia', aluguel: 1926.54, taxa: 192.65, cond: 200, venda: 0 },
+  { end: 'Padre Todesco, 927 apto 505', loc: 'Bernado', aluguel: 2000, taxa: 200, cond: 0, venda: 0 },
+  { end: 'Doutor David Giacomini, 30, Canoas', loc: 'Vinicius', aluguel: 3425.12, taxa: 171.26, cond: 0, venda: 0 },
+  { end: 'Ary Tarragô, 3095 - APTO 1002 B', loc: 'Ariane', aluguel: 951.35, taxa: 95.13, cond: 0, venda: 0 },
+  { end: 'Ary Tarragô, 3095 - APTO 1007 B', loc: 'Edison', aluguel: 976.68, taxa: 97.67, cond: 0, venda: 0 },
+  { end: 'Ary Tarragô, 3095 - APTO 702 B', loc: 'Alessandra', aluguel: 1300, taxa: 130, cond: 0, venda: 0 },
+  { end: 'Ary Tarragô, 3095 - APTO 706 B', loc: 'Yasmin', aluguel: 965.21, taxa: 96.52, cond: 0, venda: 0 },
+  { end: 'Ary Tarragô, 3095 - APTO 708 B', loc: 'Renata', aluguel: 962.53, taxa: 96.25, cond: 0, venda: 0 },
+  { end: 'Ary Tarragô, 3095 - APTO 906 B', loc: 'Alzira', aluguel: 950.07, taxa: 95.01, cond: 0, venda: 0 },
+  { end: 'Ary Tarragô, 3095 - APTO 808 B', loc: 'Raquel', aluguel: 965.21, taxa: 96.52, cond: 0, venda: 0 },
+  { end: 'Ary Tarragô, 3095 - APTO 602 B', loc: 'Gabriel', aluguel: 1300, taxa: 130, cond: 0, venda: 0 },
+  { end: 'Ary Tarragô, 3095 - APTO 403 A', loc: 'Leticia', aluguel: 1052.67, taxa: 105.26, cond: 0, venda: 0 },
+  { end: 'Ary Tarragô, 3095 - APTO 402 C', loc: 'Rafael', aluguel: 1193.72, taxa: 119.37, cond: 0, venda: 0 },
+  { end: 'Ary Tarragô, 3095 - APTO 302 B', loc: 'Davi', aluguel: 1054.73, taxa: 105.47, cond: 0, venda: 0 },
+  { end: 'Ary Tarragô, 3095 - APTO 703 A', loc: 'Adriano', aluguel: 1300, taxa: 130, cond: 0, venda: 0 },
+  { end: 'Ary Tarragô, 3095 - APTO 208 C', loc: 'Ana', aluguel: 1100, taxa: 110, cond: 0, venda: 0 },
+  { end: 'Ary Tarragô, 3095 - APTO 708 C', loc: 'Marina', aluguel: 946.34, taxa: 94.63, cond: 0, venda: 0 },
+  { end: 'Ary Tarragô, 3095 - APTO 803 A', loc: 'Jeferson', aluguel: 1300, taxa: 130, cond: 0, venda: 0 },
+  { end: 'Ary Tarragô, 3095 - APTO 208 B', loc: 'Elis', aluguel: 948.21, taxa: 94.82, cond: 0, venda: 0 },
+  { end: 'Ary Tarragô, 3095 - APTO 602 C', loc: 'Michele', aluguel: 1193.72, taxa: 119.37, cond: 0, venda: 0 },
+  { end: 'Ary Tarragô, 3095 - APTO 406 C', loc: 'Carla', aluguel: 1193.72, taxa: 119.37, cond: 0, venda: 0 },
+  { end: 'Ary Tarragô, 3095 - APTO 307 B', loc: 'Roberto', aluguel: 1177.33, taxa: 117.73, cond: 0, venda: 0 },
+  { end: 'Ary Tarragô, 3095 - APTO 903 A', loc: 'Fabricio', aluguel: 1400, taxa: 140, cond: 0, venda: 0 },
+  { end: 'Ary Tarragô, 3095 - APTO 206 B', loc: 'Leonardo', aluguel: 1070.3, taxa: 107.03, cond: 0, venda: 0 },
+  { end: 'Ary Tarragô, 3095 - APTO 1203 A', loc: 'Thiago', aluguel: 1391.39, taxa: 139.14, cond: 0, venda: 0 },
+  { end: 'Ary Tarragô, 3095 - APTO 402 B', loc: 'Marcelo', aluguel: 1300, taxa: 130, cond: 0, venda: 0 },
+  { end: 'Av.A. J. Renner 2050 Ap 104', loc: 'Rodrigo', aluguel: 957.62, taxa: 95.76, cond: 0, venda: 0 },
+  { end: 'Bahia 801 pavilhão', loc: 'Sistemak', aluguel: 5859.77, taxa: 585.97, cond: 0, venda: 0 },
+  { end: 'Panamericana 150/242', loc: 'Beatriz', aluguel: 1300, taxa: 130, cond: 0, venda: 0 },
+  { end: 'Praça Navegantes', loc: 'Jorge', aluguel: 852.32, taxa: 85.23, cond: 0, venda: 0 },
+  { end: 'Benno Mentz, 100 apto 1701', loc: 'Lauro', aluguel: 3780, taxa: 378, cond: 0, venda: 0 },
+  { end: 'Benno Mentz, 100 apto 1502', loc: 'Bruna', aluguel: 2663.53, taxa: 266.36, cond: 0, venda: 0 },
+  { end: 'Celeste Gobbato, 99, 201', loc: 'Mariana', aluguel: 1010.13, taxa: 101.01, cond: 0, venda: 0 },
+  { end: 'José Juliano, 30 101', loc: 'Anita', aluguel: 978.22, taxa: 97.82, cond: 0, venda: 0 },
+  { end: 'Pernambuco, 1401, 22', loc: 'Victoria', aluguel: 1284.36, taxa: 128.44, cond: 0, venda: 0 },
+  { end: 'São Pedro, 720, Sl 302', loc: 'Glaucia', aluguel: 747.25, taxa: 74.72, cond: 0, venda: 0 },
+  { end: 'Ernesto Alves, 289, 203', loc: 'Marta', aluguel: 921.83, taxa: 92.18, cond: 0, venda: 0 },
+  { end: 'Ten Ary Tarragô, 3095 Aptº 1102', loc: 'Gustavo', aluguel: 1177.33, taxa: 117.73, cond: 0, venda: 0 },
+  { end: 'Rua Buarque de Macedo, 90, 06', loc: 'Gabriel', aluguel: 1500, taxa: 150, cond: 0, venda: 0 },
+  { end: 'Rua Sadi de Castro 896 ap 208', loc: 'Mariana', aluguel: 1723, taxa: 172.3, cond: 0, venda: 0 },
+  { end: 'Rua Conde de Poa, 201, Ap 32', loc: 'Celeste', aluguel: 965.83, taxa: 96.58, cond: 0, venda: 0 },
+  { end: 'Edmundo Bastian', loc: 'Luiza', aluguel: 1451.96, taxa: 145.19, cond: 0, venda: 0 },
+  { end: 'Pres. Franklin Roosevelt, 984 ap 04', loc: 'Giordano', aluguel: 1074.19, taxa: 107.42, cond: 0, venda: 0 },
+  { end: 'Rua Itapeva, 151, apto 202', loc: 'Chiara', aluguel: 2024.28, taxa: 202.43, cond: 0, venda: 0 },
+  { end: 'Rua Marco Polo, 505 - Apto 517', loc: 'Stefanie', aluguel: 2600, taxa: 260, cond: 0, venda: 0 },
+  { end: 'Rua Conselheiro Travassos, 582', loc: 'Ismael', aluguel: 2500, taxa: 250, cond: 0, venda: 0 },
+  { end: 'Av. Assis Brasil 1800 sala 606', loc: 'Gloria', aluguel: 427, taxa: 42.7, cond: 0, venda: 0 },
+  { end: 'Av. Forte, 940 Apto 405', loc: 'Fabiane', aluguel: 1355.63, taxa: 135.56, cond: 0, venda: 0 },
+  { end: 'Rua Carlos Estevão 17 Apto 413', loc: 'Natalina', aluguel: 1177.33, taxa: 117.73, cond: 0, venda: 0 },
+  { end: 'Av. Jose Aloisio filho 595 Apto 358', loc: 'Marcela', aluguel: 1691.07, taxa: 169.11, cond: 0, venda: 0 },
+  { end: 'Av. Jose Aloisio filho 595 Apto 552', loc: 'Jose Agnelo', aluguel: 1699.01, taxa: 169.9, cond: 0, venda: 0 },
+  { end: 'Av. Jose Aloisio filho 595 Apto 548 L', loc: 'Antonio', aluguel: 1800, taxa: 180, cond: 0, venda: 0 },
+  { end: 'Rua Manoel Py, 222 Apto 101', loc: 'Sarita', aluguel: 1100, taxa: 110, cond: 0, venda: 0 },
+  { end: 'Rua Alcides Maia, 562 casa', loc: 'Lisiane', aluguel: 2850, taxa: 285, cond: 0, venda: 0 },
+  { end: 'Av. Amazonas, 1093 Ap. 303', loc: 'Beatriz', aluguel: 1029.7, taxa: 102.97, cond: 0, venda: 0 },
+  { end: 'Av. Amazonas, 1396 Ap. 001', loc: 'Giselle', aluguel: 1029.7, taxa: 102.97, cond: 0, venda: 0 },
+  { end: 'Av. Ipiranga, 8355 Ap. 703', loc: 'Gerson', aluguel: 2210.84, taxa: 176.87, cond: 0, venda: 0 },
+  { end: 'Av. Jose Aloisio Filho, 595 Ap. 115 T D', loc: 'Luis Felipe', aluguel: 1311.96, taxa: 131.2, cond: 0, venda: 0 },
+  { end: 'Av. Guido Mondim, 55 Ap. 02', loc: 'Francisco', aluguel: 1513.8, taxa: 151.38, cond: 0, venda: 0 },
+  { end: 'Av. Protasio Alves, 5986 terreno', loc: 'Natan', aluguel: 2000, taxa: 200, cond: 0, venda: 0 },
+  { end: 'Av. Lavras, 22 casa', loc: 'Gustavo', aluguel: 6693.05, taxa: 669.31, cond: 0, venda: 0 },
+  { end: 'Av. Jose Aloisio Filho, 595 Ap. 136 T I', loc: 'Ana Paula', aluguel: 1248, taxa: 124.8, cond: 0, venda: 0 },
+  { end: 'Rua Cipo, 318 Ap. 233', loc: 'Antony', aluguel: 2000, taxa: 200, cond: 0, venda: 0 },
+  { end: 'Av. Amazonas, 1093 Ap. 204', loc: 'Emerson', aluguel: 900, taxa: 90, cond: 0, venda: 0 },
+  { end: 'Rua Frederico O.D. Barbosa50 Ap1005', loc: 'SKHAR', aluguel: 3300, taxa: 330, cond: 0, venda: 0 },
+  { end: 'Gomes De Freitas 325 Ap 408', loc: 'Carolina', aluguel: 1000, taxa: 50, cond: 0, venda: 0 },
+  { end: 'Av. São Paulo 1016 Ap 02', loc: 'Andressa', aluguel: 1299, taxa: 129.9, cond: 0, venda: 0 },
+  { end: 'Rua Moura Azevedo 162 Ap 05', loc: 'Luana', aluguel: 850, taxa: 85, cond: 0, venda: 0 },
+  { end: 'Rua Alcides Maia, 553 casa', loc: 'Walpa', aluguel: 5500, taxa: 550, cond: 0, venda: 0 },
+  { end: 'Av.Taquara 264 loja', loc: 'Celoir', aluguel: 2700, taxa: 270, cond: 0, venda: 0 },
+  { end: 'Rua Moura Azevedo 150 Ap 02', loc: 'Eliezer', aluguel: 1000, taxa: 100, cond: 0, venda: 0 },
+  { end: 'Av Eudoro Berlink 629 ap 304', loc: 'Caren', aluguel: 1850, taxa: 148, cond: 0, venda: 0 },
+  { end: 'Av São Pedro 844 sala 402', loc: 'Luana', aluguel: 620, taxa: 62, cond: 0, venda: 0 },
+  { end: 'Av. Aparicio borges 168 Ap 206', loc: 'Bruna', aluguel: 1800, taxa: 180, cond: 0, venda: 0 },
+  { end: 'Av. Aparicio borges 910 ap 406', loc: 'Amanda', aluguel: 1300, taxa: 130, cond: 0, venda: 0 },
+  { end: 'Rua Itarare 110 ap 603', loc: 'Ana Cristina', aluguel: 1200, taxa: 120, cond: 0, venda: 0 },
+  { end: 'Av. Benno 100 ap 602', loc: 'Felipe', aluguel: 3000, taxa: 300, cond: 0, venda: 0 },
+  { end: 'Av. Cavalhada 5793 ap 203', loc: 'Marcelo', aluguel: 3300, taxa: 330, cond: 0, venda: 0 },
+  { end: 'Av. Ary Tarrago 3095 ap 703 B', loc: 'Kayque', aluguel: 1300, taxa: 130, cond: 0, venda: 0 },
+  { end: 'Av. Ary Tarrago 3095 ap 1002 C', loc: 'Maria Ivone', aluguel: 1400, taxa: 140, cond: 0, venda: 0 },
+  { end: 'Av. Ary Tarrago 3095 ap 207 A', loc: 'Jair', aluguel: 1300, taxa: 130, cond: 0, venda: 0 },
+  { end: 'Av. Ary Tarrago 3095 ap 707 C', loc: 'Fabiano', aluguel: 1300, taxa: 130, cond: 0, venda: 0 },
+  { end: 'Av. Ary Tarrago 3095 ap 801 B', loc: 'Fabiano', aluguel: 1300, taxa: 130, cond: 0, venda: 0 },
+  { end: 'Av. Ary Tarrago 3095 ap 207 B', loc: 'Mauricio', aluguel: 1300, taxa: 130, cond: 0, venda: 0 },
+  { end: 'Av. Ary Tarrago 3095 ap 207 C', loc: 'Raimunda', aluguel: 1300, taxa: 130, cond: 0, venda: 0 },
+  { end: 'Av. Ary Tarrago 3095 ap 1107 B', loc: 'Ana Paula', aluguel: 1400, taxa: 140, cond: 0, venda: 0 },
+  { end: 'Av. Ary Tarrago 3095 ap 502 C', loc: 'Rafael', aluguel: 1400, taxa: 140, cond: 0, venda: 0 },
+  { end: 'Av. Jose Aloisio Filho 595 Ap 137 T J', loc: 'Claudete', aluguel: 2600, taxa: 260, cond: 0, venda: 0 },
+  { end: 'Av. A.J.Renner 2050 ap 306', loc: 'Nathalia', aluguel: 1300, taxa: 130, cond: 0, venda: 0 },
+  { end: 'Rua Presidente Juarez 405 casa', loc: 'Denize', aluguel: 2000, taxa: 200, cond: 0, venda: 0 },
+  { end: 'Av. Patria 343 loja', loc: 'Viviane', aluguel: 2000, taxa: 200, cond: 0, venda: 0 },
+  // Receitas de Venda
+  { end: 'COMISSÃO VENDA CAIRU 720/206', loc: 'Venda', aluguel: 0, taxa: 0, cond: 0, venda: 8750 },
+  { end: 'COMISSÃO VENDA FARRAPOS, 3803/24', loc: 'Venda', aluguel: 0, taxa: 0, cond: 0, venda: 5400 },
+  { end: 'COMISSÃO VENDA SERTORIO, 1615/36', loc: 'Venda', aluguel: 0, taxa: 0, cond: 0, venda: 9666.28 },
+  { end: 'COMISSÃO VENDA OLIVEIRA VIANA, 491, Ap 130.', loc: 'Venda', aluguel: 0, taxa: 0, cond: 0, venda: 5940 },
+  { end: 'COMISSÃO VENDA A J RENNER, 1800 Ap 102 A', loc: 'Venda', aluguel: 0, taxa: 0, cond: 0, venda: 5700 },
+  { end: 'SAPE 780 AP 602', loc: 'Venda', aluguel: 0, taxa: 0, cond: 0, venda: 13050 },
+  { end: 'PROF JOAO DE SOUZA RIBEIRO,155/116', loc: 'Venda', aluguel: 0, taxa: 0, cond: 0, venda: 2500 },
+  { end: 'Jeronymo ZELMANOVITZ, 100 AP 803', loc: 'Venda', aluguel: 0, taxa: 0, cond: 0, venda: 15750 },
+];
+
+const JANEIRO2026_DESPESAS = [
+  { cat: 'Mídias', desc: 'Chaves na Mão - FBS Mídia Eireli - ME', valor: 459, data: '2022-02-10' },
+  { cat: 'Sistemas', desc: 'Vista Software e Internet Ltda', valor: 575.7, data: '2022-02-21' },
+  { cat: 'Mídias', desc: 'ZAP Viva Real-ADYEN BR LTDA', valor: 2184, data: '2022-02-28' },
+  { cat: 'Sistemas', desc: 'Fenyx do Brasil', valor: 661.39, data: '2022-02-25' },
+  { cat: 'Sistemas', desc: 'SAMI Sistemas', valor: 429, data: '2022-02-17' },
+  { cat: 'Mídias', desc: 'EMOVEL', valor: 466.55, data: '2022-02-22' },
+  { cat: 'Outros', desc: 'TAXA MARK SDR', valor: 0, data: '2022-02-25' }, // Valor 0, não será contabilizado
+  { cat: 'Outros', desc: 'Ricardo A. da Cruz', valor: 252.49, data: '2022-02-10' },
+  { cat: 'Água/Luz', desc: 'Conta Energia - CEEE-D', valor: 287.15, data: '2022-02-01' },
+  { cat: 'Água/Luz', desc: 'DMAE', valor: 37.31, data: '2022-02-15' },
+  { cat: 'Outros', desc: 'CLARO NET Fone', valor: 152.88, data: '2022-02-10' },
+  { cat: 'Serviços Gerais', desc: 'Camila Prest Serv. Adm', valor: 2705.73, data: '2026-01-10' }, // Data ajustada
+  { cat: 'Impostos', desc: 'DAS', valor: 4409.88, data: '2022-02-20' },
+  { cat: 'Impostos', desc: 'Guia de ISSQN', valor: 287.53, data: '2026-01-10' }, // Data ajustada
+  { cat: 'Serviços Gerais', desc: 'RP Vigilância', valor: 150, data: '2026-01-10' }, // Data ajustada
+  { cat: 'Outros', desc: 'Royaties Crédito Real', valor: 7069.19, data: '2026-01-10' }, // Data ajustada
+  { cat: 'Seguros', desc: 'Despesas seguros', valor: 204.33, data: '2026-01-10' }, // Data ajustada
+  { cat: 'Material de Consumo', desc: 'Diversos (Placas, fotos, cartao de visita)', valor: 480, data: '2026-01-10' }, // Data ajustada
+  { cat: 'Serviços Gerais', desc: 'Despesas SERV GERAIS', valor: 2180, data: '2026-01-10' }, // Data ajustada
+  { cat: 'Outros', desc: 'Desp. Manutenção Prédio', valor: 0, data: '2026-01-10' }, // Valor 0, não será contabilizado
+  { cat: 'Mídias', desc: 'Despesas de Marketing', valor: 2105, data: '2026-01-10' }, // Data ajustada
+  { cat: 'Material de Consumo', desc: 'Material de consumo', valor: 300, data: '2026-01-10' }, // Data ajustada
+];
+
+// Dados de FEVEREIRO2026
+const FEVEREIRO2026_DATA = [
+  // Receitas de Locação
+  { end: 'Av. São Pedro, 611 conj. 201', loc: 'Diego', aluguel: 1500, taxa: 150, cond: 150, venda: 0 },
+  { end: 'Av. São Pedro, 611 conj. 202', loc: 'Luiz Carlos', aluguel: 1229.28, taxa: 122.93, cond: 150, venda: 0 },
+  { end: 'Av. São Pedro, 611 conj. 203', loc: 'Jorge', aluguel: 1200, taxa: 120, cond: 150, venda: 0 },
+  { end: 'Av. São Pedro, 611 conj. 204', loc: 'Douglas', aluguel: 1200, taxa: 120, cond: 150, venda: 0 },
+  { end: 'Av. São Pedro, 611 conj. 301', loc: 'Marco', aluguel: 1300, taxa: 130, cond: 150, venda: 0 },
+  { end: 'Av. São Pedro, 611 conj. 302', loc: 'Amanda', aluguel: 1400, taxa: 140, cond: 150, venda: 0 },
+  { end: 'Av. São Pedro, 611 conj. 303', loc: 'Juliano', aluguel: 1073.65, taxa: 107.37, cond: 150, venda: 0 },
+  { end: 'Av. São Pedro, 611 conj. 304', loc: 'Ivone', aluguel: 1052.67, taxa: 105.27, cond: 150, venda: 0 },
+  { end: 'Av. São Pedro, 605 LOJA', loc: 'Edilson', aluguel: 2074.34, taxa: 207.43, cond: 0, venda: 0 },
+  { end: 'Av. Assis Brasil, 2884 LOJA', loc: 'Rei Midas', aluguel: 10000, taxa: 1000, cond: 0, venda: 0 },
+  { end: 'Av. Assis Brasil, 2886 apto 01', loc: 'Ana Paula', aluguel: 1500, taxa: 150, cond: 160, venda: 0 },
+  { end: 'Av. Assis Brasil, 2886 apto 02', loc: 'Michele', aluguel: 1439.62, taxa: 143.96, cond: 200, venda: 0 },
+  { end: 'Av. Assis Brasil, 2886 apto 03', loc: 'André', aluguel: 1668.14, taxa: 166.81, cond: 160, venda: 0 },
+  { end: 'Av. Assis Brasil, 2886 apto 04', loc: 'André', aluguel: 1128.28, taxa: 112.83, cond: 160, venda: 0 },
+  { end: 'Av. Assis Brasil, 2888 LOJA', loc: 'Hiperdoces', aluguel: 13269.34, taxa: 1326.93, cond: 0, venda: 0 },
+  { end: 'Av. João Wallig, 509', loc: 'Maria Beatriz', aluguel: 5351.5, taxa: 535.15, cond: 0, venda: 0 },
+  { end: 'Alberto Pasqualine, 101. 102', loc: 'Lidiane', aluguel: 1456.91, taxa: 145.69, cond: 150, venda: 0 },
+  { end: 'Alberto Pasqualine, 101. 101', loc: 'Willian', aluguel: 2353.79, taxa: 235.38, cond: 200, venda: 0 },
+  { end: 'Alberto Pasqualine, 101. 103', loc: 'Lidiane', aluguel: 1088.07, taxa: 108.8, cond: 150, venda: 0 },
+  { end: 'Alberto Pasqualine, 101. 201', loc: 'Nathalia', aluguel: 2216.23, taxa: 221.63, cond: 200, venda: 0 },
+  { end: 'Alberto Pasqualine, 101. 202', loc: 'Nathalia', aluguel: 1926.54, taxa: 192.65, cond: 200, venda: 0 },
+  { end: 'Padre Todesco, 927 apto 505', loc: 'Bernado', aluguel: 2000, taxa: 200, cond: 0, venda: 0 },
+  { end: 'Doutor David Giacomini, 30, Canoas', loc: 'Vinicius', aluguel: 3425.12, taxa: 171.26, cond: 0, venda: 0 },
+  { end: 'Ary Tarragô, 3095 - APTO 1002 B', loc: 'Ariane', aluguel: 951.35, taxa: 95.13, cond: 0, venda: 0 },
+  { end: 'Ary Tarragô, 3095 - APTO 1007 B', loc: 'Edison', aluguel: 976.68, taxa: 97.67, cond: 0, venda: 0 },
+  { end: 'Ary Tarragô, 3095 - APTO 702 B', loc: 'Alessandra', aluguel: 1300, taxa: 130, cond: 0, venda: 0 },
+  { end: 'Ary Tarragô, 3095 - APTO 706 B', loc: 'Yasmin', aluguel: 965.21, taxa: 96.52, cond: 0, venda: 0 },
+  { end: 'Ary Tarragô, 3095 - APTO 708 B', loc: 'Renata', aluguel: 962.53, taxa: 96.25, cond: 0, venda: 0 },
+  { end: 'Ary Tarragô, 3095 - APTO 906 B', loc: 'Alzira', aluguel: 950.07, taxa: 95.01, cond: 0, venda: 0 },
+  { end: 'Ary Tarragô, 3095 - APTO 808 B', loc: 'Raquel', aluguel: 965.21, taxa: 96.52, cond: 0, venda: 0 },
+  { end: 'Ary Tarragô, 3095 - APTO 602 B', loc: 'Gabriel', aluguel: 1300, taxa: 130, cond: 0, venda: 0 },
+  { end: 'Ary Tarragô, 3095 - APTO 403 A', loc: 'Leticia', aluguel: 1052.67, taxa: 105.26, cond: 0, venda: 0 },
+  { end: 'Ary Tarragô, 3095 - APTO 402 C', loc: 'Rafael', aluguel: 1193.72, taxa: 119.37, cond: 0, venda: 0 },
+  { end: 'Ary Tarragô, 3095 - APTO 302 B', loc: 'Davi', aluguel: 1054.73, taxa: 105.47, cond: 0, venda: 0 },
+  { end: 'Ary Tarragô, 3095 - APTO 703 A', loc: 'Adriano', aluguel: 1300, taxa: 130, cond: 0, venda: 0 },
+  { end: 'Ary Tarragô, 3095 - APTO 208 C', loc: 'Ana', aluguel: 1100, taxa: 110, cond: 0, venda: 0 },
+  { end: 'Ary Tarragô, 3095 - APTO 708 C', loc: 'Marina', aluguel: 946.34, taxa: 94.63, cond: 0, venda: 0 },
+  { end: 'Ary Tarragô, 3095 - APTO 803 A', loc: 'Jeferson', aluguel: 1300, taxa: 130, cond: 0, venda: 0 },
+  { end: 'Ary Tarragô, 3095 - APTO 208 B', loc: 'Elis', aluguel: 948.21, taxa: 94.82, cond: 0, venda: 0 },
+  { end: 'Ary Tarragô, 3095 - APTO 602 C', loc: 'Michele', aluguel: 1193.72, taxa: 119.37, cond: 0, venda: 0 },
+  { end: 'Ary Tarragô, 3095 - APTO 406 C', loc: 'Carla', aluguel: 1193.72, taxa: 119.37, cond: 0, venda: 0 },
+  { end: 'Ary Tarragô, 3095 - APTO 307 B', loc: 'Roberto', aluguel: 1177.33, taxa: 117.73, cond: 0, venda: 0 },
+  { end: 'Ary Tarragô, 3095 - APTO 903 A', loc: 'Fabricio', aluguel: 1400, taxa: 140, cond: 0, venda: 0 },
+  { end: 'Ary Tarragô, 3095 - APTO 206 B', loc: 'Leonardo', aluguel: 1070.3, taxa: 107.03, cond: 0, venda: 0 },
+  { end: 'Ary Tarragô, 3095 - APTO 1203 A', loc: 'Thiago', aluguel: 1391.39, taxa: 139.14, cond: 0, venda: 0 },
+  { end: 'Ary Tarragô, 3095 - APTO 402 B', loc: 'Marcelo', aluguel: 1300, taxa: 130, cond: 0, venda: 0 },
+  { end: 'Av.A. J. Renner 2050 Ap 104', loc: 'Rodrigo', aluguel: 957.62, taxa: 95.76, cond: 0, venda: 0 },
+  { end: 'Bahia 801 pavilhão', loc: 'Sistemak', aluguel: 5859.77, taxa: 585.97, cond: 0, venda: 0 },
+  { end: 'Panamericana 150/242', loc: 'Beatriz', aluguel: 1300, taxa: 130, cond: 0, venda: 0 },
+  { end: 'Praça Navegantes', loc: 'Jorge', aluguel: 852.32, taxa: 85.23, cond: 0, venda: 0 },
+  { end: 'Benno Mentz, 100 apto 1701', loc: 'Lauro', aluguel: 3780, taxa: 378, cond: 0, venda: 0 },
+  { end: 'Benno Mentz, 100 apto 1502', loc: 'Bruna', aluguel: 2663.53, taxa: 266.36, cond: 0, venda: 0 },
+  { end: 'Celeste Gobbato, 99, 201', loc: 'Mariana', aluguel: 1010.13, taxa: 101.01, cond: 0, venda: 0 },
+  { end: 'José Juliano, 30 101', loc: 'Anita', aluguel: 978.22, taxa: 97.82, cond: 0, venda: 0 },
+  { end: 'Pernambuco, 1401, 22', loc: 'Victoria', aluguel: 1284.36, taxa: 128.44, cond: 0, venda: 0 },
+  { end: 'São Pedro, 720, Sl 302', loc: 'Glaucia', aluguel: 747.25, taxa: 74.72, cond: 0, venda: 0 },
+  { end: 'Ernesto Alves, 289, 203', loc: 'Marta', aluguel: 921.83, taxa: 92.18, cond: 0, venda: 0 },
+  { end: 'Ten Ary Tarragô, 3095 Aptº 1102', loc: 'Gustavo', aluguel: 1177.33, taxa: 117.73, cond: 0, venda: 0 },
+  { end: 'Rua Buarque de Macedo, 90, 06', loc: 'Gabriel', aluguel: 1500, taxa: 150, cond: 0, venda: 0 },
+  { end: 'Rua Sadi de Castro 896 ap 208', loc: 'Mariana', aluguel: 1723, taxa: 172.3, cond: 0, venda: 0 },
+  { end: 'Rua Conde de Poa, 201, Ap 32', loc: 'Celeste', aluguel: 965.83, taxa: 96.58, cond: 0, venda: 0 },
+  { end: 'Edmundo Bastian', loc: 'Luiza', aluguel: 1451.96, taxa: 145.19, cond: 0, venda: 0 },
+  { end: 'Pres. Franklin Roosevelt, 984 ap 04', loc: 'Giordano', aluguel: 1074.19, taxa: 107.42, cond: 0, venda: 0 },
+  { end: 'Rua Itapeva, 151, apto 202', loc: 'Chiara', aluguel: 2024.28, taxa: 202.43, cond: 0, venda: 0 },
+  { end: 'Rua Marco Polo, 505 - Apto 517', loc: 'Stefanie', aluguel: 2600, taxa: 260, cond: 0, venda: 0 },
+  { end: 'Rua Conselheiro Travassos, 582', loc: 'Ismael', aluguel: 2500, taxa: 250, cond: 0, venda: 0 },
+  { end: 'Av. Assis Brasil 1800 sala 606', loc: 'Gloria', aluguel: 427, taxa: 42.7, cond: 0, venda: 0 },
+  { end: 'Av. Forte, 940 Apto 405', loc: 'Fabiane', aluguel: 1355.63, taxa: 135.56, cond: 0, venda: 0 },
+  { end: 'Rua Carlos Estevão 17 Apto 413', loc: 'Natalina', aluguel: 1177.33, taxa: 117.73, cond: 0, venda: 0 },
+  { end: 'Av. Jose Aloisio filho 595 Apto 358', loc: 'Marcela', aluguel: 1691.07, taxa: 169.11, cond: 0, venda: 0 },
+  { end: 'Av. Jose Aloisio filho 595 Apto 552', loc: 'Jose Agnelo', aluguel: 1699.01, taxa: 169.9, cond: 0, venda: 0 },
+  { end: 'Av. Jose Aloisio filho 595 Apto 548 L', loc: 'Antonio', aluguel: 1800, taxa: 180, cond: 0, venda: 0 },
+  { end: 'Rua Manoel Py, 222 Apto 101', loc: 'Sarita', aluguel: 1100, taxa: 110, cond: 0, venda: 0 },
+  { end: 'Rua Alcides Maia, 562 casa', loc: 'Lisiane', aluguel: 2850, taxa: 285, cond: 0, venda: 0 },
+  { end: 'Av. Amazonas, 1093 Ap. 303', loc: 'Beatriz', aluguel: 1029.7, taxa: 102.97, cond: 0, venda: 0 },
+  { end: 'Av. Amazonas, 1396 Ap. 001', loc: 'Giselle', aluguel: 1029.7, taxa: 102.97, cond: 0, venda: 0 },
+  { end: 'Av. Ipiranga, 8355 Ap. 703', loc: 'Gerson', aluguel: 2210.84, taxa: 176.87, cond: 0, venda: 0 },
+  { end: 'Av. Jose Aloisio Filho, 595 Ap. 115 T D', loc: 'Luis Felipe', aluguel: 1311.96, taxa: 131.2, cond: 0, venda: 0 },
+  { end: 'Av. Guido Mondim, 55 Ap. 02', loc: 'Francisco', aluguel: 1513.8, taxa: 151.38, cond: 0, venda: 0 },
+  { end: 'Av. Protasio Alves, 5986 terreno', loc: 'Natan', aluguel: 2000, taxa: 200, cond: 0, venda: 0 },
+  { end: 'Av. Lavras, 22 casa', loc: 'Gustavo', aluguel: 6693.05, taxa: 669.31, cond: 0, venda: 0 },
+  { end: 'Av. Jose Aloisio Filho, 595 Ap. 136 T I', loc: 'Ana Paula', aluguel: 1248, taxa: 124.8, cond: 0, venda: 0 },
+  { end: 'Rua Cipo, 318 Ap. 233', loc: 'Antony', aluguel: 2000, taxa: 200, cond: 0, venda: 0 },
+  { end: 'Av. Amazonas, 1093 Ap. 204', loc: 'Emerson', aluguel: 900, taxa: 90, cond: 0, venda: 0 },
+  { end: 'Rua Frederico O.D. Barbosa50 Ap1005', loc: 'SKHAR', aluguel: 3300, taxa: 330, cond: 0, venda: 0 },
+  { end: 'Gomes De Freitas 325 Ap 408', loc: 'Carolina', aluguel: 1000, taxa: 50, cond: 0, venda: 0 },
+  { end: 'Av. São Paulo 1016 Ap 02', loc: 'Andressa', aluguel: 1299, taxa: 129.9, cond: 0, venda: 0 },
+  { end: 'Rua Moura Azevedo 162 Ap 05', loc: 'Luana', aluguel: 850, taxa: 85, cond: 0, venda: 0 },
+  { end: 'Rua Alcides Maia, 553 casa', loc: 'Walpa', aluguel: 5500, taxa: 550, cond: 0, venda: 0 },
+  { end: 'Av.Taquara 264 loja', loc: 'Celoir', aluguel: 2700, taxa: 270, cond: 0, venda: 0 },
+  { end: 'Rua Moura Azevedo 150 Ap 02', loc: 'Eliezer', aluguel: 1000, taxa: 100, cond: 0, venda: 0 },
+  { end: 'Av Eudoro Berlink 629 ap 304', loc: 'Caren', aluguel: 1850, taxa: 148, cond: 0, venda: 0 },
+  { end: 'Av São Pedro 844 sala 402', loc: 'Luana', aluguel: 620, taxa: 62, cond: 0, venda: 0 },
+  { end: 'Av. Aparicio borges 168 Ap 206', loc: 'Bruna', aluguel: 1800, taxa: 180, cond: 0, venda: 0 },
+  { end: 'Av. Aparicio borges 910 ap 406', loc: 'Amanda', aluguel: 1300, taxa: 130, cond: 0, venda: 0 },
+  { end: 'Rua Itarare 110 ap 603', loc: 'Ana Cristina', aluguel: 1200, taxa: 120, cond: 0, venda: 0 },
+  { end: 'Av. Benno 100 ap 602', loc: 'Felipe', aluguel: 3000, taxa: 300, cond: 0, venda: 0 },
+  { end: 'Av. Cavalhada 5793 ap 203', loc: 'Marcelo', aluguel: 3300, taxa: 330, cond: 0, venda: 0 },
+  { end: 'Av. Ary Tarrago 3095 ap 703 B', loc: 'Kayque', aluguel: 1300, taxa: 130, cond: 0, venda: 0 },
+  { end: 'Av. Ary Tarrago 3095 ap 1002 C', loc: 'Maria Ivone', aluguel: 1400, taxa: 140, cond: 0, venda: 0 },
+  { end: 'Av. Ary Tarrago 3095 ap 207 A', loc: 'Jair', aluguel: 1300, taxa: 130, cond: 0, venda: 0 },
+  { end: 'Av. Ary Tarrago 3095 ap 707 C', loc: 'Fabiano', aluguel: 1300, taxa: 130, cond: 0, venda: 0 },
+  { end: 'Av. Ary Tarrago 3095 ap 801 B', loc: 'Fabiano', aluguel: 1300, taxa: 130, cond: 0, venda: 0 },
+  { end: 'Av. Ary Tarrago 3095 ap 207 B', loc: 'Mauricio', aluguel: 1300, taxa: 130, cond: 0, venda: 0 },
+  { end: 'Av. Ary Tarrago 3095 ap 207 C', loc: 'Raimunda', aluguel: 1300, taxa: 130, cond: 0, venda: 0 },
+  { end: 'Av. Ary Tarrago 3095 ap 1107 B', loc: 'Ana Paula', aluguel: 1400, taxa: 140, cond: 0, venda: 0 },
+  { end: 'Av. Ary Tarrago 3095 ap 502 C', loc: 'Rafael', aluguel: 1400, taxa: 140, cond: 0, venda: 0 },
+  { end: 'Av. Jose Aloisio Filho 595 Ap 137 T J', loc: 'Claudete', aluguel: 2600, taxa: 260, cond: 0, venda: 0 },
+  { end: 'Av. A.J.Renner 2050 ap 306', loc: 'Nathalia', aluguel: 1300, taxa: 130, cond: 0, venda: 0 },
+  { end: 'Rua Presidente Juarez 405 casa', loc: 'Denize', aluguel: 2000, taxa: 200, cond: 0, venda: 0 },
+  { end: 'Av. Patria 343 loja', loc: 'Viviane', aluguel: 2000, taxa: 200, cond: 0, venda: 0 },
+  // Receitas de Venda
+  { end: 'COMISSÃO VENDA CAIRU 720/206', loc: 'Venda', aluguel: 0, taxa: 0, cond: 0, venda: 8750 },
+  { end: 'COMISSÃO VENDA FARRAPOS, 3803/24', loc: 'Venda', aluguel: 0, taxa: 0, cond: 0, venda: 5400 },
+  { end: 'COMISSÃO VENDA SERTORIO, 1615/36', loc: 'Venda', aluguel: 0, taxa: 0, cond: 0, venda: 9666.28 },
+  { end: 'COMISSÃO VENDA OLIVEIRA VIANA, 491, Ap 130.', loc: 'Venda', aluguel: 0, taxa: 0, cond: 0, venda: 5940 },
+  { end: 'COMISSÃO VENDA A J RENNER, 1800 Ap 102 A', loc: 'Venda', aluguel: 0, taxa: 0, cond: 0, venda: 5700 },
+  { end: 'SAPE 780 AP 602', loc: 'Venda', aluguel: 0, taxa: 0, cond: 0, venda: 13050 },
+  { end: 'PROF JOAO DE SOUZA RIBEIRO,155/116', loc: 'Venda', aluguel: 0, taxa: 0, cond: 0, venda: 2500 },
+  { end: 'Jeronymo ZELMANOVITZ, 100 AP 803', loc: 'Venda', aluguel: 0, taxa: 0, cond: 0, venda: 15750 },
+];
+
+const FEVEREIRO2026_DESPESAS = [
+  { cat: 'Mídias', desc: 'Chaves na Mão - FBS Mídia Eireli - ME', valor: 459, data: '2022-02-10' },
+  { cat: 'Sistemas', desc: 'Vista Software e Internet Ltda', valor: 575.7, data: '2022-02-21' },
+  { cat: 'Mídias', desc: 'ZAP Viva Real-ADYEN BR LTDA', valor: 2184, data: '2022-02-28' },
+  { cat: 'Sistemas', desc: 'Fenyx do Brasil', valor: 661.39, data: '2022-02-25' },
+  { cat: 'Sistemas', desc: 'SAMI Sistemas', valor: 429, data: '2022-02-17' },
+  { cat: 'Mídias', desc: 'EMOVEL', valor: 466.55, data: '2022-02-22' },
+  { cat: 'Outros', desc: 'TAXA MARK SDR', valor: 0, data: '2022-02-25' }, // Valor 0, não será contabilizado
+  { cat: 'Outros', desc: 'Ricardo A. da Cruz', valor: 252.49, data: '2022-02-10' },
+  { cat: 'Água/Luz', desc: 'Conta Energia - CEEE-D', valor: 287.15, data: '2022-02-01' },
+  { cat: 'Água/Luz', desc: 'DMAE', valor: 37.31, data: '2022-02-15' },
+  { cat: 'Outros', desc: 'CLARO NET Fone', valor: 152.88, data: '2022-02-10' },
+  { cat: 'Serviços Gerais', desc: 'Camila Prest Serv. Adm', valor: 2705.73, data: '2026-02-10' }, // Data ajustada
+  { cat: 'Impostos', desc: 'DAS', valor: 4409.88, data: '2022-02-20' },
+  { cat: 'Impostos', desc: 'Guia de ISSQN', valor: 287.53, data: '2026-02-10' }, // Data ajustada
+  { cat: 'Serviços Gerais', desc: 'RP Vigilância', valor: 150, data: '2026-02-10' }, // Data ajustada
+  { cat: 'Outros', desc: 'Royaties Crédito Real', valor: 7069.19, data: '2026-02-10' }, // Data ajustada
+  { cat: 'Seguros', desc: 'Despesas seguros', valor: 204.33, data: '2026-02-10' }, // Data ajustada
+  { cat: 'Material de Consumo', desc: 'Diversos (Placas, fotos, cartao de visita)', valor: 480, data: '2026-02-10' }, // Data ajustada
+  { cat: 'Serviços Gerais', desc: 'Despesas SERV GERAIS', valor: 2180, data: '2026-02-10' }, // Data ajustada
+  { cat: 'Outros', desc: 'Desp. Manutenção Prédio', valor: 0, data: '2026-02-10' }, // Valor 0, não será contabilizado
+  { cat: 'Mídias', desc: 'Despesas de Marketing', valor: 2105, data: '2026-02-10' }, // Data ajustada
+  { cat: 'Material de Consumo', desc: 'Material de consumo', valor: 300, data: '2026-02-10' }, // Data ajustada
+];
+
+// Dados de MARCO2026 (Exemplo, você pode preencher com os dados reais de Março)
+const MARCO2026_DATA = [
+  // Receitas de Locação
+  { end: 'Av. São Pedro, 611 conj. 201', loc: 'Diego', aluguel: 1500, taxa: 150, cond: 150, venda: 0 },
+  { end: 'Av. São Pedro, 611 conj. 202', loc: 'Luiz Carlos', aluguel: 1229.28, taxa: 122.93, cond: 150, venda: 0 },
+  // ... adicione mais receitas de locação de Março aqui
+  // Receitas de Venda
+  { end: 'COMISSÃO VENDA EXEMPLO MARÇO', loc: 'Venda', aluguel: 0, taxa: 0, cond: 0, venda: 10000 },
+];
+
+const MARCO2026_DESPESAS = [
+  { cat: 'Mídias', desc: 'ZAP Viva Real-ADYEN BR LTDA', valor: 2000, data: '2026-03-28' },
+  { cat: 'Impostos', desc: 'DAS', valor: 4000, data: '2026-03-20' },
+  // ... adicione mais despesas de Março aqui
+];
+
+
+// ====================== ESTADO GLOBAL DA APLICAÇÃO ======================
 const STATE = {
   currentMonth: 'JANEIRO2026',
   receitas: [],
   despesas: [],
   imoveis: [],
-  charts: {}, // Para armazenar instâncias de gráficos e destruí-los antes de recriar
+  charts: {}, // Para armazenar instâncias de gráficos
 };
 
 // ====================== CONSTANTES E UTILITÁRIOS ======================
 const DESP_LABELS = {
-  'Mídias': { label: 'Mídias/Marketing', icon: '📣' },
-  'Sistemas': { label: 'Sistemas/Software', icon: '💻' },
-  'Água/Luz': { label: 'Água e Luz', icon: '💡' },
-  'Impostos': { label: 'Impostos/Taxas', icon: '🧾' },
+  'Mídias': { label: 'Mídias', icon: '📣' },
+  'Sistemas': { label: 'Sistemas', icon: '💻' },
+  'Água/Luz': { label: 'Água/Luz', icon: '💧' },
+  'Impostos': { label: 'Impostos', icon: '🧾' },
   'Seguros': { label: 'Seguros', icon: '🛡️' },
-  'Serviços Gerais': { label: 'Serviços Gerais', icon: '🧹' },
-  'Material de Consumo': { label: 'Material de Consumo', icon: '✏️' },
-  'Aluguel': { label: 'Aluguel', icon: '🏠' },
-  'Salários': { label: 'Salários', icon: '👨‍💼' },
-  'Outros': { label: 'Outras Despesas', icon: '❓' },
+  'Serviços Gerais': { label: 'Serviços Gerais', icon: '🛠️' },
+  'Material de Consumo': { label: 'Material de Consumo', icon: '📦' },
+  'Outros': { label: 'Outros', icon: '🤷' },
 };
 
 function fmt(value) {
-  return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value || 0);
+  return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
 }
 
 function monthLabel(monthKey) {
   const map = {
-    'JANEIRO2026': 'Janeiro 2026',
-    'FEVEREIRO2026': 'Fevereiro 2026',
-    'MARCO2026': 'Março 2026',
-    'ABRIL2026': 'Abril 2026',
-    'MAIO2026': 'Maio 2026',
-    'JUNHO2026': 'Junho 2026',
-    'JULHO2026': 'Julho 2026',
-    'AGOSTO2026': 'Agosto 2026',
-    'SETEMBRO2026': 'Setembro 2026',
-    'OUTUBRO2026': 'Outubro 2026',
-    'NOVEMBRO2026': 'Novembro 2026',
-    'DEZEMBRO2026': 'Dezembro 2026',
+    'JANEIRO2026': 'Jan 2026',
+    'FEVEREIRO2026': 'Fev 2026',
+    'MARCO2026': 'Mar 2026',
+    // Adicione outros meses conforme necessário
   };
   return map[monthKey] || monthKey;
 }
@@ -390,13 +691,13 @@ function today() {
 }
 
 function toast(message, isError = false) {
-  const t = document.getElementById('toast');
-  t.textContent = message;
-  t.className = 'show';
-  if (isError) t.classList.add('error');
+  const toastEl = document.getElementById('toast');
+  toastEl.textContent = message;
+  toastEl.className = 'show';
+  if (isError) toastEl.classList.add('error');
   setTimeout(() => {
-    t.className = '';
-    t.classList.remove('error');
+    toastEl.className = '';
+    toastEl.classList.remove('error');
   }, 3000);
 }
 
@@ -407,247 +708,101 @@ function destroyChart(chartId) {
   }
 }
 
-// ====================== NAVEGAÇÃO ======================
-document.querySelectorAll('.nav-item').forEach(button => {
-  button.addEventListener('click', () => {
-    document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
-    document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+// ====================== FUNÇÕES DE NAVEGAÇÃO ======================
+function showPage(pageId) {
+  document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+  document.getElementById(pageId).classList.add('active');
 
-    const pageId = button.dataset.page;
-    document.getElementById(pageId).classList.add('active');
-    button.classList.add('active');
-  });
+  document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+  document.querySelector(`.nav-item[data-page="${pageId}"]`).classList.add('active');
+
+  // Sincroniza o seletor de mês para a página ativa
+  const monthSelector = document.getElementById(`${pageId.replace('-', '')}Mes`);
+  if (monthSelector) {
+    monthSelector.value = STATE.currentMonth;
+  }
+}
+
+document.querySelectorAll('.nav-item').forEach(item => {
+  item.addEventListener('click', () => showPage(item.dataset.page));
 });
 
-// ====================== LÓGICA DE DADOS (IMPORTAÇÃO DO EXCEL) ======================
-function excelDateToJSDate(excelDate) {
-  if (typeof excelDate === 'number') {
-    const date = new Date(Math.round((excelDate - 25569) * 86400 * 1000));
-    return date.toISOString().split('T')[0];
-  }
-  if (typeof excelDate === 'string') {
-    // Tenta parsear strings como 'YYYY-MM-DD HH:MM:SS' ou 'YYYY-MM-DD'
-    const parts = excelDate.split(' ')[0].split('-');
-    if (parts.length === 3) {
-      return excelDate.split(' ')[0]; // Já está no formato YYYY-MM-DD
-    }
-    // Tenta parsear como 'DD/MM/YYYY'
-    const dateParts = excelDate.split('/');
-    if (dateParts.length === 3) {
-      return `${dateParts[2]}-${dateParts[1].padStart(2, '0')}-${dateParts[0].padStart(2, '0')}`;
-    }
-  }
-  return null; // Retorna null se não conseguir converter
-}
+// ====================== FUNÇÕES DE DADOS E RENDERIZAÇÃO ======================
 
-function parseExcelSheet(sheetName, sheetData) {
-  const receitasMes = [];
-  const despesasMes = [];
-  const imoveisMes = []; // Imóveis são coletados por mês, mas adicionados ao STATE.imoveis globalmente
+function processMonthData(monthKey, monthReceitasData, monthDespesasData) {
+  // Limpa dados para o mês atual antes de processar
+  STATE.receitas = STATE.receitas.filter(r => r.mes !== monthKey);
+  STATE.despesas = STATE.despesas.filter(d => d.mes !== monthKey);
+  STATE.imoveis = STATE.imoveis.filter(i => i.mes !== monthKey); // Se imoveis forem por mês
 
-  // Encontrar a linha de cabeçalho de receitas (ENDEREÇO, LOCATÁRIO, etc.)
-  let headerReceitasRowIndex = -1;
-  for (let i = 0; i < sheetData.length; i++) {
-    if (sheetData[i][0] === 'ENDEREÇO') {
-      headerReceitasRowIndex = i;
-      break;
-    }
-  }
-
-  if (headerReceitasRowIndex === -1) {
-    console.warn(`Cabeçalho de receitas não encontrado na aba ${sheetName}.`);
-    return { receitas: receitasMes, despesas: despesasMes, imoveis: imoveisMes };
-  }
-
-  // Mapeamento de colunas para receitas e despesas
-  const colMap = {
-    endereco: 0,
-    locatario: 1,
-    valorTotalAluguel: 2,
-    txAdm: 3,
-    condominio: 4,
-    receitaVenda: 5,
-    nomeDespesa: 7,
-    valorPagoDespesa: 9,
-    dtVencimentoDespesa: 10,
-  };
-
-  // Processar Receitas e Imóveis
-  for (let i = headerReceitasRowIndex + 1; i < sheetData.length; i++) {
-    const row = sheetData[i];
-    const endereco = String(row[colMap.endereco] || '').trim();
-    const locatario = String(row[colMap.locatario] || '').trim();
-    const valorTotalAluguel = parseFloat(row[colMap.valorTotalAluguel]) || 0;
-    let txAdm = parseFloat(row[colMap.txAdm]) || 0;
-    const condominio = parseFloat(row[colMap.condominio]) || 0;
-    const receitaVenda = parseFloat(row[colMap.receitaVenda]) || 0;
-
-    // Ignorar linhas de totais ou vazias na seção de receitas
-    if (endereco.includes('TOTAL GERAL') || endereco.includes('RECEITA LIQUIDA') || endereco.includes('RESULTADO LÍQUIDO') || (!endereco && !locatario && !valorTotalAluguel && !receitaVenda)) {
-      continue;
-    }
-
-    // Se a taxa de administração não for fornecida, calcula como 10% do valor total do aluguel
-    if (txAdm === 0 && valorTotalAluguel > 0 && endereco !== 'Av. Assis Brasil, 2884 LOJA') { // Exceção para Rei Midas
-      txAdm = valorTotalAluguel * 0.10;
-    }
-
-    if (valorTotalAluguel > 0 && txAdm > 0) {
-      receitasMes.push({
-        mes: sheetName,
+  monthReceitasData.forEach(item => {
+    if (item.aluguel > 0) {
+      STATE.receitas.push({
+        mes: monthKey,
         tipo: 'Locação',
-        desc: `Taxa Adm. ${endereco} (${locatario})`,
-        valor: txAdm,
+        desc: `Aluguel ${item.end} - ${item.loc}`,
+        valor: item.aluguel,
         status: 'pago'
       });
-
-      // Adicionar ou atualizar imóvel na carteira
-      const existingImovelIndex = imoveisMes.findIndex(im => im.end === endereco);
-      if (existingImovelIndex === -1) {
-        imoveisMes.push({
-          end: endereco,
-          loc: locatario,
-          aluguel: valorTotalAluguel,
-          taxa: txAdm,
-          cond: condominio
+      STATE.receitas.push({
+        mes: monthKey,
+        tipo: 'Taxa Adm.',
+        desc: `Taxa Adm. ${item.end} - ${item.loc}`,
+        valor: item.taxa,
+        status: 'pago'
+      });
+      // Adiciona à carteira de imóveis (garantindo que não duplique se já existir)
+      if (!STATE.imoveis.some(i => i.end === item.end)) {
+        STATE.imoveis.push({
+          mes: monthKey, // Adiciona o mês para filtrar depois se necessário
+          end: item.end,
+          loc: item.loc,
+          aluguel: item.aluguel,
+          taxa: item.taxa,
+          cond: item.cond || 0
         });
-      } else {
-        // Atualiza se já existe (pode ser útil para meses diferentes)
-        imoveisMes[existingImovelIndex] = {
-          end: endereco,
-          loc: locatario,
-          aluguel: valorTotalAluguel,
-          taxa: txAdm,
-          cond: condominio
-        };
       }
     }
-
-    if (receitaVenda > 0) {
-      receitasMes.push({
-        mes: sheetName,
+    if (item.venda > 0) {
+      STATE.receitas.push({
+        mes: monthKey,
         tipo: 'Venda',
-        desc: `Comissão Venda Imóvel ${endereco || 'Desconhecido'}`,
-        valor: receitaVenda,
+        desc: `Comissão Venda ${item.end}`,
+        valor: item.venda,
         status: 'pago'
       });
     }
-  }
+  });
 
-  // Processar Despesas (elas começam na mesma linha do cabeçalho de receitas, mas em colunas diferentes)
-  for (let i = headerReceitasRowIndex + 1; i < sheetData.length; i++) {
-    const row = sheetData[i];
-    const nomeDespesa = String(row[colMap.nomeDespesa] || '').trim();
-    const valorPago = parseFloat(row[colMap.valorPagoDespesa]) || 0;
-    let dtVencimento = excelDateToJSDate(row[colMap.dtVencimentoDespesa]);
-
-    // Ignorar linhas de totais ou vazias na seção de despesas
-    if (nomeDespesa.includes('TOTAL') || (!nomeDespesa && !valorPago)) {
-      continue;
-    }
-
-    if (nomeDespesa && valorPago > 0) {
-      let categoria = 'Outros';
-      if (nomeDespesa.includes('Chaves na Mão') || nomeDespesa.includes('ZAP Viva Real') || nomeDespesa.includes('EMOVEL') || nomeDespesa.includes('Marketing')) {
-        categoria = 'Mídias';
-      } else if (nomeDespesa.includes('Vista Software') || nomeDespesa.includes('Fenyx') || nomeDespesa.includes('SAMI Sistemas')) {
-        categoria = 'Sistemas';
-      } else if (nomeDespesa.includes('CEEE-D') || nomeDespesa.includes('DMAE') || nomeDespesa.includes('Energia')) {
-        categoria = 'Água/Luz';
-      } else if (nomeDespesa.includes('DAS') || nomeDespesa.includes('ISSQN') || nomeDespesa.includes('Impostos')) {
-        categoria = 'Impostos';
-      } else if (nomeDespesa.includes('seguros')) {
-        categoria = 'Seguros';
-      } else if (nomeDespesa.includes('SERV GERAIS')) {
-        categoria = 'Serviços Gerais';
-      } else if (nomeDespesa.includes('Material de consumo')) {
-        categoria = 'Material de Consumo';
-      } else if (nomeDespesa.includes('Royaties Crédito Real')) {
-        categoria = 'Outros'; // Pode ser uma categoria específica de royalties
-      } else if (nomeDespesa.includes('CLARO NET Fone')) {
-        categoria = 'Comunicação'; // Nova categoria
-      } else if (nomeDespesa.includes('RP Vigilância')) {
-        categoria = 'Segurança'; // Nova categoria
-      } else if (nomeDespesa.includes('Desp. Manutenção Prédio')) {
-        categoria = 'Manutenção'; // Nova categoria
-      } else if (nomeDespesa.includes('Salários') || nomeDespesa.includes('Camila Prest Serv. Adm')) {
-        categoria = 'Salários'; // Nova categoria
-      }
-
-      // Se a data de vencimento não foi encontrada, tenta inferir
-      if (!dtVencimento) {
-        const year = sheetName.slice(-4);
-        const monthNum = { 'JANEIRO': '01', 'FEVEREIRO': '02', 'MARCO': '03' }[sheetName.slice(0, -4)];
-        if (monthNum) {
-          dtVencimento = `${year}-${monthNum}-10`; // Dia 10 como padrão
-        } else {
-          dtVencimento = today(); // Se não conseguir inferir, usa a data atual
-        }
-      }
-
-      despesasMes.push({
-        mes: sheetName,
-        cat: categoria,
-        desc: nomeDespesa,
-        valor: valorPago,
-        data: dtVencimento,
+  monthDespesasData.forEach(item => {
+    if (item.valor > 0) {
+      STATE.despesas.push({
+        mes: monthKey,
+        cat: item.cat,
+        desc: item.desc,
+        valor: item.valor,
+        data: item.data,
         status: 'pago'
       });
     }
-  }
-
-  return { receitas: receitasMes, despesas: despesasMes, imoveis: imoveisMes };
+  });
 }
 
-function handleExcelUpload(event) {
-  const file = event.target.files[0];
-  if (!file) {
-    toast('Nenhum arquivo selecionado.', true);
-    return;
-  }
+function loadAllEmbeddedData() {
+  // Limpa todos os dados antes de carregar os novos
+  STATE.receitas = [];
+  STATE.despesas = [];
+  STATE.imoveis = [];
 
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    try {
-      const data = new Uint8Array(e.target.result);
-      const workbook = XLSX.read(data, { type: 'array' });
+  processMonthData('JANEIRO2026', JANEIRO2026_DATA, JANEIRO2026_DESPESAS);
+  processMonthData('FEVEREIRO2026', FEVEREIRO2026_DATA, FEVEREIRO2026_DESPESAS);
+  processMonthData('MARCO2026', MARCO2026_DATA, MARCO2026_DESPESAS); // Carrega Março também
 
-      STATE.receitas = [];
-      STATE.despesas = [];
-      STATE.imoveis = [];
-
-      const sheetNamesToProcess = ['JANEIRO2026', 'FEVEREIRO2026', 'MARCO2026']; // Adicione mais abas aqui se necessário
-
-      for (const sheetName of sheetNamesToProcess) {
-        if (workbook.SheetNames.includes(sheetName)) {
-          const worksheet = workbook.Sheets[sheetName];
-          const json = XLSX.utils.sheet_to_json(worksheet, { header: 1, raw: false }); // raw:false para manter datas formatadas
-
-          const { receitas: r, despesas: d, imoveis: i } = parseExcelSheet(sheetName, json);
-          STATE.receitas.push(...r);
-          STATE.despesas.push(...d);
-          // Adicionar imóveis, evitando duplicatas
-          i.forEach(newImovel => {
-            if (!STATE.imoveis.some(existingImovel => existingImovel.end === newImovel.end)) {
-              STATE.imoveis.push(newImovel);
-            }
-          });
-        } else {
-          console.warn(`Aba "${sheetName}" não encontrada no arquivo Excel.`);
-        }
-      }
-
-      toast('Dados do Excel carregados com sucesso!');
-      renderAll();
-    } catch (error) {
-      console.error('Erro ao processar o arquivo Excel:', error);
-      toast('Erro ao processar o arquivo Excel. Verifique o formato.', true);
-    }
-  };
-  reader.readAsArrayBuffer(file);
+  toast('Dados de Janeiro, Fevereiro e Março de 2026 carregados automaticamente!');
+  renderAll();
 }
 
-// ====================== LÓGICA DE RENDERIZAÇÃO ======================
+
 function getMonthData(monthKey) {
   const receitasMes = STATE.receitas.filter(r => r.mes === monthKey);
   const despesasMes = STATE.despesas.filter(d => d.mes === monthKey);
@@ -655,46 +810,40 @@ function getMonthData(monthKey) {
   const totalReceita = receitasMes.reduce((sum, r) => sum + r.valor, 0);
   const totalDespesa = despesasMes.reduce((sum, d) => sum + d.valor, 0);
   const saldo = totalReceita - totalDespesa;
+  const taxaAdm = receitasMes.filter(r => r.tipo === 'Taxa Adm.').reduce((sum, r) => sum + r.valor, 0);
 
   const receitasPorTipo = {
     'Locação': receitasMes.filter(r => r.tipo === 'Locação').reduce((sum, r) => sum + r.valor, 0),
     'Venda': receitasMes.filter(r => r.tipo === 'Venda').reduce((sum, r) => sum + r.valor, 0),
-    'Bonificação': receitasMes.filter(r => r.tipo === 'Bonificação').reduce((sum, r) => sum + r.valor, 0),
+    'Taxa Adm.': taxaAdm,
+    'Outros': receitasMes.filter(r => r.tipo === 'Outros').reduce((sum, r) => sum + r.valor, 0),
   };
 
-  const despesasPorCategoria = despesasMes.reduce((acc, d) => {
-    acc[d.cat] = (acc[d.cat] || 0) + d.valor;
-    return acc;
-  }, {});
-
-  return { totalReceita, totalDespesa, saldo, receitasPorTipo, despesasPorCategoria };
+  return { totalReceita, totalDespesa, saldo, taxaAdm, receitasPorTipo };
 }
 
 function renderDashboard() {
   const currentMonthData = getMonthData(STATE.currentMonth);
+  document.getElementById('kpisDashboard').innerHTML = `
+    <div class="kpi-card"><div class="lbl">Receita Total</div><div class="val green">${fmt(currentMonthData.totalReceita)}</div></div>
+    <div class="kpi-card"><div class="lbl">Despesa Total</div><div class="val red">${fmt(currentMonthData.totalDespesa)}</div></div>
+    <div class="kpi-card"><div class="lbl">Saldo do Mês</div><div class="val blue">${fmt(currentMonthData.saldo)}</div></div>
+    <div class="kpi-card"><div class="lbl">Taxa Adm.</div><div class="val">${fmt(currentMonthData.taxaAdm)}</div></div>
+  `;
 
-  // KPIs
-  document.getElementById('kpiReceitaTotal').textContent = fmt(currentMonthData.totalReceita);
-  document.getElementById('kpiDespesaTotal').textContent = fmt(currentMonthData.totalDespesa);
-  document.getElementById('kpiSaldoMes').textContent = fmt(currentMonthData.saldo);
-  document.getElementById('kpiSaldoMes').className = `val ${currentMonthData.saldo >= 0 ? 'green' : 'red'}`;
-  document.getElementById('kpiImoveisCarteira').textContent = STATE.imoveis.length;
-
-  // Chart: Receita x Despesa
+  // Gráfico Receita x Despesa
   destroyChart('chartReceitaDespesa');
-  const months = ['JANEIRO2026', 'FEVEREIRO2026', 'MARCO2026']; // Ajuste conforme os meses que você tem dados
+  const months = ['JANEIRO2026', 'FEVEREIRO2026', 'MARCO2026']; // Meses para o gráfico
   const receitasData = months.map(m => getMonthData(m).totalReceita);
   const despesasData = months.map(m => getMonthData(m).totalDespesa);
-
-  document.getElementById('chartMesesCarregados').textContent = months.map(monthLabel).join(', ');
 
   STATE.charts['chartReceitaDespesa'] = new Chart(document.getElementById('chartReceitaDespesa'), {
     type: 'bar',
     data: {
       labels: months.map(monthLabel),
       datasets: [
-        { label: 'Receita', data: receitasData, backgroundColor: 'rgba(34,197,94,.7)', borderRadius: 4 },
-        { label: 'Despesa', data: despesasData, backgroundColor: 'rgba(239,68,68,.7)', borderRadius: 4 }
+        { label: 'Receita', data: receitasData, backgroundColor: '#22c55e' },
+        { label: 'Despesa', data: despesasData, backgroundColor: '#ef4444' }
       ]
     },
     options: {
@@ -702,152 +851,106 @@ function renderDashboard() {
       plugins: { legend: { labels: { color: 'var(--text)' } } },
       scales: {
         x: { ticks: { color: 'var(--muted)' }, grid: { color: 'var(--border)' } },
-        y: { ticks: { color: 'var(--muted)', callback: v => fmt(v) }, grid: { color: 'var(--border)' } }
+        y: { ticks: { color: 'var(--muted)', callback: v => 'R$' + v.toLocaleString('pt-BR') }, grid: { color: 'var(--border)' } }
       }
     }
   });
 
-  // Chart: Composição das Receitas
+  // Gráfico Composição das Receitas
   destroyChart('chartComposicaoReceitas');
-  const receitasTipos = currentMonthData.receitasPorTipo;
-  const labels = Object.keys(receitasTipos).filter(k => receitasTipos[k] > 0);
-  const data = labels.map(k => receitasTipos[k]);
+  const composicao = currentMonthData.receitasPorTipo;
+  const labels = Object.keys(composicao).filter(key => composicao[key] > 0);
+  const data = labels.map(key => composicao[key]);
 
-  if (data.length === 0) {
-    document.getElementById('chartComposicaoReceitas').parentNode.innerHTML = '<div class="empty">Sem dados de receita para o mês.</div>';
-  } else {
-    document.getElementById('chartComposicaoReceitas').parentNode.innerHTML = '<div class="chart-wrap"><canvas id="chartComposicaoReceitas"></canvas></div>';
-    STATE.charts['chartComposicaoReceitas'] = new Chart(document.getElementById('chartComposicaoReceitas'), {
-      type: 'doughnut',
-      data: {
-        labels: labels,
-        datasets: [{
-          data: data,
-          backgroundColor: ['var(--accent)', 'var(--green)', 'var(--yellow)'],
-          hoverOffset: 4
-        }]
-      },
-      options: {
-        responsive: true, maintainAspectRatio: false,
-        plugins: { legend: { labels: { color: 'var(--text)' } } }
-      }
-    });
-  }
+  STATE.charts['chartComposicaoReceitas'] = new Chart(document.getElementById('chartComposicaoReceitas'), {
+    type: 'doughnut',
+    data: {
+      labels: labels,
+      datasets: [{
+        data: data,
+        backgroundColor: ['#4f46e5', '#22c55e', '#eab308', '#7c3aed'],
+        hoverOffset: 4
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { labels: { color: 'var(--text)' } } }
+    }
+  });
 
-  // Metas de Receita (Exemplo de metas fixas, você pode tornar dinâmico)
-  const metaLocacao = 150000;
-  const metaVenda = 70000;
-  const metaBonificacao = 10000;
+  // Metas de Receita (exemplo com valores fixos, pode ser dinâmico depois)
+  const metaLoc = 20000, metaVnd = 50000, metaBon = 10000; // Exemplo de metas
+  const locacaoAtual = currentMonthData.receitasPorTipo['Locação'] || 0;
+  const vendasAtual = currentMonthData.receitasPorTipo['Venda'] || 0;
+  const taxaAdmAtual = currentMonthData.receitasPorTipo['Taxa Adm.'] || 0;
 
-  const currentLocacao = currentMonthData.receitasPorTipo['Locação'] || 0;
-  const currentVenda = currentMonthData.receitasPorTipo['Venda'] || 0;
-  const currentBonificacao = currentMonthData.receitasPorTipo['Bonificação'] || 0;
+  document.getElementById('progress-metas').innerHTML = [
+    { label: '🏘️ Locação', val: locacaoAtual, meta: metaLoc, color: '#4f46e5' },
+    { label: '🤝 Vendas', val: vendasAtual, meta: metaVnd, color: '#22c55e' },
+    { label: '⭐ Taxa Adm.', val: taxaAdmAtual, meta: metaBon, color: '#a78bfa' },
+  ].map(p => {
+    const pct = Math.min(p.meta > 0 ? (p.val / p.meta * 100) : 0, 100);
+    return `<div class="prog-wrap">
+      <div class="prog-lbl"><span>${p.label}</span><span>${fmt(p.val)} / ${fmt(p.meta)}</span></div>
+      <div class="prog-bar"><div class="prog-fill" style="width:${pct}%;background:${p.color};"></div></div>
+    </div>`;
+  }).join('');
 
-  document.getElementById('progressMetas').innerHTML = `
-    <div class="prog-wrap">
-      <div class="prog-lbl"><span>Locação</span><span>${fmt(currentLocacao)} / ${fmt(metaLocacao)}</span></div>
-      <div class="prog-bar"><div class="prog-fill" style="width:${Math.min((currentLocacao / metaLocacao) * 100, 100)}%; background:var(--accent);"></div></div>
-    </div>
-    <div class="prog-wrap">
-      <div class="prog-lbl"><span>Venda</span><span>${fmt(currentVenda)} / ${fmt(metaVenda)}</span></div>
-      <div class="prog-bar"><div class="prog-fill" style="width:${Math.min((currentVenda / metaVenda) * 100, 100)}%; background:var(--green);"></div></div>
-    </div>
-    <div class="prog-wrap">
-      <div class="prog-lbl"><span>Bonificação</span><span>${fmt(currentBonificacao)} / ${fmt(metaBonificacao)}</span></div>
-      <div class="prog-bar"><div class="prog-fill" style="width:${Math.min((currentBonificacao / metaBonificacao) * 100, 100)}%; background:var(--yellow);"></div></div>
-    </div>
-  `;
-
-  // Próximos Vencimentos
+  // Próximos Vencimentos (exemplo: despesas futuras)
   const hoje = today();
-  const proximasDespesas = STATE.despesas
-    .filter(d => d.data >= hoje && d.status === 'previsto') // Filtra apenas futuras e previstas
+  const prox = STATE.despesas
+    .filter(d => d.status === 'previsto' && d.data >= hoje)
     .sort((a, b) => a.data.localeCompare(b.data))
-    .slice(0, 5); // Pega as 5 mais próximas
+    .slice(0, 5); // Pega as 5 próximas
 
-  if (proximasDespesas.length === 0) {
-    document.getElementById('proximosVencimentos').innerHTML = '<div class="empty">Sem despesas futuras próximas.</div>';
-  } else {
-    document.getElementById('proximosVencimentos').innerHTML = `
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr><th>Vencimento</th><th>Descrição</th><th>Valor</th></tr>
-          </thead>
-          <tbody>
-            ${proximasDespesas.map(d => `
-              <tr>
-                <td>${d.data}</td>
-                <td>${DESP_LABELS[d.cat]?.label || d.cat} - ${d.desc}</td>
-                <td style="color:var(--yellow);">${fmt(d.valor)}</td>
-              </tr>
-            `).join('')}
-          </tbody>
-        </table>
-      </div>
-    `;
-  }
+  document.getElementById('proximos-venc').innerHTML = prox.length
+    ? `<div class="table-wrap"><table><thead><tr><th>Venc.</th><th>Descrição</th><th>Valor</th></tr></thead><tbody>
+        ${prox.map(d => `<tr><td>${d.data}</td><td>${DESP_LABELS[d.cat]?.label || d.cat} ${d.desc}</td><td style="color:var(--yellow)">${fmt(d.valor)}</td></tr>`).join('')}
+       </tbody></table></div>`
+    : `<div class="empty">Sem próximos vencimentos.</div>`;
 }
 
 function renderIA() {
   const currentMonthData = getMonthData(STATE.currentMonth);
-  const iaContent = document.getElementById('iaContent');
-  let analysis = '';
+  const iaBox = document.getElementById('ia-insights');
+  let insights = '';
 
-  if (STATE.receitas.length === 0 && STATE.despesas.length === 0) {
-    analysis = '<p>Aguardando dados para realizar a análise. Por favor, importe seu Excel.</p>';
+  if (currentMonthData.totalReceita === 0 && currentMonthData.totalDespesa === 0) {
+    insights = '<p>Nenhum dado financeiro encontrado para este mês. Carregue os dados para obter insights.</p>';
   } else {
-    const { totalReceita, totalDespesa, saldo, receitasPorTipo } = currentMonthData;
+    insights += `<p>No mês de <strong>${monthLabel(STATE.currentMonth)}</strong>, a Credito Real Ag. São Pedro teve uma receita total de <span class="ok">${fmt(currentMonthData.totalReceita)}</span> e despesas de <span class="bad">${fmt(currentMonthData.totalDespesa)}</span>, resultando em um saldo de <span class="${currentMonthData.saldo >= 0 ? 'ok' : 'bad'}">${fmt(currentMonthData.saldo)}</span>.</p>`;
 
-    analysis += `<p>Para o mês de <strong>${monthLabel(STATE.currentMonth)}</strong>:</p>`;
-    analysis += `<p>Sua receita total foi de <span class="ok">${fmt(totalReceita)}</span> e suas despesas totalizaram <span class="bad">${fmt(totalDespesa)}</span>.</p>`;
-    analysis += `<p>O saldo final do mês é de <span class="${saldo >= 0 ? 'ok' : 'bad'}">${fmt(saldo)}</span>.</p>`;
-
-    if (saldo >= 0) {
-      analysis += '<p class="ok">Parabéns! O mês encerrou com um saldo positivo. Continue monitorando suas despesas e buscando novas oportunidades de receita.</p>';
+    if (currentMonthData.saldo < 0) {
+      insights += '<p class="bad"><strong>Alerta:</strong> O saldo do mês está negativo. É crucial revisar as despesas e buscar aumentar as receitas.</p>';
+    } else if (currentMonthData.saldo < currentMonthData.totalReceita * 0.1) { // Saldo menor que 10% da receita
+      insights += '<p class="warn"><strong>Atenção:</strong> O saldo do mês é positivo, mas a margem é baixa. Considere otimizar custos ou explorar novas fontes de receita.</p>';
     } else {
-      analysis += '<p class="bad">Atenção! O mês encerrou com um saldo negativo. É crucial revisar as despesas e identificar onde é possível reduzir custos ou aumentar as receitas.</p>';
+      insights += '<p class="ok"><strong>Ótimo:</strong> O saldo do mês é saudável, indicando boa gestão financeira.</p>';
     }
 
-    analysis += '<p><strong>Detalhes das Receitas:</strong></p><ul>';
-    for (const tipo in receitasPorTipo) {
-      if (receitasPorTipo[tipo] > 0) {
-        analysis += `<li>${tipo}: ${fmt(receitasPorTipo[tipo])}</li>`;
-      }
-    }
-    analysis += '</ul>';
+    const maiorDespesaCat = Object.entries(STATE.despesas.filter(d => d.mes === STATE.currentMonth).reduce((acc, d) => {
+      acc[d.cat] = (acc[d.cat] || 0) + d.valor;
+      return acc;
+    }, {})).sort(([, a], [, b]) => b - a)[0];
 
-    // Análise de despesas (exemplo)
-    const despesasPorCat = currentMonthData.despesasPorCategoria;
-    const sortedDespesas = Object.entries(despesasPorCat).sort(([, a], [, b]) => b - a);
-    if (sortedDespesas.length > 0) {
-      analysis += '<p><strong>Principais Despesas:</strong></p><ul>';
-      sortedDespesas.slice(0, 3).forEach(([cat, val]) => {
-        analysis += `<li>${DESP_LABELS[cat]?.label || cat}: ${fmt(val)}</li>`;
-      });
-      analysis += '</ul>';
-      if (sortedDespesas[0][1] > totalReceita * 0.2) { // Se a maior despesa for mais de 20% da receita
-        analysis += `<p class="warn">A categoria "${DESP_LABELS[sortedDespesas[0][0]]?.label || sortedDespesas[0][0]}" representa uma parcela significativa das suas despesas. Considere analisar a fundo esses gastos.</p>`;
-      }
-    } else {
-      analysis += '<p>Não há despesas registradas para este mês.</p>';
+    if (maiorDespesaCat) {
+      insights += `<p>A maior categoria de despesa foi <strong>${DESP_LABELS[maiorDespesaCat[0]]?.label || maiorDespesaCat[0]}</strong>, totalizando ${fmt(maiorDespesaCat[1])}. Analisar essa área pode trazer oportunidades de economia.</p>`;
     }
 
-    // Sugestões
-    if (receitasPorTipo['Venda'] === 0) {
-      analysis += '<p class="warn">Não houve receita de vendas neste mês. Explore estratégias para impulsionar a venda de imóveis.</p>';
-    }
-    if (STATE.imoveis.length < 100) { // Exemplo de meta de carteira
-      analysis += `<p>Sua carteira atual tem ${STATE.imoveis.length} imóveis. Para aumentar a receita de locação, foque na captação de novos imóveis.</p>`;
+    const receitaLocacao = currentMonthData.receitasPorTipo['Locação'] || 0;
+    const receitaVenda = currentMonthData.receitasPorTipo['Venda'] || 0;
+    if (receitaLocacao > receitaVenda * 2) {
+      insights += '<p>A receita de locação é significativamente maior que a de vendas. Continue fortalecendo a carteira de aluguéis, mas explore também estratégias para impulsionar as vendas.</p>';
+    } else if (receitaVenda > receitaLocacao * 2) {
+      insights += '<p>A receita de vendas superou a de locação. Mantenha o foco nas vendas, mas não negligencie a estabilidade que a carteira de aluguéis proporciona.</p>';
     }
   }
-
-  iaContent.querySelector('.ia-body').innerHTML = analysis;
+  iaBox.querySelector('.ia-body').innerHTML = insights;
 }
 
 function addReceita() {
   const mes = STATE.currentMonth;
-  const tipo = prompt('Tipo de Receita (Locação, Venda, Bonificação):');
+  const tipo = prompt('Tipo de Receita (Locação, Venda, Bonificação, Outros):');
   const desc = prompt('Descrição da Receita:');
   const valor = parseFloat(prompt('Valor da Receita:'));
   if (mes && tipo && desc && !isNaN(valor) && valor > 0) {
@@ -906,14 +1009,19 @@ function renderDespesas() {
 }
 
 function renderFuturos() {
-  const rec = STATE.receitas.filter(r => r.status === 'previsto');
-  const desp = STATE.despesas.filter(d => d.status === 'previsto');
+  // Para este exemplo, vamos considerar todas as despesas com data futura como "previsto"
+  const hoje = today();
+  const rec = STATE.receitas.filter(r => r.status === 'previsto' && r.mes > STATE.currentMonth); // Exemplo de filtro
+  const desp = STATE.despesas.filter(d => d.data > hoje); // Despesas com data futura
+
   const fr = document.getElementById('tabFutRec');
   const fd = document.getElementById('tabFutDesp');
+
   fr.innerHTML = rec.length ? `<div class="table-wrap"><table><thead><tr><th>Mês</th><th>Tipo</th><th>Descrição</th><th>Valor</th></tr></thead><tbody>${
     rec.map(r => `<tr><td>${monthLabel(r.mes)}</td><td>${r.tipo}</td><td>${r.desc}</td><td>${fmt(r.valor)}</td></tr>`).join('')
   }</tbody></table></div>` : '<div class="empty">Sem receitas futuras.</div>';
-  fd.innerHTML = desp.length ? `<div class="table-wrap"><table><thead><tr><th>Mês</th><th>Categoria</th><th>Descrição</th><th>Data</th><th>Valor</th></tr></thead><tbody>${
+
+  fd.innerHTML = desp.length ? `<div class="table-wrap"><table><thead><tr><th>Mês</th><th>Categoria</th><th>Descrição</th><th>Data</th><th><th>Valor</th></tr></thead><tbody>${
     desp.map(d => `<tr><td>${monthLabel(d.mes)}</td><td>${DESP_LABELS[d.cat]?.label || d.cat}</td><td>${d.desc}</td><td>${d.data}</td><td>${fmt(d.valor)}</td></tr>`).join('')
   }</tbody></table></div>` : '<div class="empty">Sem despesas futuras.</div>';
 }
@@ -923,7 +1031,7 @@ function renderCarteira() {
   const t = document.getElementById('tabCart');
   if (!STATE.imoveis.length) {
     k.innerHTML = '';
-    t.innerHTML = '<div class="empty">A carteira será preenchida ao importar o Excel.</div>';
+    t.innerHTML = '<div class="empty">A carteira será preenchida ao carregar os dados.</div>';
     return;
   }
   const qtd = STATE.imoveis.length;
@@ -965,8 +1073,14 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('rMes').value = STATE.currentMonth;
   document.getElementById('dMes').value = STATE.currentMonth;
 
-  // Renderiza tudo inicialmente (vai mostrar as mensagens de "carregar dados" até o Excel ser importado)
-  renderAll();
+  // Carrega os dados embutidos automaticamente ao carregar a página
+  loadAllEmbeddedData();
+
+  // Adiciona listeners para os seletores de mês
+  document.getElementById('mesDashboard').addEventListener('change', (e) => { STATE.currentMonth = e.target.value; renderAll(); });
+  document.getElementById('iaMes').addEventListener('change', (e) => { STATE.currentMonth = e.target.value; renderAll(); });
+  document.getElementById('rMes').addEventListener('change', (e) => { STATE.currentMonth = e.target.value; renderAll(); });
+  document.getElementById('dMes').addEventListener('change', (e) => { STATE.currentMonth = e.target.value; renderAll(); });
 });
 </script>
 </body>
