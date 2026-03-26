@@ -5,6 +5,7 @@
 <title>FluxoCaixa IA - Credito Real Ag. São Pedro</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.19.3/dist/xlsx.full.min.js"></script>
 <style>
 :root{
   --bg:#020617;--surface:#020617;--card:#0f172a;--card2:#020617;
@@ -169,8 +170,9 @@ tr:hover td{background:rgba(15,23,42,.8);}
     <div class="nav-section">Operacional</div>
     <button class="nav-item" onclick="goTo('receitas')"><span>💰</span><span>Receitas</span></button>
     <button class="nav-item" onclick="goTo('despesas')"><span>💸</span><span>Despesas</span></button>
-    <button class="nav-item" onclick="goTo('futuros')"><span>📅</span><span>Futuros</span></button>
-    <button class="nav-item" onclick="goTo('carteira')"><span>🏠</span><span>Carteira</span></button>
+    <button class="nav-item" onclick="goTo('futuros')"><span>🗓️</span><span>Futuros</span></button>
+    <div class="nav-section">Carteira</div>
+    <button class="nav-item" onclick="goTo('imoveis')"><span>🏠</span><span>Imóveis</span></button>
   </div>
 </nav>
 
@@ -180,15 +182,16 @@ tr:hover td{background:rgba(15,23,42,.8);}
     <div class="ph">
       <div>
         <h1>Dashboard Financeiro</h1>
-        <p class="sub">Visão geral do fluxo de caixa da imobiliária.</p>
+        <p class="sub">Visão geral do fluxo de caixa da Credito Real Ag. São Pedro.</p>
       </div>
       <div class="mbar">
-        <select id="mesDashboard" onchange="renderDashboard(); renderIA();">
+        <select id="mesDashboard" onchange="renderAll()">
           <option value="JANEIRO2026">Janeiro 2026</option>
           <option value="FEVEREIRO2026">Fevereiro 2026</option>
-          <option value="MARÇO2026">Março 2026</option>
+          <option value="MARCO2026">Março 2026</option>
         </select>
-        <button class="btn btn-primary" onclick="loadExcelData()"><span>🔄</span> Carregar Dados</button>
+        <button class="btn btn-primary" onclick="loadExcelData()">Carregar Dados Excel</button>
+        <input type="file" id="excelFileInput" accept=".xlsx, .xls" style="display:none;">
       </div>
     </div>
 
@@ -198,63 +201,52 @@ tr:hover td{background:rgba(15,23,42,.8);}
 
     <div class="grid2">
       <div class="panel">
-        <h3>Receita vs Despesa — 6 meses</h3>
+        <h3>Receita x Despesa — meses carregados</h3>
         <div class="chart-wrap"><canvas id="chartRecDesp"></canvas></div>
       </div>
       <div class="panel">
-        <h3>Composição de Receitas</h3>
+        <h3>Composição das Receitas</h3>
         <div class="chart-wrap"><canvas id="chartRecComp"></canvas></div>
-      </div>
-    </div>
-
-    <div class="grid-1-2">
-      <div class="panel">
-        <h3>Metas de Receita</h3>
-        <div id="progressMetas">
-          <!-- Metas serão renderizadas aqui -->
-        </div>
-      </div>
-      <div class="panel">
-        <h3>Despesas por Categoria</h3>
-        <div class="chart-wrap"><canvas id="chartDesp"></canvas></div>
       </div>
     </div>
 
     <div class="grid2">
       <div class="panel">
-        <h3>Saldo Acumulado</h3>
-        <div class="chart-wrap"><canvas id="chartSaldo"></canvas></div>
+        <h3>Metas de Receita</h3>
+        <div id="progress-receitas">
+          <div class="empty">Sem dados carregados.</div>
+        </div>
       </div>
       <div class="panel">
         <h3>Próximos Vencimentos</h3>
-        <div id="proxVenc">
-          <!-- Próximos vencimentos serão renderizados aqui -->
+        <div id="proximos-venc">
+          <div class="empty">Sem dados carregados.</div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- IA PAGE -->
+  <!-- ANÁLISE IA PAGE -->
   <div id="ia" class="page">
     <div class="ph">
       <div>
-        <h1>Análise de Inteligência Artificial</h1>
-        <p class="sub">Insights e recomendações para o seu fluxo de caixa.</p>
+        <h1>Análise de IA</h1>
+        <p class="sub">Insights e recomendações baseadas nos dados financeiros.</p>
       </div>
       <div class="mbar">
         <select id="iaMes" onchange="renderIA()">
           <option value="JANEIRO2026">Janeiro 2026</option>
           <option value="FEVEREIRO2026">Fevereiro 2026</option>
-          <option value="MARÇO2026">Março 2026</option>
+          <option value="MARCO2026">Março 2026</option>
         </select>
       </div>
     </div>
     <div class="ia-box">
       <div class="ia-header">
-        <span>💡</span><strong>Análise do Mês</strong>
+        <span>🤖</span><strong>Análise do Mês</strong>
       </div>
       <div class="ia-body" id="iaTexto">
-        <p>Carregando análise...</p>
+        <p>Carregue os dados do Excel no Dashboard para liberar a análise de IA.</p>
       </div>
     </div>
   </div>
@@ -262,35 +254,38 @@ tr:hover td{background:rgba(15,23,42,.8);}
   <!-- RECEITAS PAGE -->
   <div id="receitas" class="page">
     <div class="ph">
-      <h1>Gestão de Receitas</h1>
-      <p class="sub">Adicione e visualize todas as receitas da imobiliária.</p>
+      <div>
+        <h1>Gestão de Receitas</h1>
+        <p class="sub">Adicione e visualize todas as receitas da imobiliária.</p>
+      </div>
+      <div class="mbar">
+        <select id="rMes">
+          <option value="JANEIRO2026">Janeiro 2026</option>
+          <option value="FEVEREIRO2026">Fevereiro 2026</option>
+          <option value="MARCO2026">Março 2026</option>
+        </select>
+        <button class="btn btn-primary" onclick="addReceita()">Adicionar Receita</button>
+      </div>
     </div>
     <div class="panel">
-      <h3>Adicionar Nova Receita</h3>
+      <h3>Nova Receita</h3>
       <div class="form-grid">
-        <div class="form-group">
-          <label for="rMes">Mês</label>
-          <select id="rMes">
-            <option value="JANEIRO2026">Janeiro 2026</option>
-            <option value="FEVEREIRO2026">Fevereiro 2026</option>
-            <option value="MARÇO2026">Março 2026</option>
-          </select>
-        </div>
         <div class="form-group">
           <label for="rTipo">Tipo</label>
           <select id="rTipo">
-            <option value="locacao">Locação</option>
-            <option value="venda">Venda</option>
-            <option value="bonus">Bonificação</option>
+            <option value="Locação">Locação</option>
+            <option value="Venda">Venda</option>
+            <option value="Bonificação">Bonificação</option>
+            <option value="Outros">Outros</option>
           </select>
         </div>
         <div class="form-group">
           <label for="rDesc">Descrição</label>
-          <input type="text" id="rDesc" placeholder="Ex: Aluguel de imóvel X">
+          <input type="text" id="rDesc" placeholder="Ex: Aluguel Imóvel X">
         </div>
         <div class="form-group">
           <label for="rValor">Valor (R$)</label>
-          <input type="number" id="rValor" placeholder="0.00">
+          <input type="number" id="rValor" step="0.01" value="0">
         </div>
         <div class="form-group">
           <label for="rStatus">Status</label>
@@ -300,10 +295,9 @@ tr:hover td{background:rgba(15,23,42,.8);}
           </select>
         </div>
       </div>
-      <button class="btn btn-success" onclick="addReceita()">Adicionar Receita</button>
     </div>
-    <div class="panel mt-4">
-      <h3>Todas as Receitas</h3>
+    <div class="panel mt-3">
+      <h3>Receitas Lançadas</h3>
       <div id="tabReceitas">
         <div class="empty">Sem receitas lançadas.</div>
       </div>
@@ -313,41 +307,44 @@ tr:hover td{background:rgba(15,23,42,.8);}
   <!-- DESPESAS PAGE -->
   <div id="despesas" class="page">
     <div class="ph">
-      <h1>Gestão de Despesas</h1>
-      <p class="sub">Adicione e visualize todas as despesas da imobiliária.</p>
+      <div>
+        <h1>Gestão de Despesas</h1>
+        <p class="sub">Adicione e visualize todas as despesas da imobiliária.</p>
+      </div>
+      <div class="mbar">
+        <select id="dMes">
+          <option value="JANEIRO2026">Janeiro 2026</option>
+          <option value="FEVEREIRO2026">Fevereiro 2026</option>
+          <option value="MARCO2026">Março 2026</option>
+        </select>
+        <button class="btn btn-danger" onclick="addDespesa()">Adicionar Despesa</button>
+      </div>
     </div>
     <div class="panel">
-      <h3>Adicionar Nova Despesa</h3>
+      <h3>Nova Despesa</h3>
       <div class="form-grid">
-        <div class="form-group">
-          <label for="dMes">Mês</label>
-          <select id="dMes">
-            <option value="JANEIRO2026">Janeiro 2026</option>
-            <option value="FEVEREIRO2026">Fevereiro 2026</option>
-            <option value="MARÇO2026">Março 2026</option>
-          </select>
-        </div>
         <div class="form-group">
           <label for="dCat">Categoria</label>
           <select id="dCat">
-            <option value="midia">Mídia</option>
-            <option value="sistema">Sistema</option>
-            <option value="agua">Água</option>
-            <option value="luz">Luz</option>
-            <option value="imposto">Imposto</option>
-            <option value="seguro">Seguro</option>
-            <option value="serv_gerais">Serviços Gerais</option>
-            <option value="manutencao">Manutenção</option>
-            <option value="outros">Outros</option>
+            <option value="Mídias">Mídias</option>
+            <option value="Sistemas">Sistemas</option>
+            <option value="Água/Luz">Água/Luz</option>
+            <option value="Impostos">Impostos</option>
+            <option value="Empréstimos">Empréstimos</option>
+            <option value="Manutenção">Manutenção</option>
+            <option value="Serviços Gerais">Serviços Gerais</option>
+            <option value="Seguros">Seguros</option>
+            <option value="Material de Consumo">Material de Consumo</option>
+            <option value="Outros">Outros</option>
           </select>
         </div>
         <div class="form-group">
           <label for="dDesc">Descrição</label>
-          <input type="text" id="dDesc" placeholder="Ex: Conta de luz">
+          <input type="text" id="dDesc" placeholder="Ex: Conta de Luz">
         </div>
         <div class="form-group">
           <label for="dValor">Valor (R$)</label>
-          <input type="number" id="dValor" placeholder="0.00">
+          <input type="number" id="dValor" step="0.01" value="0">
         </div>
         <div class="form-group">
           <label for="dData">Data Vencimento</label>
@@ -361,10 +358,9 @@ tr:hover td{background:rgba(15,23,42,.8);}
           </select>
         </div>
       </div>
-      <button class="btn btn-success" onclick="addDespesa()">Adicionar Despesa</button>
     </div>
-    <div class="panel mt-4">
-      <h3>Todas as Despesas</h3>
+    <div class="panel mt-3">
+      <h3>Despesas Lançadas</h3>
       <div id="tabDespesas">
         <div class="empty">Sem despesas lançadas.</div>
       </div>
@@ -393,17 +389,17 @@ tr:hover td{background:rgba(15,23,42,.8);}
     </div>
   </div>
 
-  <!-- CARTEIRA PAGE -->
-  <div id="carteira" class="page">
+  <!-- IMÓVEIS PAGE -->
+  <div id="imoveis" class="page">
     <div class="ph">
       <h1>Carteira de Imóveis</h1>
-      <p class="sub">Visão geral dos imóveis sob gestão.</p>
+      <p class="sub">Detalhes dos imóveis sob gestão da imobiliária.</p>
     </div>
     <div class="kpi-grid" id="kpisCart">
       <!-- KPIs da carteira serão renderizados aqui -->
     </div>
-    <div class="panel mt-4">
-      <h3>Detalhes da Carteira</h3>
+    <div class="panel mt-3">
+      <h3>Imóveis Cadastrados</h3>
       <div id="tabCart">
         <div class="empty">A carteira será preenchida ao carregar os dados do Excel.</div>
       </div>
@@ -416,387 +412,182 @@ tr:hover td{background:rgba(15,23,42,.8);}
 <script>
 // ====================== ESTADO GLOBAL ======================
 const STATE = {
+  currentMonth: 'JANEIRO2026',
   receitas: [],
   despesas: [],
   imoveis: [],
-  currentMonth: 'JANEIRO2026',
+  charts: {}, // Para armazenar instâncias de gráficos
 };
 
 const DESP_LABELS = {
-  midia: { label: 'Mídia', icon: '📣' },
-  sistema: { label: 'Sistema', icon: '💻' },
-  agua: { label: 'Água', icon: '💧' },
-  luz: { label: 'Luz', icon: '💡' },
-  imposto: { label: 'Imposto', icon: '🧾' },
-  seguro: { label: 'Seguro', icon: '🛡️' },
-  serv_gerais: { label: 'Serviços Gerais', icon: '🧹' },
-  manutencao: { label: 'Manutenção', icon: '🛠️' },
-  outros: { label: 'Outros', icon: '📦' },
+  'Mídias': { label: 'Mídias', icon: '📢' },
+  'Sistemas': { label: 'Sistemas', icon: '💻' },
+  'Água/Luz': { label: 'Água/Luz', icon: '💡' },
+  'Impostos': { label: 'Impostos', icon: '🧾' },
+  'Empréstimos': { label: 'Empréstimos', icon: '🏦' },
+  'Manutenção': { label: 'Manutenção', icon: '🛠️' },
+  'Serviços Gerais': { label: 'Serviços Gerais', icon: '🧹' },
+  'Seguros': { label: 'Seguros', icon: '🛡️' },
+  'Material de Consumo': { label: 'Material de Consumo', icon: '🛒' },
+  'Outros': { label: 'Outros', icon: '❓' },
 };
-
-let charts = {}; // Objeto para armazenar instâncias de gráficos
 
 // ====================== UTILS ======================
 function fmt(value) {
-  return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
+  return (value || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 }
-
 function pct(value) {
-  return new Intl.NumberFormat('pt-BR', { style: 'percent', minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value / 100);
+  return (value || 0).toLocaleString('pt-BR', { style: 'percent', minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
-
-function today() {
-  return new Date().toISOString().slice(0, 10);
-}
-
-function monthLabel(monthKey) {
+function monthLabel(mes) {
   const map = {
-    'JANEIRO2026': 'Jan 26',
-    'FEVEREIRO2026': 'Fev 26',
-    'MARÇO2026': 'Mar 26',
+    'JANEIRO2026': 'Janeiro 2026',
+    'FEVEREIRO2026': 'Fevereiro 2026',
+    'MARCO2026': 'Março 2026',
   };
-  return map[monthKey] || monthKey;
+  return map[mes] || mes;
 }
-
+function today() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
 function toast(message, isError = false) {
-  const t = document.getElementById('toast');
-  t.textContent = message;
-  t.className = isError ? 'error show' : 'show';
-  setTimeout(() => { t.className = ''; }, 3000);
+  const el = document.getElementById('toast');
+  el.textContent = message;
+  el.className = 'show';
+  if (isError) el.classList.add('error');
+  setTimeout(() => {
+    el.className = '';
+    el.classList.remove('error');
+  }, 3000);
 }
 
+// ====================== NAVEGAÇÃO ======================
 function goTo(pageId) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
   document.getElementById(pageId).classList.add('active');
   document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
   document.querySelector(`.nav-item[onclick="goTo('${pageId}')"]`).classList.add('active');
-  STATE.currentMonth = document.getElementById('mesDashboard').value; // Atualiza o mês ao mudar de página
-  renderAll(); // Renderiza tudo novamente para garantir que os dados estejam atualizados
+  renderAll(); // Re-renderiza tudo ao mudar de página para garantir dados atualizados
 }
 
-function destroyChart(chartId) {
-  if (charts[chartId]) {
-    charts[chartId].destroy();
-    delete charts[chartId];
-  }
-}
-
-// ====================== DADOS DO MÊS ======================
+// ====================== LÓGICA DE DADOS DO MÊS ======================
 function dadosMes(mes) {
-  const rec = STATE.receitas.filter(r => r.mes === mes);
-  const desp = STATE.despesas.filter(d => d.mes === mes);
+  const receitasMes = STATE.receitas.filter(r => r.mes === mes && r.status === 'pago');
+  const despesasMes = STATE.despesas.filter(d => d.mes === mes && d.status === 'pago');
+  const despesasVencidas = STATE.despesas.filter(d => d.mes === mes && d.status === 'previsto' && d.data < today());
 
-  const loc = rec.filter(r => r.tipo === 'locacao').reduce((s, r) => s + r.valor, 0);
-  const venda = rec.filter(r => r.tipo === 'venda').reduce((s, r) => s + r.valor, 0);
-  const bonus = rec.filter(r => r.tipo === 'bonus').reduce((s, r) => s + r.valor, 0);
-  const totalRec = loc + venda + bonus;
+  const loc = receitasMes.filter(r => r.tipo === 'Locação').reduce((sum, r) => sum + r.valor, 0);
+  const venda = receitasMes.filter(r => r.tipo === 'Venda').reduce((sum, r) => sum + r.valor, 0);
+  const bon = receitasMes.filter(r => r.tipo === 'Bonificação').reduce((sum, r) => sum + r.valor, 0);
+  const outrosRec = receitasMes.filter(r => r.tipo === 'Outros').reduce((sum, r) => sum + r.valor, 0);
 
-  const totalDesp = desp.reduce((s, d) => s + d.valor, 0);
-  const vencidos = desp.filter(d => d.status === 'previsto' && d.data < today()).reduce((s, d) => s + d.valor, 0);
-
+  const totalRec = loc + venda + bon + outrosRec;
+  const totalDesp = despesasMes.reduce((sum, d) => sum + d.valor, 0);
   const saldo = totalRec - totalDesp;
+  const vencidos = despesasVencidas.reduce((sum, d) => sum + d.valor, 0);
 
-  return { loc, venda, bonus, totalRec, totalDesp, saldo, vencidos };
+  return { loc, venda, bon, outrosRec, totalRec, totalDesp, saldo, vencidos };
 }
 
-// ====================== LEITURA DO EXCEL ======================
-function parseExcelDate(excelDate) {
-  if (typeof excelDate === 'number') {
-    const date = new Date(Math.round((excelDate - 25569) * 86400 * 1000));
-    return date.toISOString().slice(0, 10);
+// ====================== RENDER DASHBOARD ======================
+function destroyChart(chartId) {
+  if (STATE.charts[chartId]) {
+    STATE.charts[chartId].destroy();
+    delete STATE.charts[chartId];
   }
-  if (typeof excelDate === 'string' && excelDate.includes('T')) { // "2022-02-10T00:00:00.000Z"
-    return excelDate.slice(0, 10);
-  }
-  if (typeof excelDate === 'string' && excelDate.includes(' ')) { // "2022-02-10 00:00:00"
-    return excelDate.split(' ')[0];
-  }
-  return excelDate; // Assume que já está no formato YYYY-MM-DD
 }
 
-function mapDespesaCategory(description) {
-  const descLower = description.toLowerCase();
-  if (descLower.includes('zap') || descLower.includes('mídia') || descLower.includes('marketing')) return 'midia';
-  if (descLower.includes('vista') || descLower.includes('fenyx') || descLower.includes('sami') || descLower.includes('emovel')) return 'sistema';
-  if (descLower.includes('ceee') || descLower.includes('luz')) return 'luz';
-  if (descLower.includes('dmae') || descLower.includes('água')) return 'agua';
-  if (descLower.includes('das') || descLower.includes('issqn') || descLower.includes('imposto')) return 'imposto';
-  if (descLower.includes('seguro')) return 'seguro';
-  if (descLower.includes('serv. adm') || descLower.includes('serv gerais')) return 'serv_gerais';
-  if (descLower.includes('manutenção')) return 'manutencao';
-  return 'outros';
-}
-
-function processSheet(sheetData, month) {
-  const newReceitas = [];
-  const newDespesas = [];
-  const newImoveis = [];
-
-  // Encontrar a linha de cabeçalho das receitas e despesas
-  let headerRowIndex = -1;
-  for (let i = 0; i < sheetData.length; i++) {
-    if (sheetData[i][0] === 'ENDEREÇO' && sheetData[i][7] === 'Nome') {
-      headerRowIndex = i;
-      break;
-    }
-  }
-
-  if (headerRowIndex === -1) {
-    console.warn(`Cabeçalho não encontrado para o mês ${month}.`);
-    return { newReceitas, newDespesas, newImoveis };
-  }
-
-  const receitaStartCol = 0;
-  const despesaStartCol = 7;
-
-  for (let i = headerRowIndex + 1; i < sheetData.length; i++) {
-    const row = sheetData[i];
-
-    // Processar Receitas
-    const endereco = row[receitaStartCol];
-    const locatario = row[receitaStartCol + 1];
-    const valorTotal = parseFloat(row[receitaStartCol + 2]);
-    const txAdm = parseFloat(row[receitaStartCol + 3]);
-    const receitaVenda = parseFloat(row[receitaStartCol + 5]);
-
-    if (endereco && locatario && !isNaN(valorTotal) && valorTotal > 0) {
-      // Receita de Locação
-      const valorTxAdm = isNaN(txAdm) ? (valorTotal * 0.10) : txAdm; // Se Tx Adm for NaN, assume 10%
-      newReceitas.push({
-        mes: month,
-        tipo: 'locacao',
-        desc: `Locação ${endereco} - ${locatario}`,
-        valor: valorTxAdm,
-        status: 'pago'
-      });
-      newImoveis.push({
-        end: endereco,
-        loc: locatario,
-        aluguel: valorTotal,
-        taxa: valorTxAdm,
-        cond: parseFloat(row[receitaStartCol + 4]) || 0,
-      });
-    } else if (row[receitaStartCol] && String(row[receitaStartCol]).startsWith('COMISSÃO VENDA') && !isNaN(receitaVenda) && receitaVenda > 0) {
-      // Receita de Venda
-      newReceitas.push({
-        mes: month,
-        tipo: 'venda',
-        desc: String(row[receitaStartCol]).replace('COMISSÃO VENDA ', ''),
-        valor: receitaVenda,
-        status: 'pago'
-      });
-    }
-
-    // Processar Despesas
-    const despNome = row[despesaStartCol];
-    const despValor = parseFloat(row[despesaStartCol + 2]);
-    const despData = row[despesaStartCol + 3];
-
-    if (despNome && !isNaN(despValor) && despValor > 0 && despNome !== 'TOTAL') {
-      newDespesas.push({
-        mes: month,
-        cat: mapDespesaCategory(despNome),
-        desc: despNome,
-        valor: despValor,
-        data: parseExcelDate(despData) || `${month.slice(0, -4)}-10`, // Data padrão se não houver
-        status: 'pago'
-      });
-    }
-  }
-  return { newReceitas, newDespesas, newImoveis };
-}
-
-function loadExcelData() {
-  // Limpa o estado atual antes de carregar novos dados
-  STATE.receitas = [];
-  STATE.despesas = [];
-  STATE.imoveis = [];
-
-  const fileInput = document.createElement('input');
-  fileInput.type = 'file';
-  fileInput.accept = '.xlsx, .xls';
-  fileInput.onchange = (e) => {
-    const file = e.target.files[0];
-    if (!file) {
-      toast('Nenhum arquivo selecionado.', true);
-      return;
-    }
-
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      try {
-        const data = new Uint8Array(event.target.result);
-        const workbook = XLSX.read(data, { type: 'array' });
-
-        const sheetsToProcess = ['JANEIRO2026', 'FEVEREIRO2026', 'MARÇO2026'];
-
-        sheetsToProcess.forEach(sheetName => {
-          if (workbook.SheetNames.includes(sheetName)) {
-            const worksheet = workbook.Sheets[sheetName];
-            const json = XLSX.utils.sheet_to_json(worksheet, { header: 1, raw: false }); // raw: false para formatar datas
-            const { newReceitas, newDespesas, newImoveis } = processSheet(json, sheetName);
-            STATE.receitas.push(...newReceitas);
-            STATE.despesas.push(...newDespesas);
-            STATE.imoveis.push(...newImoveis);
-          } else {
-            console.warn(`Aba "${sheetName}" não encontrada no arquivo Excel.`);
-          }
-        });
-
-        toast('Dados do Excel carregados com sucesso!');
-        renderAll(); // Renderiza todos os componentes após carregar os dados
-      } catch (error) {
-        console.error('Erro ao processar o arquivo Excel:', error);
-        toast('Erro ao processar o arquivo Excel. Verifique o formato.', true);
-      }
-    };
-    reader.readAsArrayBuffer(file);
-  };
-  fileInput.click();
-}
-
-
-// ====================== DASHBOARD ======================
 function renderDashboard() {
   const mes = STATE.currentMonth;
   const D = dadosMes(mes);
+  const kpisEl = document.getElementById('kpisDashboard');
 
-  // KPIs
-  document.getElementById('kpisDashboard').innerHTML = `
-    <div class="kpi-card"><div class="lbl">Receita Total</div><div class="val green">${fmt(D.totalRec)}</div></div>
-    <div class="kpi-card"><div class="lbl">Despesa Total</div><div class="val red">${fmt(D.totalDesp)}</div></div>
-    <div class="kpi-card"><div class="lbl">Saldo do Mês</div><div class="val ${D.saldo >= 0 ? 'green' : 'red'}">${fmt(D.saldo)}</div></div>
-    <div class="kpi-card"><div class="lbl">Margem Líquida</div><div class="val blue">${pct(D.totalRec > 0 ? (D.saldo / D.totalRec * 100) : 0)}</div></div>
-  `;
-
-  // Gráficos só renderizam se houver dados
   if (STATE.receitas.length === 0 && STATE.despesas.length === 0) {
-    document.getElementById('chartRecDesp').parentElement.innerHTML = '<div class="empty">Carregue os dados do Excel para ver os gráficos.</div>';
-    document.getElementById('chartRecComp').parentElement.innerHTML = '<div class="empty">Carregue os dados do Excel para ver os gráficos.</div>';
-    document.getElementById('chartDesp').parentElement.innerHTML = '<div class="empty">Carregue os dados do Excel para ver os gráficos.</div>';
-    document.getElementById('chartSaldo').parentElement.innerHTML = '<div class="empty">Carregue os dados do Excel para ver os gráficos.</div>';
-    document.getElementById('progressMetas').innerHTML = '<div class="empty">Carregue os dados do Excel para ver as metas.</div>';
-    document.getElementById('proxVenc').innerHTML = '<div class="empty">Carregue os dados do Excel para ver os vencimentos.</div>';
+    kpisEl.innerHTML = `
+      <div class="kpi-card"><div class="lbl">Receita Total</div><div class="val">-</div><div class="sub">Importe o Excel</div></div>
+      <div class="kpi-card"><div class="lbl">Despesa Total</div><div class="val">-</div><div class="sub">para ver os números</div></div>
+      <div class="kpi-card"><div class="lbl">Saldo Líquido</div><div class="val">-</div><div class="sub">reais.</div></div>
+      <div class="kpi-card"><div class="lbl">Margem Líquida</div><div class="val">-</div><div class="sub"></div></div>
+    `;
+    document.getElementById('progress-receitas').innerHTML = '<div class="empty">Sem dados carregados.</div>';
+    document.getElementById('proximos-venc').innerHTML = '<div class="empty">Sem dados carregados.</div>';
+    destroyChart('chartRecDesp');
+    destroyChart('chartRecComp');
     return;
   }
 
-  // CHART: Receita vs Despesa - 6 meses
-  const months6 = ['JANEIRO2026', 'FEVEREIRO2026', 'MARÇO2026']; // Ajuste conforme a necessidade de meses
-  const recData = months6.map(m => dadosMes(m).totalRec);
-  const despData = months6.map(m => dadosMes(m).totalDesp);
+  const margem = D.totalRec > 0 ? (D.saldo / D.totalRec) : 0;
+  const margemClass = margem >= 0.3 ? 'green' : (margem >= 0.1 ? 'yellow' : 'red');
 
+  kpisEl.innerHTML = `
+    <div class="kpi-card"><div class="lbl">Receita Total</div><div class="val green">${fmt(D.totalRec)}</div></div>
+    <div class="kpi-card"><div class="lbl">Despesa Total</div><div class="val red">${fmt(D.totalDesp)}</div></div>
+    <div class="kpi-card"><div class="lbl">Saldo Líquido</div><div class="val ${D.saldo >= 0 ? 'blue' : 'red'}">${fmt(D.saldo)}</div></div>
+    <div class="kpi-card"><div class="lbl">Margem Líquida</div><div class="val ${margemClass}">${pct(margem)}</div></div>
+  `;
+
+  // CHART: Receita x Despesa
   destroyChart('chartRecDesp');
-  charts['chartRecDesp'] = new Chart(document.getElementById('chartRecDesp'), {
+  STATE.charts['chartRecDesp'] = new Chart(document.getElementById('chartRecDesp'), {
     type: 'bar',
     data: {
-      labels: months6.map(monthLabel),
+      labels: ['Receita', 'Despesa'],
       datasets: [
-        { label: 'Receita', data: recData, backgroundColor: 'rgba(34,197,94,.7)', borderRadius: 6 },
-        { label: 'Despesa', data: despData, backgroundColor: 'rgba(239,68,68,.7)', borderRadius: 6 }
+        { label: 'Valor', data: [D.totalRec, D.totalDesp], backgroundColor: ['rgba(34,197,94,.7)', 'rgba(239,68,68,.7)'], borderRadius: 6 }
       ]
     },
     options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { labels: { color: '#e2e8f0' } } },
+      responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
       scales: {
-        x: { ticks: { color: '#8892a4' }, grid: { color: '#1e293b' } },
-        y: { ticks: { color: '#8892a4', callback: v => 'R$' + v.toLocaleString('pt-BR') }, grid: { color: '#1e293b' } }
+        x: { ticks: { color: '#64748b' }, grid: { color: '#1e293b' } },
+        y: { ticks: { color: '#64748b', callback: v => 'R$' + v.toLocaleString('pt-BR') }, grid: { color: '#1e293b' } }
       }
     }
   });
 
   // CHART: Composição Receitas
   destroyChart('chartRecComp');
-  charts['chartRecComp'] = new Chart(document.getElementById('chartRecComp'), {
+  STATE.charts['chartRecComp'] = new Chart(document.getElementById('chartRecComp'), {
     type: 'doughnut',
     data: {
-      labels: ['🏘️ Locação', '🤝 Vendas', '⭐ Bonificações'],
+      labels: ['🏘️ Locação', '🤝 Vendas', '⭐ Bonificações', 'Outros'],
       datasets: [{
-        data: [D.loc, D.venda, D.bonus],
-        backgroundColor: ['rgba(79,70,229,.8)', 'rgba(34,197,94,.8)', 'rgba(124,58,237,.8)'],
+        data: [D.loc || 0, D.venda || 0, D.bon || 0, D.outrosRec || 0],
+        backgroundColor: ['rgba(79,70,229,.8)', 'rgba(34,197,94,.8)', 'rgba(124,58,237,.8)', 'rgba(234,179,8,.8)'],
         borderWidth: 2, borderColor: '#0f172a'
       }]
     },
     options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { position: 'bottom', labels: { color: '#e2e8f0', padding: 12 } } }
+      responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#e2e8f0', padding: 12 } } }
     }
   });
 
-  // CHART: Despesas por Categoria
-  const cats = Object.keys(DESP_LABELS);
-  const catTotals = cats.map(c => STATE.despesas.filter(d => d.mes === mes && d.cat === c).reduce((s, d) => s + d.valor, 0));
-  const catLabels = cats.map(c => DESP_LABELS[c].label);
-  destroyChart('chartDesp');
-  charts['chartDesp'] = new Chart(document.getElementById('chartDesp'), {
-    type: 'bar',
-    data: {
-      labels: catLabels,
-      datasets: [{ label: 'R$', data: catTotals, backgroundColor: 'rgba(239,68,68,.7)', borderRadius: 6 }]
-    },
-    options: {
-      indexAxis: 'y', responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { display: false } },
-      scales: {
-        x: { ticks: { color: '#8892a4' }, grid: { color: '#1e293b' } },
-        y: { ticks: { color: '#8892a4' }, grid: { color: '#1e293b' } }
-      }
-    }
-  });
-
-  // CHART: Saldo acumulado
-  let acc = 0;
-  const saldAcc = months6.map(m => { acc += dadosMes(m).saldo; return acc; });
-  destroyChart('chartSaldo');
-  charts['chartSaldo'] = new Chart(document.getElementById('chartSaldo'), {
-    type: 'line',
-    data: {
-      labels: months6.map(monthLabel),
-      datasets: [{
-        label: 'Saldo Acumulado',
-        data: saldAcc,
-        borderColor: '#4f46e5',
-        backgroundColor: 'rgba(79,70,229,.12)',
-        fill: true, tension: .4, pointBackgroundColor: '#4f46e5'
-      }]
-    },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { labels: { color: '#e2e8f0' } } },
-      scales: {
-        x: { ticks: { color: '#8892a4' }, grid: { color: '#1e293b' } },
-        y: { ticks: { color: '#8892a4', callback: v => 'R$' + v.toLocaleString('pt-BR') }, grid: { color: '#1e293b' } }
-      }
-    }
-  });
-
-  // Metas de Receita
-  const metas = [
-    { label: 'Locação', meta: 20000, valor: D.loc, color: 'linear-gradient(90deg,#4f46e5,#6366f1)' },
-    { label: 'Vendas', meta: 50000, valor: D.venda, color: 'linear-gradient(90deg,#22c55e,#4ade80)' },
-    { label: 'Bonificações', meta: 10000, valor: D.bonus, color: 'linear-gradient(90deg,#7c3aed,#a855f7)' }
-  ];
-  const el = document.getElementById('progressMetas');
-  el.innerHTML = metas.map(m => {
-    const p = m.meta > 0 ? Math.min(100, m.valor / m.meta * 100) : 0;
+  // PROGRESS METAS
+  const metaLoc = 20000, metaVnd = 50000, metaBon = 10000; // Metas de exemplo
+  document.getElementById('progress-receitas').innerHTML = [
+    { label: '🏘️ Locação', val: D.loc, meta: metaLoc, color: '#4f46e5' },
+    { label: '🤝 Vendas', val: D.venda, meta: metaVnd, color: '#22c55e' },
+    { label: '⭐ Bonificações', val: D.bon, meta: metaBon, color: '#a78bfa' },
+  ].map(p => {
+    const pct = Math.min(p.meta > 0 ? (p.val / p.meta * 100) : 0, 100);
     return `<div class="prog-wrap">
-      <div class="prog-lbl"><span>${m.label}</span><span>${fmt(m.valor)} / ${fmt(m.meta)}</span></div>
-      <div class="prog-bar"><div class="prog-fill" style="width:${p}%;background:${m.color}"></div></div>
+      <div class="prog-lbl"><span>${p.label}</span><span>${fmt(p.val)} / ${fmt(p.meta)}</span></div>
+      <div class="prog-bar"><div class="prog-fill" style="width:${pct}%;background:${p.color};"></div></div>
     </div>`;
   }).join('');
 
-  // Próximos Vencimentos
-  const hoje = new Date().toISOString().slice(0, 10);
+  // PRÓXIMOS VENCIMENTOS
+  const hoje = today();
   const prox = STATE.despesas
-    .filter(d => d.status === 'previsto' || d.data >= hoje)
+    .filter(d => d.status === 'previsto' && d.data >= hoje)
     .sort((a, b) => a.data.localeCompare(b.data))
-    .slice(0, 6);
-
-  const proxVencEl = document.getElementById('proxVenc');
-  if (!prox.length) { proxVencEl.innerHTML = '<div class="empty">Sem vencimentos futuros cadastrados.</div>'; return; }
-  proxVencEl.innerHTML = `<div class="table-wrap"><table><thead><tr><th>Data</th><th>Descrição</th><th>Valor</th></tr></thead><tbody>${
-    prox.map(d => `<tr><td>${d.data}</td><td>${d.desc}</td><td>${fmt(d.valor)}</td></tr>`).join('')
-  }</tbody></table></div>`;
+    .slice(0, 5);
+  document.getElementById('proximos-venc').innerHTML = prox.length
+    ? `<div class="table-wrap"><table><thead><tr><th>Venc.</th><th>Descrição</th><th>Valor</th></tr></thead><tbody>
+        ${prox.map(d => `<tr><td>${d.data}</td><td>${DESP_LABELS[d.cat]?.label || d.cat} ${d.desc}</td><td style="color:var(--yellow)">${fmt(d.valor)}</td></tr>`).join('')}
+       </tbody></table></div>`
+    : '<div class="empty">Sem próximos vencimentos.</div>';
 }
 
 // ====================== IA ======================
@@ -806,7 +597,7 @@ function renderIA() {
   const D = dadosMes(mes);
 
   if (STATE.receitas.length === 0 && STATE.despesas.length === 0) {
-    el.innerHTML = '<p>Carregue os dados do Excel no Dashboard para liberar a análise de IA.</p>';
+    el.innerHTML = '<p>Carregue os dados do Excel para liberar a análise de IA.</p>';
     return;
   }
 
@@ -850,7 +641,7 @@ function addDespesa() {
   const cat = document.getElementById('dCat').value;
   const desc = document.getElementById('dDesc').value.trim();
   const valor = parseFloat(document.getElementById('dValor').value || '0');
-  const data = document.getElementById('dData').value || `${mes.slice(0, -4)}-10`;
+  const data = document.getElementById('dData').value || `${mes.slice(0, -4)}-10`; // Default to 10th of the month
   const status = document.getElementById('dStatus').value;
   if (!desc || !valor) { toast('Descrição e valor são obrigatórios.', true); return; }
   STATE.despesas.push({ mes, cat, desc, valor, data, status });
@@ -924,6 +715,144 @@ function renderCarteira() {
   }</tbody></table></div>`;
 }
 
+// ====================== LEITURA DO EXCEL ======================
+async function loadExcelData() {
+  const fileInput = document.getElementById('excelFileInput');
+  fileInput.click(); // Abre o seletor de arquivos
+
+  fileInput.onchange = async (event) => {
+    const file = event.target.files[0];
+    if (!file) {
+      toast('Nenhum arquivo selecionado.', true);
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+      try {
+        const data = new Uint8Array(e.target.result);
+        const workbook = XLSX.read(data, { type: 'array' });
+
+        STATE.receitas = [];
+        STATE.despesas = [];
+        STATE.imoveis = [];
+
+        const sheetsToProcess = ['JANEIRO2026', 'FEVEREIRO2026', 'MARCO2026']; // Adicione MARCO2026 aqui
+
+        for (const sheetName of sheetsToProcess) {
+          if (workbook.SheetNames.includes(sheetName)) {
+            const worksheet = workbook.Sheets[sheetName];
+            const json = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+
+            // --- Processar Receitas ---
+            // As receitas começam na linha 3 (índice 2) e coluna 0 (ENDEREÇO)
+            // Colunas: ENDEREÇO (0), LOCATÁRIO (1), Valor total (R$) (2), Tx Adm (R$) (3), Condominio (R$) (4), Receita de Venda Imóveis (5)
+            for (let i = 3; i < json.length; i++) {
+              const row = json[i];
+              const endereco = row[0];
+              const locatario = row[1];
+              let valorTotal = parseFloat(row[2]) || 0;
+              let txAdm = parseFloat(row[3]) || 0;
+              const condominio = parseFloat(row[4]) || 0;
+              const receitaVenda = parseFloat(row[5]) || 0;
+
+              if (endereco && locatario && valorTotal > 0) {
+                // Se a Tx Adm não for preenchida, calcula 10% do valor total
+                if (txAdm === 0 && valorTotal > 0) {
+                    txAdm = valorTotal * 0.10;
+                }
+                STATE.receitas.push({
+                  mes: sheetName,
+                  tipo: 'Locação',
+                  desc: `Aluguel ${endereco} - ${locatario}`,
+                  valor: txAdm, // A receita da imobiliária é a taxa de administração
+                  status: 'pago'
+                });
+                // Adiciona o imóvel à carteira se ainda não existir
+                if (!STATE.imoveis.some(im => im.end === endereco)) {
+                  STATE.imoveis.push({
+                    end: endereco,
+                    loc: locatario,
+                    aluguel: valorTotal,
+                    taxa: txAdm,
+                    cond: condominio
+                  });
+                }
+              }
+              // Adicionar receita de venda se houver
+              if (receitaVenda > 0) {
+                STATE.receitas.push({
+                  mes: sheetName,
+                  tipo: 'Venda',
+                  desc: `Comissão Venda Imóvel ${endereco || 'Desconhecido'}`,
+                  valor: receitaVenda,
+                  status: 'pago'
+                });
+              }
+            }
+
+            // --- Processar Despesas ---
+            // As despesas começam na linha 3 (índice 2) e coluna 7 (Nome)
+            // Colunas: Nome (7), Valor pago (9), Dt Vencimento (10)
+            for (let i = 3; i < json.length; i++) {
+              const row = json[i];
+              const nomeDespesa = row[7];
+              const valorPago = parseFloat(row[9]) || 0;
+              let dtVencimento = row[10];
+
+              if (nomeDespesa && valorPago > 0) {
+                let categoria = 'Outros';
+                if (nomeDespesa.includes('Chaves na Mão') || nomeDespesa.includes('ZAP Viva Real') || nomeDespesa.includes('EMOVEL') || nomeDespesa.includes('Marketing')) {
+                  categoria = 'Mídias';
+                } else if (nomeDespesa.includes('Vista Software') || nomeDespesa.includes('Fenyx') || nomeDespesa.includes('SAMI Sistemas')) {
+                  categoria = 'Sistemas';
+                } else if (nomeDespesa.includes('CEEE-D') || nomeDespesa.includes('DMAE')) {
+                  categoria = 'Água/Luz';
+                } else if (nomeDespesa.includes('DAS') || nomeDespesa.includes('ISSQN')) {
+                  categoria = 'Impostos';
+                } else if (nomeDespesa.includes('Despesas seguros')) {
+                  categoria = 'Seguros';
+                } else if (nomeDespesa.includes('Despesas SERV GERAIS')) {
+                  categoria = 'Serviços Gerais';
+                } else if (nomeDespesa.includes('Material de consumo')) {
+                  categoria = 'Material de Consumo';
+                }
+
+                // Converter data do Excel para formato YYYY-MM-DD
+                if (typeof dtVencimento === 'number') { // Se for número, é data do Excel
+                  const excelDate = new Date(Math.round((dtVencimento - 25569) * 86400 * 1000));
+                  dtVencimento = excelDate.toISOString().split('T')[0];
+                } else if (typeof dtVencimento === 'string' && dtVencimento.includes(' ')) { // Se for string com hora
+                  dtVencimento = dtVencimento.split(' ')[0];
+                } else if (!dtVencimento) { // Se não tiver data, usa o dia 10 do mês
+                  const year = sheetName.slice(-4);
+                  const monthNum = { 'JANEIRO': '01', 'FEVEREIRO': '02', 'MARCO': '03' }[sheetName.slice(0, -4)];
+                  dtVencimento = `${year}-${monthNum}-10`;
+                }
+
+                STATE.despesas.push({
+                  mes: sheetName,
+                  cat: categoria,
+                  desc: nomeDespesa,
+                  valor: valorPago,
+                  data: dtVencimento,
+                  status: 'pago'
+                });
+              }
+            }
+          }
+        }
+        toast('Dados do Excel carregados com sucesso!');
+        renderAll();
+      } catch (error) {
+        console.error('Erro ao processar o arquivo Excel:', error);
+        toast('Erro ao processar o arquivo Excel. Verifique o formato.', true);
+      }
+    };
+    reader.readAsArrayBuffer(file);
+  };
+}
+
 // ====================== RENDER GLOBAL ======================
 function renderAll() {
   // Sincroniza os seletores de mês
@@ -950,7 +879,12 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('rMes').value = STATE.currentMonth;
   document.getElementById('dMes').value = STATE.currentMonth;
 
-  // Renderiza tudo inicialmente (vai mostrar as mensagens de "carregar dados")
+  // Adiciona o listener para o botão de importação
+  document.querySelector('.mbar .btn-primary').addEventListener('click', () => {
+    document.getElementById('excelFileInput').click();
+  });
+
+  // Renderiza tudo inicialmente (vai mostrar as mensagens de "carregar dados" até o Excel ser importado)
   renderAll();
 });
 </script>
