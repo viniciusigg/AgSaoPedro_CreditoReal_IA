@@ -4,9 +4,7 @@
 <meta charset="UTF-8">
 <title>FluxoCaixa IA - Credito Real Ag. São Pedro</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<!-- Chart e XLSX -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.19.3/dist/xlsx.full.min.js"></script>
 <style>
 :root{
   --bg:#020617;--surface:#020617;--card:#0f172a;--card2:#020617;
@@ -172,574 +170,660 @@ tr:hover td{background:rgba(15,23,42,.8);}
     <button class="nav-item" onclick="goTo('receitas')"><span>💰</span><span>Receitas</span></button>
     <button class="nav-item" onclick="goTo('despesas')"><span>💸</span><span>Despesas</span></button>
     <button class="nav-item" onclick="goTo('futuros')"><span>📅</span><span>Futuros</span></button>
-    <div class="nav-section">Carteira</div>
-    <button class="nav-item" onclick="goTo('carteira')"><span>🏘️</span><span>Imóveis</span></button>
+    <button class="nav-item" onclick="goTo('carteira')"><span>🏠</span><span>Carteira</span></button>
   </div>
 </nav>
 
-<div id="toast"></div>
-
 <main class="main">
-
-<!-- DASHBOARD -->
-<section id="page-dashboard" class="page active">
-  <div class="ph">
-    <div>
-      <h1>Dashboard Financeiro</h1>
-      <div class="sub" id="subDash">Carregando...</div>
+  <!-- DASHBOARD PAGE -->
+  <div id="dashboard" class="page active">
+    <div class="ph">
+      <div>
+        <h1>Dashboard Financeiro</h1>
+        <p class="sub">Visão geral do fluxo de caixa da imobiliária.</p>
+      </div>
+      <div class="mbar">
+        <select id="mesDashboard" onchange="renderDashboard(); renderIA();">
+          <option value="JANEIRO2026">Janeiro 2026</option>
+          <option value="FEVEREIRO2026">Fevereiro 2026</option>
+          <option value="MARÇO2026">Março 2026</option>
+        </select>
+        <button class="btn btn-primary" onclick="loadExcelData()"><span>🔄</span> Carregar Dados</button>
+      </div>
     </div>
-    <div class="mbar">
-      <select id="dashMes" onchange="renderAll()">
-        <option value="2026-01">Janeiro 2026</option>
-        <option value="2026-02">Fevereiro 2026</option>
-      </select>
-      <label class="btn btn-ghost">
-        Importar Excel 2026
-        <input type="file" id="fileExcel" accept=".xlsx,.xls" onchange="importExcel(event)" style="display:none;">
-      </label>
+
+    <div class="kpi-grid" id="kpisDashboard">
+      <!-- KPIs serão renderizados aqui -->
+    </div>
+
+    <div class="grid2">
+      <div class="panel">
+        <h3>Receita vs Despesa — 6 meses</h3>
+        <div class="chart-wrap"><canvas id="chartRecDesp"></canvas></div>
+      </div>
+      <div class="panel">
+        <h3>Composição de Receitas</h3>
+        <div class="chart-wrap"><canvas id="chartRecComp"></canvas></div>
+      </div>
+    </div>
+
+    <div class="grid-1-2">
+      <div class="panel">
+        <h3>Metas de Receita</h3>
+        <div id="progressMetas">
+          <!-- Metas serão renderizadas aqui -->
+        </div>
+      </div>
+      <div class="panel">
+        <h3>Despesas por Categoria</h3>
+        <div class="chart-wrap"><canvas id="chartDesp"></canvas></div>
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div class="panel">
+        <h3>Saldo Acumulado</h3>
+        <div class="chart-wrap"><canvas id="chartSaldo"></canvas></div>
+      </div>
+      <div class="panel">
+        <h3>Próximos Vencimentos</h3>
+        <div id="proxVenc">
+          <!-- Próximos vencimentos serão renderizados aqui -->
+        </div>
+      </div>
     </div>
   </div>
 
-  <div id="kpisDash" class="kpi-grid"></div>
+  <!-- IA PAGE -->
+  <div id="ia" class="page">
+    <div class="ph">
+      <div>
+        <h1>Análise de Inteligência Artificial</h1>
+        <p class="sub">Insights e recomendações para o seu fluxo de caixa.</p>
+      </div>
+      <div class="mbar">
+        <select id="iaMes" onchange="renderIA()">
+          <option value="JANEIRO2026">Janeiro 2026</option>
+          <option value="FEVEREIRO2026">Fevereiro 2026</option>
+          <option value="MARÇO2026">Março 2026</option>
+        </select>
+      </div>
+    </div>
+    <div class="ia-box">
+      <div class="ia-header">
+        <span>💡</span><strong>Análise do Mês</strong>
+      </div>
+      <div class="ia-body" id="iaTexto">
+        <p>Carregando análise...</p>
+      </div>
+    </div>
+  </div>
 
-  <div class="grid2">
+  <!-- RECEITAS PAGE -->
+  <div id="receitas" class="page">
+    <div class="ph">
+      <h1>Gestão de Receitas</h1>
+      <p class="sub">Adicione e visualize todas as receitas da imobiliária.</p>
+    </div>
     <div class="panel">
-      <h3>Receita × Despesa — meses carregados</h3>
-      <div class="chart-wrap"><canvas id="chartRecDesp"></canvas></div>
+      <h3>Adicionar Nova Receita</h3>
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="rMes">Mês</label>
+          <select id="rMes">
+            <option value="JANEIRO2026">Janeiro 2026</option>
+            <option value="FEVEREIRO2026">Fevereiro 2026</option>
+            <option value="MARÇO2026">Março 2026</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="rTipo">Tipo</label>
+          <select id="rTipo">
+            <option value="locacao">Locação</option>
+            <option value="venda">Venda</option>
+            <option value="bonus">Bonificação</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="rDesc">Descrição</label>
+          <input type="text" id="rDesc" placeholder="Ex: Aluguel de imóvel X">
+        </div>
+        <div class="form-group">
+          <label for="rValor">Valor (R$)</label>
+          <input type="number" id="rValor" placeholder="0.00">
+        </div>
+        <div class="form-group">
+          <label for="rStatus">Status</label>
+          <select id="rStatus">
+            <option value="pago">Pago</option>
+            <option value="previsto">Previsto</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn btn-success" onclick="addReceita()">Adicionar Receita</button>
+    </div>
+    <div class="panel mt-4">
+      <h3>Todas as Receitas</h3>
+      <div id="tabReceitas">
+        <div class="empty">Sem receitas lançadas.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DESPESAS PAGE -->
+  <div id="despesas" class="page">
+    <div class="ph">
+      <h1>Gestão de Despesas</h1>
+      <p class="sub">Adicione e visualize todas as despesas da imobiliária.</p>
     </div>
     <div class="panel">
-      <h3>Composição das Receitas</h3>
-      <div class="chart-wrap"><canvas id="chartComp"></canvas></div>
+      <h3>Adicionar Nova Despesa</h3>
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="dMes">Mês</label>
+          <select id="dMes">
+            <option value="JANEIRO2026">Janeiro 2026</option>
+            <option value="FEVEREIRO2026">Fevereiro 2026</option>
+            <option value="MARÇO2026">Março 2026</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="dCat">Categoria</label>
+          <select id="dCat">
+            <option value="midia">Mídia</option>
+            <option value="sistema">Sistema</option>
+            <option value="agua">Água</option>
+            <option value="luz">Luz</option>
+            <option value="imposto">Imposto</option>
+            <option value="seguro">Seguro</option>
+            <option value="serv_gerais">Serviços Gerais</option>
+            <option value="manutencao">Manutenção</option>
+            <option value="outros">Outros</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="dDesc">Descrição</label>
+          <input type="text" id="dDesc" placeholder="Ex: Conta de luz">
+        </div>
+        <div class="form-group">
+          <label for="dValor">Valor (R$)</label>
+          <input type="number" id="dValor" placeholder="0.00">
+        </div>
+        <div class="form-group">
+          <label for="dData">Data Vencimento</label>
+          <input type="date" id="dData">
+        </div>
+        <div class="form-group">
+          <label for="dStatus">Status</label>
+          <select id="dStatus">
+            <option value="pago">Pago</option>
+            <option value="previsto">Previsto</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn btn-success" onclick="addDespesa()">Adicionar Despesa</button>
+    </div>
+    <div class="panel mt-4">
+      <h3>Todas as Despesas</h3>
+      <div id="tabDespesas">
+        <div class="empty">Sem despesas lançadas.</div>
+      </div>
     </div>
   </div>
 
-  <div class="grid-1-2">
-    <div class="panel">
-      <h3>Metas de Receita</h3>
-      <div id="progressMetas"></div>
-    </div>
-    <div class="panel">
-      <h3>Próximos Vencimentos</h3>
-      <div id="proxVenc"></div>
-    </div>
-  </div>
-</section>
-
-<!-- IA -->
-<section id="page-ia" class="page">
-  <div class="ph">
-    <div>
-      <h1>Inteligência Artificial — Análise do Mês</h1>
-      <div class="sub">Resumo inteligente com base no fluxo de caixa real.</div>
-    </div>
-    <div class="mbar">
-      <select id="iaMes" onchange="renderIA()">
-        <option value="2026-01">Janeiro 2026</option>
-        <option value="2026-02">Fevereiro 2026</option>
-      </select>
-      <button class="btn btn-primary" onclick="renderIA()">Atualizar</button>
-    </div>
-  </div>
-  <div class="ia-box">
-    <div class="ia-header">
-      <span>🧠</span><strong>Análise do mês</strong>
-    </div>
-    <div class="ia-body" id="iaTexto">Importe o Excel 2026 no Dashboard para liberar a análise.</div>
-  </div>
-</section>
-
-<!-- RECEITAS -->
-<section id="page-receitas" class="page">
-  <div class="ph">
-    <div>
-      <h1>Receitas</h1>
-      <div class="sub">Locação, vendas e bonificações.</div>
-    </div>
-  </div>
-
-  <div class="panel">
-    <h3>Novo lançamento</h3>
-    <div class="form-grid">
-      <div class="form-group">
-        <label>Mês</label>
-        <select id="rMes">
-          <option value="2026-01">Jan/2026</option>
-          <option value="2026-02">Fev/2026</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Tipo</label>
-        <select id="rTipo">
-          <option value="locacao">Locação</option>
-          <option value="venda">Venda</option>
-          <option value="bonus">Bonificação</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Descrição</label>
-        <input id="rDesc" placeholder="Ex: Taxa adm. imóvel X">
-      </div>
-      <div class="form-group">
-        <label>Valor (R$)</label>
-        <input id="rValor" type="number" step="0.01">
-      </div>
-      <div class="form-group">
-        <label>Status</label>
-        <select id="rStatus">
-          <option value="pago">Realizado</option>
-          <option value="previsto">Previsto</option>
-        </select>
-      </div>
-    </div>
-    <button class="btn btn-success" onclick="addReceita()">Salvar receita</button>
-  </div>
-
-  <div class="panel" style="margin-top:14px;">
-    <div class="panel-header"><h3>Receitas lançadas</h3></div>
-    <div id="tabReceitas"></div>
-  </div>
-</section>
-
-<!-- DESPESAS -->
-<section id="page-despesas" class="page">
-  <div class="ph">
-    <div>
-      <h1>Despesas</h1>
-      <div class="sub">Custos fixos e variáveis da imobiliária.</div>
-    </div>
-  </div>
-
-  <div class="panel">
-    <h3>Novo lançamento</h3>
-    <div class="form-grid">
-      <div class="form-group">
-        <label>Mês</label>
-        <select id="dMes">
-          <option value="2026-01">Jan/2026</option>
-          <option value="2026-02">Fev/2026</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Categoria</label>
-        <select id="dCat">
-          <option value="sistemas">Sistemas</option>
-          <option value="midias">Mídias</option>
-          <option value="impostos">Impostos</option>
-          <option value="servicos">Serviços Gerais</option>
-          <option value="agua">Água</option>
-          <option value="luz">Energia</option>
-          <option value="marketing">Marketing</option>
-          <option value="seguro">Seguros</option>
-          <option value="royalties">Royalties</option>
-          <option value="material">Material consumo</option>
-          <option value="outros">Outros</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Descrição</label>
-        <input id="dDesc" placeholder="Ex: ZAP Viva Real, DAS, ISSQN...">
-      </div>
-      <div class="form-group">
-        <label>Valor (R$)</label>
-        <input id="dValor" type="number" step="0.01">
-      </div>
-      <div class="form-group">
-        <label>Vencimento</label>
-        <input id="dData" type="date">
-      </div>
-      <div class="form-group">
-        <label>Status</label>
-        <select id="dStatus">
-          <option value="pago">Pago</option>
-          <option value="previsto">Previsto</option>
-        </select>
-      </div>
-    </div>
-    <button class="btn btn-success" onclick="addDespesa()">Salvar despesa</button>
-  </div>
-
-  <div class="panel" style="margin-top:14px;">
-    <div class="panel-header"><h3>Despesas lançadas</h3></div>
-    <div id="tabDespesas"></div>
-  </div>
-</section>
-
-<!-- FUTUROS -->
-<section id="page-futuros" class="page">
-  <div class="ph">
-    <div>
+  <!-- FUTUROS PAGE -->
+  <div id="futuros" class="page">
+    <div class="ph">
       <h1>Lançamentos Futuros</h1>
-      <div class="sub">Receitas e despesas previstas impactando o caixa.</div>
+      <p class="sub">Receitas e despesas previstas para os próximos meses.</p>
+    </div>
+    <div class="grid2">
+      <div class="panel">
+        <h3>Receitas Futuras</h3>
+        <div id="tabFutRec">
+          <div class="empty">Sem receitas futuras.</div>
+        </div>
+      </div>
+      <div class="panel">
+        <h3>Despesas Futuras</h3>
+        <div id="tabFutDesp">
+          <div class="empty">Sem despesas futuras.</div>
+        </div>
+      </div>
     </div>
   </div>
-  <div class="grid2" style="grid-template-columns:1fr 1fr;">
-    <div class="panel">
-      <h3>Receitas futuras</h3>
-      <div id="tabFutRec"></div>
-    </div>
-    <div class="panel">
-      <h3>Despesas futuras</h3>
-      <div id="tabFutDesp"></div>
-    </div>
-  </div>
-</section>
 
-<!-- CARTEIRA -->
-<section id="page-carteira" class="page">
-  <div class="ph">
-    <div>
+  <!-- CARTEIRA PAGE -->
+  <div id="carteira" class="page">
+    <div class="ph">
       <h1>Carteira de Imóveis</h1>
-      <div class="sub">Imóveis de locação da agência.</div>
+      <p class="sub">Visão geral dos imóveis sob gestão.</p>
+    </div>
+    <div class="kpi-grid" id="kpisCart">
+      <!-- KPIs da carteira serão renderizados aqui -->
+    </div>
+    <div class="panel mt-4">
+      <h3>Detalhes da Carteira</h3>
+      <div id="tabCart">
+        <div class="empty">A carteira será preenchida ao carregar os dados do Excel.</div>
+      </div>
     </div>
   </div>
-  <div id="kpisCart" class="kpi-grid"></div>
-  <div class="panel">
-    <h3>Imóveis cadastrados</h3>
-    <div id="tabCart"></div>
-  </div>
-</section>
-
 </main>
+
+<div id="toast"></div>
 
 <script>
 // ====================== ESTADO GLOBAL ======================
 const STATE = {
-  receitas: [],   // {mes, tipo, desc, valor, status}
-  despesas: [],   // {mes, cat, desc, valor, data, status}
-  imoveis: []     // {end, loc, aluguel, taxa, cond}
+  receitas: [],
+  despesas: [],
+  imoveis: [],
+  currentMonth: 'JANEIRO2026',
 };
-let charts = { recDesp:null, comp:null };
+
+const DESP_LABELS = {
+  midia: { label: 'Mídia', icon: '📣' },
+  sistema: { label: 'Sistema', icon: '💻' },
+  agua: { label: 'Água', icon: '💧' },
+  luz: { label: 'Luz', icon: '💡' },
+  imposto: { label: 'Imposto', icon: '🧾' },
+  seguro: { label: 'Seguro', icon: '🛡️' },
+  serv_gerais: { label: 'Serviços Gerais', icon: '🧹' },
+  manutencao: { label: 'Manutenção', icon: '🛠️' },
+  outros: { label: 'Outros', icon: '📦' },
+};
+
+let charts = {}; // Objeto para armazenar instâncias de gráficos
 
 // ====================== UTILS ======================
-const fmt = v => 'R$ ' + (v||0).toFixed(2).replace('.',',').replace(/\B(?=(\d{3})+(?!\d))/g,'.');
-const pct = v => (v||0).toFixed(1).replace('.',',')+'%';
-
-function toast(msg,err=false){
-  const t=document.getElementById('toast');
-  t.textContent=msg;
-  t.className='';t.classList.add('show');
-  if(err)t.classList.add('error');
-  setTimeout(()=>t.classList.remove('show'),2500);
+function fmt(value) {
+  return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
 }
 
-function goTo(page){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.getElementById('page-'+page).classList.add('active');
-  document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));
-  const btn=[...document.querySelectorAll('.nav-item')].find(b=>b.getAttribute('onclick').includes(page));
-  if(btn)btn.classList.add('active');
+function pct(value) {
+  return new Intl.NumberFormat('pt-BR', { style: 'percent', minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value / 100);
 }
 
-// ====================== IMPORTAÇÃO EXCEL ======================
-function importExcel(evt){
-  const file = evt.target.files[0];
-  if(!file){return;}
-  const reader = new FileReader();
-  reader.onload = e=>{
-    try{
-      const wb = XLSX.read(e.target.result,{type:'binary'});
-      STATE.receitas = [];
-      STATE.despesas = [];
-      STATE.imoveis  = [];
+function today() {
+  return new Date().toISOString().slice(0, 10);
+}
 
-      const meses = [
-        {sheet:'JANEIRO2026',mes:'2026-01'},
-        {sheet:'FEVEREIRO2026',mes:'2026-02'}
-      ];
-      meses.forEach(m=>{
-        const sh = wb.Sheets[m.sheet];
-        if(sh){ parseSheet(sh,m.mes); }
-      });
-
-      toast('Excel importado com sucesso.');
-      renderAll();
-    }catch(err){
-      console.error(err);
-      toast('Erro ao importar Excel. Ver console.',true);
-    }
+function monthLabel(monthKey) {
+  const map = {
+    'JANEIRO2026': 'Jan 26',
+    'FEVEREIRO2026': 'Fev 26',
+    'MARÇO2026': 'Mar 26',
   };
-  reader.readAsBinaryString(file);
+  return map[monthKey] || monthKey;
 }
 
-// lê planilha no formato que você mandou
-function parseSheet(sheet,mes){
-  const json = XLSX.utils.sheet_to_json(sheet,{header:1,defval:null});
-  // linhas a partir do cabeçalho "ENDEREÇO"
-  const headIdx = json.findIndex(r=>String(r[1]).toUpperCase().includes('LOCATÁRIO') || String(r[0]).toUpperCase().includes('ENDEREÇO'));
-  if(headIdx===-1)return;
+function toast(message, isError = false) {
+  const t = document.getElementById('toast');
+  t.textContent = message;
+  t.className = isError ? 'error show' : 'show';
+  setTimeout(() => { t.className = ''; }, 3000);
+}
 
-  for(let i=headIdx+1;i<json.length;i++){
-    const row = json[i];
-    const endereco = row[0];
-    const locatario= row[1];
-    const valorTotal = parseFloat(row[2]);
-    const txAdm      = parseFloat(row[3]);
-    const cond       = parseFloat(row[4]);
-    const recVenda   = parseFloat(row[5]);
-    const despNome   = row[7];
-    const despValor  = parseFloat(row[9]);
-    const despData   = row[10];
+function goTo(pageId) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById(pageId).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+  document.querySelector(`.nav-item[onclick="goTo('${pageId}')"]`).classList.add('active');
+  STATE.currentMonth = document.getElementById('mesDashboard').value; // Atualiza o mês ao mudar de página
+  renderAll(); // Renderiza tudo novamente para garantir que os dados estejam atualizados
+}
 
-    // RECEITAS LOCACAO
-    if(endereco && !isNaN(valorTotal)){
-      if(!isNaN(txAdm) && txAdm>0){
-        STATE.receitas.push({
-          mes,tipo:'locacao',
-          desc:`Tx adm ${endereco} - ${locatario||''}`.trim(),
-          valor:txAdm,
-          status:'pago'
-        });
-      }
-      STATE.imoveis.push({
-        end:endereco,
-        loc:locatario||'',
-        aluguel:valorTotal||0,
-        taxa:!isNaN(txAdm)?txAdm:0,
-        cond:!isNaN(cond)?cond:0
-      });
-    }
-
-    // RECEITAS VENDAS (linhas de comissão)
-    if(recVenda && !isNaN(recVenda)){
-      STATE.receitas.push({
-        mes,tipo:'venda',
-        desc:(endereco||'Comissão venda').toString(),
-        valor:recVenda,
-        status:'pago'
-      });
-    }
-
-    // DESPESAS (lado direito da planilha)
-    if(despNome && despNome.toString().toUpperCase()!=='TOTAL' && despNome.toString().toUpperCase().indexOf('RECEITA')===-1){
-      if(!isNaN(despValor) && despValor>0){
-        STATE.despesas.push({
-          mes,
-          cat:mapCategoria(despNome),
-          desc:despNome.toString(),
-          valor:despValor,
-          data: formatExcelDate(despData,mes),
-          status:'pago'
-        });
-      }
-    }
+function destroyChart(chartId) {
+  if (charts[chartId]) {
+    charts[chartId].destroy();
+    delete charts[chartId];
   }
 }
 
-// mapeia texto da despesa para categoria
-function mapCategoria(nome){
-  const n = nome.toString().toLowerCase();
-  if(n.includes('zap') || n.includes('chaves na mão') || n.includes('chaves na mao')) return 'midias';
-  if(n.includes('vista') || n.includes('sami') || n.includes('emovel')) return 'sistemas';
-  if(n.includes('energia') || n.includes('ceee')) return 'luz';
-  if(n.includes('dmae') || n.includes('agua')) return 'agua';
-  if(n.includes('issqn') || n.includes('das') || n.includes('simples')) return 'impostos';
-  if(n.includes('royaties') || n.includes('royalties')) return 'royalties';
-  if(n.includes('seguro')) return 'seguro';
-  if(n.includes('serv geral') || n.includes('serv gerais') || n.includes('serviços gerais')) return 'servicos';
-  if(n.includes('marketing') || n.includes('mídia') || n.includes('midia')) return 'marketing';
-  if(n.includes('material')) return 'material';
+// ====================== DADOS DO MÊS ======================
+function dadosMes(mes) {
+  const rec = STATE.receitas.filter(r => r.mes === mes);
+  const desp = STATE.despesas.filter(d => d.mes === mes);
+
+  const loc = rec.filter(r => r.tipo === 'locacao').reduce((s, r) => s + r.valor, 0);
+  const venda = rec.filter(r => r.tipo === 'venda').reduce((s, r) => s + r.valor, 0);
+  const bonus = rec.filter(r => r.tipo === 'bonus').reduce((s, r) => s + r.valor, 0);
+  const totalRec = loc + venda + bonus;
+
+  const totalDesp = desp.reduce((s, d) => s + d.valor, 0);
+  const vencidos = desp.filter(d => d.status === 'previsto' && d.data < today()).reduce((s, d) => s + d.valor, 0);
+
+  const saldo = totalRec - totalDesp;
+
+  return { loc, venda, bonus, totalRec, totalDesp, saldo, vencidos };
+}
+
+// ====================== LEITURA DO EXCEL ======================
+function parseExcelDate(excelDate) {
+  if (typeof excelDate === 'number') {
+    const date = new Date(Math.round((excelDate - 25569) * 86400 * 1000));
+    return date.toISOString().slice(0, 10);
+  }
+  if (typeof excelDate === 'string' && excelDate.includes('T')) { // "2022-02-10T00:00:00.000Z"
+    return excelDate.slice(0, 10);
+  }
+  if (typeof excelDate === 'string' && excelDate.includes(' ')) { // "2022-02-10 00:00:00"
+    return excelDate.split(' ')[0];
+  }
+  return excelDate; // Assume que já está no formato YYYY-MM-DD
+}
+
+function mapDespesaCategory(description) {
+  const descLower = description.toLowerCase();
+  if (descLower.includes('zap') || descLower.includes('mídia') || descLower.includes('marketing')) return 'midia';
+  if (descLower.includes('vista') || descLower.includes('fenyx') || descLower.includes('sami') || descLower.includes('emovel')) return 'sistema';
+  if (descLower.includes('ceee') || descLower.includes('luz')) return 'luz';
+  if (descLower.includes('dmae') || descLower.includes('água')) return 'agua';
+  if (descLower.includes('das') || descLower.includes('issqn') || descLower.includes('imposto')) return 'imposto';
+  if (descLower.includes('seguro')) return 'seguro';
+  if (descLower.includes('serv. adm') || descLower.includes('serv gerais')) return 'serv_gerais';
+  if (descLower.includes('manutenção')) return 'manutencao';
   return 'outros';
 }
 
-// converte data excel/string para yyyy-mm-dd
-function formatExcelDate(v,mes){
-  if(!v)return mes+'-10';
-  if(typeof v==='string' && v.includes('-')) return v.split(' ')[0];
-  // se vier número de série do Excel
-  if(typeof v==='number'){
-    const d = XLSX.SSF.parse_date_code(v);
-    const mm = String(d.m).padStart(2,'0');
-    const dd = String(d.d).padStart(2,'0');
-    return `${d.y}-${mm}-${dd}`;
+function processSheet(sheetData, month) {
+  const newReceitas = [];
+  const newDespesas = [];
+  const newImoveis = [];
+
+  // Encontrar a linha de cabeçalho das receitas e despesas
+  let headerRowIndex = -1;
+  for (let i = 0; i < sheetData.length; i++) {
+    if (sheetData[i][0] === 'ENDEREÇO' && sheetData[i][7] === 'Nome') {
+      headerRowIndex = i;
+      break;
+    }
   }
-  return mes+'-10';
+
+  if (headerRowIndex === -1) {
+    console.warn(`Cabeçalho não encontrado para o mês ${month}.`);
+    return { newReceitas, newDespesas, newImoveis };
+  }
+
+  const receitaStartCol = 0;
+  const despesaStartCol = 7;
+
+  for (let i = headerRowIndex + 1; i < sheetData.length; i++) {
+    const row = sheetData[i];
+
+    // Processar Receitas
+    const endereco = row[receitaStartCol];
+    const locatario = row[receitaStartCol + 1];
+    const valorTotal = parseFloat(row[receitaStartCol + 2]);
+    const txAdm = parseFloat(row[receitaStartCol + 3]);
+    const receitaVenda = parseFloat(row[receitaStartCol + 5]);
+
+    if (endereco && locatario && !isNaN(valorTotal) && valorTotal > 0) {
+      // Receita de Locação
+      const valorTxAdm = isNaN(txAdm) ? (valorTotal * 0.10) : txAdm; // Se Tx Adm for NaN, assume 10%
+      newReceitas.push({
+        mes: month,
+        tipo: 'locacao',
+        desc: `Locação ${endereco} - ${locatario}`,
+        valor: valorTxAdm,
+        status: 'pago'
+      });
+      newImoveis.push({
+        end: endereco,
+        loc: locatario,
+        aluguel: valorTotal,
+        taxa: valorTxAdm,
+        cond: parseFloat(row[receitaStartCol + 4]) || 0,
+      });
+    } else if (row[receitaStartCol] && String(row[receitaStartCol]).startsWith('COMISSÃO VENDA') && !isNaN(receitaVenda) && receitaVenda > 0) {
+      // Receita de Venda
+      newReceitas.push({
+        mes: month,
+        tipo: 'venda',
+        desc: String(row[receitaStartCol]).replace('COMISSÃO VENDA ', ''),
+        valor: receitaVenda,
+        status: 'pago'
+      });
+    }
+
+    // Processar Despesas
+    const despNome = row[despesaStartCol];
+    const despValor = parseFloat(row[despesaStartCol + 2]);
+    const despData = row[despesaStartCol + 3];
+
+    if (despNome && !isNaN(despValor) && despValor > 0 && despNome !== 'TOTAL') {
+      newDespesas.push({
+        mes: month,
+        cat: mapDespesaCategory(despNome),
+        desc: despNome,
+        valor: despValor,
+        data: parseExcelDate(despData) || `${month.slice(0, -4)}-10`, // Data padrão se não houver
+        status: 'pago'
+      });
+    }
+  }
+  return { newReceitas, newDespesas, newImoveis };
 }
 
-// ====================== AGREGADORES ======================
-function dadosMes(mes){
-  const rec = STATE.receitas.filter(r=>r.mes===mes);
-  const desp= STATE.despesas.filter(d=>d.mes===mes);
-  const totalRec = rec.reduce((s,r)=>s+r.valor,0);
-  const totalDesp= desp.reduce((s,d)=>s+d.valor,0);
-  const loc = rec.filter(r=>r.tipo==='locacao').reduce((s,r)=>s+r.valor,0);
-  const venda = rec.filter(r=>r.tipo==='venda').reduce((s,r)=>s+r.valor,0);
-  const bonus = rec.filter(r=>r.tipo==='bonus').reduce((s,r)=>s+r.valor,0);
-  const vencidos = desp.filter(d=>d.status!=='pago').reduce((s,d)=>s+d.valor,0);
-  return {totalRec,totalDesp,saldo:totalRec-totalDesp,loc,venda,bonus,vencidos};
+function loadExcelData() {
+  // Limpa o estado atual antes de carregar novos dados
+  STATE.receitas = [];
+  STATE.despesas = [];
+  STATE.imoveis = [];
+
+  const fileInput = document.createElement('input');
+  fileInput.type = 'file';
+  fileInput.accept = '.xlsx, .xls';
+  fileInput.onchange = (e) => {
+    const file = e.target.files[0];
+    if (!file) {
+      toast('Nenhum arquivo selecionado.', true);
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const data = new Uint8Array(event.target.result);
+        const workbook = XLSX.read(data, { type: 'array' });
+
+        const sheetsToProcess = ['JANEIRO2026', 'FEVEREIRO2026', 'MARÇO2026'];
+
+        sheetsToProcess.forEach(sheetName => {
+          if (workbook.SheetNames.includes(sheetName)) {
+            const worksheet = workbook.Sheets[sheetName];
+            const json = XLSX.utils.sheet_to_json(worksheet, { header: 1, raw: false }); // raw: false para formatar datas
+            const { newReceitas, newDespesas, newImoveis } = processSheet(json, sheetName);
+            STATE.receitas.push(...newReceitas);
+            STATE.despesas.push(...newDespesas);
+            STATE.imoveis.push(...newImoveis);
+          } else {
+            console.warn(`Aba "${sheetName}" não encontrada no arquivo Excel.`);
+          }
+        });
+
+        toast('Dados do Excel carregados com sucesso!');
+        renderAll(); // Renderiza todos os componentes após carregar os dados
+      } catch (error) {
+        console.error('Erro ao processar o arquivo Excel:', error);
+        toast('Erro ao processar o arquivo Excel. Verifique o formato.', true);
+      }
+    };
+    reader.readAsArrayBuffer(file);
+  };
+  fileInput.click();
 }
 
-function mesesCarregados(){
-  const set = new Set([...STATE.receitas.map(r=>r.mes),...STATE.despesas.map(d=>d.mes)]);
-  return [...set].sort();
-}
 
-// ====================== RENDER DASHBOARD ======================
-function renderDashboard(){
-  const sub = document.getElementById('subDash');
-  const kpis = document.getElementById('kpisDash');
+// ====================== DASHBOARD ======================
+function renderDashboard() {
+  const mes = STATE.currentMonth;
+  const D = dadosMes(mes);
 
-  if(!STATE.receitas.length && !STATE.despesas.length){
-    sub.textContent = 'Aguardando importação do Excel 2026.';
-    kpis.innerHTML = '<div class="kpi-card"><div class="lbl">Status</div><div class="val">–</div><div class="sub">Importe o Excel para ver os números reais.</div></div>';
-    destroyCharts();
-    document.getElementById('progressMetas').innerHTML = '<div class="empty">Sem dados carregados.</div>';
-    document.getElementById('proxVenc').innerHTML = '<div class="empty">Sem dados carregados.</div>';
+  // KPIs
+  document.getElementById('kpisDashboard').innerHTML = `
+    <div class="kpi-card"><div class="lbl">Receita Total</div><div class="val green">${fmt(D.totalRec)}</div></div>
+    <div class="kpi-card"><div class="lbl">Despesa Total</div><div class="val red">${fmt(D.totalDesp)}</div></div>
+    <div class="kpi-card"><div class="lbl">Saldo do Mês</div><div class="val ${D.saldo >= 0 ? 'green' : 'red'}">${fmt(D.saldo)}</div></div>
+    <div class="kpi-card"><div class="lbl">Margem Líquida</div><div class="val blue">${pct(D.totalRec > 0 ? (D.saldo / D.totalRec * 100) : 0)}</div></div>
+  `;
+
+  // Gráficos só renderizam se houver dados
+  if (STATE.receitas.length === 0 && STATE.despesas.length === 0) {
+    document.getElementById('chartRecDesp').parentElement.innerHTML = '<div class="empty">Carregue os dados do Excel para ver os gráficos.</div>';
+    document.getElementById('chartRecComp').parentElement.innerHTML = '<div class="empty">Carregue os dados do Excel para ver os gráficos.</div>';
+    document.getElementById('chartDesp').parentElement.innerHTML = '<div class="empty">Carregue os dados do Excel para ver os gráficos.</div>';
+    document.getElementById('chartSaldo').parentElement.innerHTML = '<div class="empty">Carregue os dados do Excel para ver os gráficos.</div>';
+    document.getElementById('progressMetas').innerHTML = '<div class="empty">Carregue os dados do Excel para ver as metas.</div>';
+    document.getElementById('proxVenc').innerHTML = '<div class="empty">Carregue os dados do Excel para ver os vencimentos.</div>';
     return;
   }
 
-  sub.textContent = 'Dados reais carregados do Excel 2026.';
-  const mes = document.getElementById('dashMes').value;
-  const D = dadosMes(mes);
-  const margem = D.totalRec>0 ? (D.saldo/D.totalRec*100) : 0;
+  // CHART: Receita vs Despesa - 6 meses
+  const months6 = ['JANEIRO2026', 'FEVEREIRO2026', 'MARÇO2026']; // Ajuste conforme a necessidade de meses
+  const recData = months6.map(m => dadosMes(m).totalRec);
+  const despData = months6.map(m => dadosMes(m).totalDesp);
 
-  kpis.innerHTML = `
-    <div class="kpi-card">
-      <div class="lbl">Receitas do mês</div>
-      <div class="val green">${fmt(D.totalRec)}</div>
-      <div class="sub">Locação ${fmt(D.loc)} · Vendas ${fmt(D.venda)}</div>
-    </div>
-    <div class="kpi-card">
-      <div class="lbl">Despesas do mês</div>
-      <div class="val red">${fmt(D.totalDesp)}</div>
-      <div class="sub">Inclui sistemas, mídias, impostos e serviços.</div>
-    </div>
-    <div class="kpi-card">
-      <div class="lbl">Saldo do mês</div>
-      <div class="val ${D.saldo>=0?'green':'red'}">${fmt(D.saldo)}</div>
-      <div class="sub">Margem líquida ${pct(margem)}</div>
-    </div>
-    <div class="kpi-card">
-      <div class="lbl">Despesas vencidas</div>
-      <div class="val ${D.vencidos>0?'yellow':'green'}">${fmt(D.vencidos)}</div>
-      <div class="sub">${D.vencidos>0?'Atenção às pendências em aberto.':'Nenhuma pendência vencida.'}</div>
-    </div>
-  `;
-
-  renderCharts();
-  renderMetas();
-  renderProxVenc();
-}
-
-function destroyCharts(){
-  if(charts.recDesp){charts.recDesp.destroy();charts.recDesp=null;}
-  if(charts.comp){charts.comp.destroy();charts.comp=null;}
-}
-
-function renderCharts(){
-  const meses = mesesCarregados();
-  if(!meses.length){destroyCharts();return;}
-
-  // Receita x despesa
-  const labels = meses;
-  const dsRec  = meses.map(m=>dadosMes(m).totalRec);
-  const dsDesp = meses.map(m=>dadosMes(m).totalDesp);
-
-  const ctx1 = document.getElementById('chartRecDesp');
-  const ctx2 = document.getElementById('chartComp');
-  if(!ctx1 || !ctx2)return;
-
-  destroyCharts();
-
-  charts.recDesp = new Chart(ctx1,{
-    type:'bar',
-    data:{
-      labels,
-      datasets:[
-        {label:'Receitas',data:dsRec,backgroundColor:'rgba(34,197,94,.7)',borderRadius:6},
-        {label:'Despesas',data:dsDesp,backgroundColor:'rgba(248,113,113,.7)',borderRadius:6}
+  destroyChart('chartRecDesp');
+  charts['chartRecDesp'] = new Chart(document.getElementById('chartRecDesp'), {
+    type: 'bar',
+    data: {
+      labels: months6.map(monthLabel),
+      datasets: [
+        { label: 'Receita', data: recData, backgroundColor: 'rgba(34,197,94,.7)', borderRadius: 6 },
+        { label: 'Despesa', data: despData, backgroundColor: 'rgba(239,68,68,.7)', borderRadius: 6 }
       ]
     },
-    options:{
-      responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{color:'#e2e8f0'}}},
-      scales:{
-        x:{ticks:{color:'#64748b'},grid:{color:'#020617'}},
-        y:{ticks:{color:'#64748b',callback:v=>v>=0?fmt(v):'-'+fmt(-v)},grid:{color:'#111827'}}
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { labels: { color: '#e2e8f0' } } },
+      scales: {
+        x: { ticks: { color: '#8892a4' }, grid: { color: '#1e293b' } },
+        y: { ticks: { color: '#8892a4', callback: v => 'R$' + v.toLocaleString('pt-BR') }, grid: { color: '#1e293b' } }
       }
     }
   });
 
-  // composição receitas – usa mês selecionado
-  const mesSel = document.getElementById('dashMes').value;
-  const D = dadosMes(mesSel);
-
-  charts.comp = new Chart(ctx2,{
-    type:'doughnut',
-    data:{
-      labels:['Locação','Vendas','Bonificações'],
-      datasets:[{
-        data:[D.loc,D.venda,D.bonus],
-        backgroundColor:[
-          'rgba(59,130,246,.8)',
-          'rgba(234,179,8,.85)',
-          'rgba(147,51,234,.8)'
-        ],
-        borderColor:'#020617',borderWidth:2
+  // CHART: Composição Receitas
+  destroyChart('chartRecComp');
+  charts['chartRecComp'] = new Chart(document.getElementById('chartRecComp'), {
+    type: 'doughnut',
+    data: {
+      labels: ['🏘️ Locação', '🤝 Vendas', '⭐ Bonificações'],
+      datasets: [{
+        data: [D.loc, D.venda, D.bonus],
+        backgroundColor: ['rgba(79,70,229,.8)', 'rgba(34,197,94,.8)', 'rgba(124,58,237,.8)'],
+        borderWidth: 2, borderColor: '#0f172a'
       }]
     },
-    options:{
-      responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{position:'bottom',labels:{color:'#e2e8f0',padding:10}}}
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'bottom', labels: { color: '#e2e8f0', padding: 12 } } }
     }
   });
-}
 
-function renderMetas(){
-  const mes = document.getElementById('dashMes').value;
-  const D = dadosMes(mes);
+  // CHART: Despesas por Categoria
+  const cats = Object.keys(DESP_LABELS);
+  const catTotals = cats.map(c => STATE.despesas.filter(d => d.mes === mes && d.cat === c).reduce((s, d) => s + d.valor, 0));
+  const catLabels = cats.map(c => DESP_LABELS[c].label);
+  destroyChart('chartDesp');
+  charts['chartDesp'] = new Chart(document.getElementById('chartDesp'), {
+    type: 'bar',
+    data: {
+      labels: catLabels,
+      datasets: [{ label: 'R$', data: catTotals, backgroundColor: 'rgba(239,68,68,.7)', borderRadius: 6 }]
+    },
+    options: {
+      indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { ticks: { color: '#8892a4' }, grid: { color: '#1e293b' } },
+        y: { ticks: { color: '#8892a4' }, grid: { color: '#1e293b' } }
+      }
+    }
+  });
+
+  // CHART: Saldo acumulado
+  let acc = 0;
+  const saldAcc = months6.map(m => { acc += dadosMes(m).saldo; return acc; });
+  destroyChart('chartSaldo');
+  charts['chartSaldo'] = new Chart(document.getElementById('chartSaldo'), {
+    type: 'line',
+    data: {
+      labels: months6.map(monthLabel),
+      datasets: [{
+        label: 'Saldo Acumulado',
+        data: saldAcc,
+        borderColor: '#4f46e5',
+        backgroundColor: 'rgba(79,70,229,.12)',
+        fill: true, tension: .4, pointBackgroundColor: '#4f46e5'
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { labels: { color: '#e2e8f0' } } },
+      scales: {
+        x: { ticks: { color: '#8892a4' }, grid: { color: '#1e293b' } },
+        y: { ticks: { color: '#8892a4', callback: v => 'R$' + v.toLocaleString('pt-BR') }, grid: { color: '#1e293b' } }
+      }
+    }
+  });
+
+  // Metas de Receita
   const metas = [
-    {label:'Locação',meta:30000,valor:D.loc,color:'linear-gradient(90deg,#4f46e5,#6366f1)'},
-    {label:'Vendas',meta:50000,valor:D.venda,color:'linear-gradient(90deg,#22c55e,#4ade80)'},
-    {label:'Bonificações',meta:10000,valor:D.bonus,color:'linear-gradient(90deg,#7c3aed,#a855f7)'}
+    { label: 'Locação', meta: 20000, valor: D.loc, color: 'linear-gradient(90deg,#4f46e5,#6366f1)' },
+    { label: 'Vendas', meta: 50000, valor: D.venda, color: 'linear-gradient(90deg,#22c55e,#4ade80)' },
+    { label: 'Bonificações', meta: 10000, valor: D.bonus, color: 'linear-gradient(90deg,#7c3aed,#a855f7)' }
   ];
   const el = document.getElementById('progressMetas');
-  if(!STATE.receitas.length){el.innerHTML='<div class="empty">Sem dados carregados.</div>';return;}
-  el.innerHTML = metas.map(m=>{
-    const p = m.meta>0?Math.min(100,m.valor/m.meta*100):0;
+  el.innerHTML = metas.map(m => {
+    const p = m.meta > 0 ? Math.min(100, m.valor / m.meta * 100) : 0;
     return `<div class="prog-wrap">
       <div class="prog-lbl"><span>${m.label}</span><span>${fmt(m.valor)} / ${fmt(m.meta)}</span></div>
       <div class="prog-bar"><div class="prog-fill" style="width:${p}%;background:${m.color}"></div></div>
     </div>`;
   }).join('');
-}
 
-function renderProxVenc(){
-  const hoje = new Date().toISOString().slice(0,10);
+  // Próximos Vencimentos
+  const hoje = new Date().toISOString().slice(0, 10);
   const prox = STATE.despesas
-    .filter(d=>d.status==='previsto' || d.data>=hoje)
-    .sort((a,b)=>a.data.localeCompare(b.data))
-    .slice(0,6);
+    .filter(d => d.status === 'previsto' || d.data >= hoje)
+    .sort((a, b) => a.data.localeCompare(b.data))
+    .slice(0, 6);
 
-  const el = document.getElementById('proxVenc');
-  if(!prox.length){el.innerHTML='<div class="empty">Sem vencimentos futuros cadastrados.</div>';return;}
-  el.innerHTML=`<table><thead><tr><th>Data</th><th>Descrição</th><th>Valor</th></tr></thead><tbody>${
-    prox.map(d=>`<tr><td>${d.data}</td><td>${d.desc}</td><td>${fmt(d.valor)}</td></tr>`).join('')
-  }</tbody></table>`;
+  const proxVencEl = document.getElementById('proxVenc');
+  if (!prox.length) { proxVencEl.innerHTML = '<div class="empty">Sem vencimentos futuros cadastrados.</div>'; return; }
+  proxVencEl.innerHTML = `<div class="table-wrap"><table><thead><tr><th>Data</th><th>Descrição</th><th>Valor</th></tr></thead><tbody>${
+    prox.map(d => `<tr><td>${d.data}</td><td>${d.desc}</td><td>${fmt(d.valor)}</td></tr>`).join('')
+  }</tbody></table></div>`;
 }
 
 // ====================== IA ======================
-function renderIA(){
+function renderIA() {
   const el = document.getElementById('iaTexto');
-  if(!STATE.receitas.length && !STATE.despesas.length){
-    el.textContent = 'Importe o Excel 2026 no Dashboard para liberar a análise de IA.';
-    return;
-  }
   const mes = document.getElementById('iaMes').value;
   const D = dadosMes(mes);
-  const margem = D.totalRec>0?(D.saldo/D.totalRec*100):0;
+
+  if (STATE.receitas.length === 0 && STATE.despesas.length === 0) {
+    el.innerHTML = '<p>Carregue os dados do Excel no Dashboard para liberar a análise de IA.</p>';
+    return;
+  }
+
+  const margem = D.totalRec > 0 ? (D.saldo / D.totalRec * 100) : 0;
   const txt = [];
-  txt.push(`<p>Em <strong>${mes}</strong>, a Credito Real Ag. São Pedro faturou <strong>${fmt(D.totalRec)}</strong> e teve despesas de <strong>${fmt(D.totalDesp)}</strong>, gerando um saldo de <strong>${fmt(D.saldo)}</strong>.</p>`);
-  if(margem>=30){
+  txt.push(`<p>Em <strong>${monthLabel(mes)}</strong>, a Credito Real Ag. São Pedro faturou <strong>${fmt(D.totalRec)}</strong> e teve despesas de <strong>${fmt(D.totalDesp)}</strong>, gerando um saldo de <strong>${fmt(D.saldo)}</strong>.</p>`);
+  if (margem >= 30) {
     txt.push(`<p class="ok">A margem líquida de <strong>${pct(margem)}</strong> é muito saudável para uma imobiliária. Dá para atravessar meses com menos vendas sem estresse de caixa.</p>`);
-  }else if(margem>=10){
+  } else if (margem >= 10) {
     txt.push(`<p class="warn">A margem líquida de <strong>${pct(margem)}</strong> é razoável. Vale revisar custos de mídias, sistemas e serviços para tentar ganhar 3–5 pontos percentuais.</p>`);
-  }else{
+  } else {
     txt.push(`<p class="bad">A margem líquida de <strong>${pct(margem)}</strong> está apertada. Qualquer queda na carteira de locação ou atraso de comissão de venda pode pressionar o caixa.</p>`);
   }
   txt.push(`<p>As receitas de <strong>locação</strong> somaram ${fmt(D.loc)}, garantindo recorrência mensal. As receitas de <strong>vendas</strong> chegaram a ${fmt(D.venda)}, que turbinam o resultado nos meses em que acontecem.</p>`);
-  if(D.vencidos>0){
+  if (D.vencidos > 0) {
     txt.push(`<p class="warn">Existem despesas vencidas e não quitadas no valor de <strong>${fmt(D.vencidos)}</strong>. Priorize negociação e pagamento dessas pendências para evitar juros.</p>`);
-  }else{
+  } else {
     txt.push(`<p class="ok">Não há apontamento de despesas vencidas em aberto nesse mês, sinal de boa disciplina financeira.</p>`);
   }
   txt.push(`<p>Recomenda-se acompanhar semanalmente o saldo projetado (incluindo lançamentos futuros) e manter uma reserva mínima equivalente a 1–2 meses de despesas fixas.</p>`);
@@ -747,101 +831,108 @@ function renderIA(){
 }
 
 // ====================== CRUD RECEITAS/DESPESAS ======================
-function addReceita(){
-  const mes=document.getElementById('rMes').value;
-  const tipo=document.getElementById('rTipo').value;
-  const desc=document.getElementById('rDesc').value.trim();
-  const valor=parseFloat(document.getElementById('rValor').value||'0');
-  const status=document.getElementById('rStatus').value;
-  if(!desc||!valor){toast('Descrição e valor são obrigatórios.',true);return;}
-  STATE.receitas.push({mes,tipo,desc,valor,status});
-  document.getElementById('rDesc').value='';
-  document.getElementById('rValor').value='';
+function addReceita() {
+  const mes = document.getElementById('rMes').value;
+  const tipo = document.getElementById('rTipo').value;
+  const desc = document.getElementById('rDesc').value.trim();
+  const valor = parseFloat(document.getElementById('rValor').value || '0');
+  const status = document.getElementById('rStatus').value;
+  if (!desc || !valor) { toast('Descrição e valor são obrigatórios.', true); return; }
+  STATE.receitas.push({ mes, tipo, desc, valor, status });
+  document.getElementById('rDesc').value = '';
+  document.getElementById('rValor').value = '';
   toast('Receita salva.');
   renderAll();
 }
 
-function addDespesa(){
-  const mes=document.getElementById('dMes').value;
-  const cat=document.getElementById('dCat').value;
-  const desc=document.getElementById('dDesc').value.trim();
-  const valor=parseFloat(document.getElementById('dValor').value||'0');
-  const data=document.getElementById('dData').value||mes+'-10';
-  const status=document.getElementById('dStatus').value;
-  if(!desc||!valor){toast('Descrição e valor são obrigatórios.',true);return;}
-  STATE.despesas.push({mes,cat,desc,valor,data,status});
-  document.getElementById('dDesc').value='';
-  document.getElementById('dValor').value='';
-  document.getElementById('dData').value='';
+function addDespesa() {
+  const mes = document.getElementById('dMes').value;
+  const cat = document.getElementById('dCat').value;
+  const desc = document.getElementById('dDesc').value.trim();
+  const valor = parseFloat(document.getElementById('dValor').value || '0');
+  const data = document.getElementById('dData').value || `${mes.slice(0, -4)}-10`;
+  const status = document.getElementById('dStatus').value;
+  if (!desc || !valor) { toast('Descrição e valor são obrigatórios.', true); return; }
+  STATE.despesas.push({ mes, cat, desc, valor, data, status });
+  document.getElementById('dDesc').value = '';
+  document.getElementById('dValor').value = '';
+  document.getElementById('dData').value = '';
   toast('Despesa salva.');
   renderAll();
 }
 
-function renderReceitas(){
-  const el=document.getElementById('tabReceitas');
-  if(!STATE.receitas.length){el.innerHTML='<div class="empty">Sem receitas lançadas.</div>';return;}
-  el.innerHTML=`<div class="table-wrap"><table><thead><tr><th>Mês</th><th>Tipo</th><th>Descrição</th><th>Valor</th><th>Status</th></tr></thead><tbody>${
-    STATE.receitas.map(r=>`<tr>
-      <td>${r.mes}</td>
+function renderReceitas() {
+  const el = document.getElementById('tabReceitas');
+  if (!STATE.receitas.length) { el.innerHTML = '<div class="empty">Sem receitas lançadas.</div>'; return; }
+  el.innerHTML = `<div class="table-wrap"><table><thead><tr><th>Mês</th><th>Tipo</th><th>Descrição</th><th>Valor</th><th>Status</th></tr></thead><tbody>${
+    STATE.receitas.map(r => `<tr>
+      <td>${monthLabel(r.mes)}</td>
       <td>${r.tipo}</td>
       <td>${r.desc}</td>
       <td>${fmt(r.valor)}</td>
-      <td><span class="badge ${r.status==='pago'?'bg':'by'}">${r.status}</span></td>
+      <td><span class="badge ${r.status === 'pago' ? 'bg' : 'by'}">${r.status}</span></td>
     </tr>`).join('')
   }</tbody></table></div>`;
 }
 
-function renderDespesas(){
-  const el=document.getElementById('tabDespesas');
-  if(!STATE.despesas.length){el.innerHTML='<div class="empty">Sem despesas lançadas.</div>';return;}
-  el.innerHTML=`<div class="table-wrap"><table><thead><tr><th>Mês</th><th>Categoria</th><th>Descrição</th><th>Vencimento</th><th>Valor</th><th>Status</th></tr></thead><tbody>${
-    STATE.despesas.map(d=>`<tr>
-      <td>${d.mes}</td>
-      <td>${d.cat}</td>
+function renderDespesas() {
+  const el = document.getElementById('tabDespesas');
+  if (!STATE.despesas.length) { el.innerHTML = '<div class="empty">Sem despesas lançadas.</div>'; return; }
+  el.innerHTML = `<div class="table-wrap"><table><thead><tr><th>Mês</th><th>Categoria</th><th>Descrição</th><th>Vencimento</th><th>Valor</th><th>Status</th></tr></thead><tbody>${
+    STATE.despesas.map(d => `<tr>
+      <td>${monthLabel(d.mes)}</td>
+      <td>${DESP_LABELS[d.cat]?.label || d.cat}</td>
       <td>${d.desc}</td>
       <td>${d.data}</td>
       <td>${fmt(d.valor)}</td>
-      <td><span class="badge ${d.status==='pago'?'bg':'by'}">${d.status}</span></td>
+      <td><span class="badge ${d.status === 'pago' ? 'bg' : 'by'}">${d.status}</span></td>
     </tr>`).join('')
   }</tbody></table></div>`;
 }
 
-function renderFuturos(){
-  const rec=STATE.receitas.filter(r=>r.status==='previsto');
-  const desp=STATE.despesas.filter(d=>d.status==='previsto');
-  const fr=document.getElementById('tabFutRec');
-  const fd=document.getElementById('tabFutDesp');
-  fr.innerHTML = rec.length?`<div class="table-wrap"><table><thead><tr><th>Mês</th><th>Tipo</th><th>Descrição</th><th>Valor</th></tr></thead><tbody>${
-    rec.map(r=>`<tr><td>${r.mes}</td><td>${r.tipo}</td><td>${r.desc}</td><td>${fmt(r.valor)}</td></tr>`).join('')
-  }</tbody></table></div>`:'<div class="empty">Sem receitas futuras.</div>';
-  fd.innerHTML = desp.length?`<div class="table-wrap"><table><thead><tr><th>Mês</th><th>Categoria</th><th>Descrição</th><th>Data</th><th>Valor</th></tr></thead><tbody>${
-    desp.map(d=>`<tr><td>${d.mes}</td><td>${d.cat}</td><td>${d.desc}</td><td>${d.data}</td><td>${fmt(d.valor)}</td></tr>`).join('')
-  }</tbody></table></div>`:'<div class="empty">Sem despesas futuras.</div>';
+function renderFuturos() {
+  const rec = STATE.receitas.filter(r => r.status === 'previsto');
+  const desp = STATE.despesas.filter(d => d.status === 'previsto');
+  const fr = document.getElementById('tabFutRec');
+  const fd = document.getElementById('tabFutDesp');
+  fr.innerHTML = rec.length ? `<div class="table-wrap"><table><thead><tr><th>Mês</th><th>Tipo</th><th>Descrição</th><th>Valor</th></tr></thead><tbody>${
+    rec.map(r => `<tr><td>${monthLabel(r.mes)}</td><td>${r.tipo}</td><td>${r.desc}</td><td>${fmt(r.valor)}</td></tr>`).join('')
+  }</tbody></table></div>` : '<div class="empty">Sem receitas futuras.</div>';
+  fd.innerHTML = desp.length ? `<div class="table-wrap"><table><thead><tr><th>Mês</th><th>Categoria</th><th>Descrição</th><th>Data</th><th>Valor</th></tr></thead><tbody>${
+    desp.map(d => `<tr><td>${monthLabel(d.mes)}</td><td>${DESP_LABELS[d.cat]?.label || d.cat}</td><td>${d.desc}</td><td>${d.data}</td><td>${fmt(d.valor)}</td></tr>`).join('')
+  }</tbody></table></div>` : '<div class="empty">Sem despesas futuras.</div>';
 }
 
-function renderCarteira(){
-  const k=document.getElementById('kpisCart');
-  const t=document.getElementById('tabCart');
-  if(!STATE.imoveis.length){
-    k.innerHTML='';
-    t.innerHTML='<div class="empty">A carteira será preenchida ao importar o Excel ou lançar receitas de locação.</div>';
+function renderCarteira() {
+  const k = document.getElementById('kpisCart');
+  const t = document.getElementById('tabCart');
+  if (!STATE.imoveis.length) {
+    k.innerHTML = '';
+    t.innerHTML = '<div class="empty">A carteira será preenchida ao carregar os dados do Excel.</div>';
     return;
   }
-  const qtd=STATE.imoveis.length;
-  const taxaTotal=STATE.imoveis.reduce((s,i)=>s+i.taxa,0);
-  const alugTotal=STATE.imoveis.reduce((s,i)=>s+i.aluguel,0);
+  const qtd = STATE.imoveis.length;
+  const taxaTotal = STATE.imoveis.reduce((s, i) => s + i.taxa, 0);
+  const alugTotal = STATE.imoveis.reduce((s, i) => s + i.aluguel, 0);
   k.innerHTML = `
     <div class="kpi-card"><div class="lbl">Imóveis</div><div class="val blue">${qtd}</div></div>
     <div class="kpi-card"><div class="lbl">Taxa adm total</div><div class="val green">${fmt(taxaTotal)}</div></div>
     <div class="kpi-card"><div class="lbl">Aluguel bruto</div><div class="val">${fmt(alugTotal)}</div></div>
   `;
-  t.innerHTML=`<div class="table-wrap"><table><thead><tr><th>Endereço</th><th>Locatário</th><th>Aluguel</th><th>Taxa</th><th>Condomínio</th></tr></thead><tbody>${
-    STATE.imoveis.map(i=>`<tr><td>${i.end}</td><td>${i.loc}</td><td>${fmt(i.aluguel)}</td><td>${fmt(i.taxa)}</td><td>${fmt(i.cond)}</td></tr>`).join('')
+  t.innerHTML = `<div class="table-wrap"><table><thead><tr><th>Endereço</th><th>Locatário</th><th>Aluguel</th><th>Taxa</th><th>Condomínio</th></tr></thead><tbody>${
+    STATE.imoveis.map(i => `<tr><td>${i.end}</td><td>${i.loc}</td><td>${fmt(i.aluguel)}</td><td>${fmt(i.taxa)}</td><td>${fmt(i.cond)}</td></tr>`).join('')
   }</tbody></table></div>`;
 }
 
 // ====================== RENDER GLOBAL ======================
-function renderAll(){
+function renderAll() {
+  // Sincroniza os seletores de mês
+  const currentMonth = STATE.currentMonth;
+  document.getElementById('mesDashboard').value = currentMonth;
+  document.getElementById('iaMes').value = currentMonth;
+  document.getElementById('rMes').value = currentMonth;
+  document.getElementById('dMes').value = currentMonth;
+
   renderDashboard();
   renderIA();
   renderReceitas();
@@ -849,7 +940,19 @@ function renderAll(){
   renderFuturos();
   renderCarteira();
 }
-renderAll();
+
+// ====================== INICIALIZAÇÃO ======================
+document.addEventListener('DOMContentLoaded', () => {
+  // Define o mês inicial como Janeiro 2026
+  STATE.currentMonth = 'JANEIRO2026';
+  document.getElementById('mesDashboard').value = STATE.currentMonth;
+  document.getElementById('iaMes').value = STATE.currentMonth;
+  document.getElementById('rMes').value = STATE.currentMonth;
+  document.getElementById('dMes').value = STATE.currentMonth;
+
+  // Renderiza tudo inicialmente (vai mostrar as mensagens de "carregar dados")
+  renderAll();
+});
 </script>
 </body>
 </html>
